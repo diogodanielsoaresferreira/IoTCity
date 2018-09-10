@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="IoT City">
+	<meta name="author"      content="Sergey Pozhilov, Luís Leira, Diogo Ferreira">
+	
+	<title>IoT City > Requirements and tests</title>
+
+	<link rel="shortcut icon" href="assets/images/icon.png">
+	
+	<link rel="stylesheet" media="screen" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets/css/main.css">
+
+
+	<!-- Icons for features -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="index.html"><img src="assets/images/logo1.png" alt="IoT City logo"></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+					<li><a href="index.html">Home</a></li> <!-- Client area -->
+					<li><a href="about.html">How to use it</a></li> <!-- User area -->
+					<li class="dropdown"> <!-- Specification area -->
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Specifications<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="specifications-1.html">Features, system scenarios and use cases</a></li>
+							<li class="active"><a href="specifications-2.html">Requirements and tests</a></li>
+							<li><a href="specifications-3.html">Architecture</a></li>
+							<li><a href="specifications-4.html">Data model</a></li>
+							<li><a href="deliverables.html">Deliverables</a></li>
+						</ul>
+					</li>
+					<li><a href="developer.html">Developer area</a></li> <!-- Developer area -->
+					<li><a href="reports.html">Weekly reports</a></li> <!-- Team area -->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->
+
+	<header id="head" class="secondary"></header>
+
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="index.html">Home</a></li>
+			<li class="active">Requirements and tests</li>
+		</ol>
+
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Requirements and tests</h1>
+				</header>
+				<p>&emsp;On this section we explore the technical requirements identified for our platform to work as intended.</p>
+
+				<div class="jumbotron top-space" id="spec-2-1">
+					<div class="container">
+						<div class="page-header">
+							<h2 class="text-center">Main Requirements</h2>
+						</div>
+						
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<!-- Feature img -->
+								<i class="material-icons md-82">developer_board</i>
+								<h4><b>Customed web portal per user</b></h4>
+								<h5>The platform should only show on the web portal the metrics allowed to that user (e.g. If a user does not have permission to manage any temperature sensor, the temperature sensor buttons and pages should not appear.)</h5>
+							</div>
+						</div><br>
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<!-- Feature img -->
+								<i class="material-icons md-82">view_headline</i>
+								<h4><b>Sensors types and subtypes</b></h4>
+								<h5>The platform will have the following types and subtypes of streams send by the sensors: 
+								<ul>
+									<li style="text-align:initial;">Air (CO2 and Pressure)</li>
+									<li style="text-align:initial;">Temperature</li>
+									<li style="text-align:initial;">Waste (Waste container fullness percentage, waste container internal temperature and waste container volume)</li>
+									<li style="text-align:initial;">Noise values</li>
+									<li style="text-align:initial;">Public Lighting (light intensity values and dimming percentage actuator)</li>
+									<li style="text-align:initial;">People counter (percentage of people in a closed space)</li>
+									<li style="text-align:initial;">Radiation (UV radiation, Visible Radiation and Infrared Radiation)</li>
+								</ul>
+								</h5>
+							</div>
+						</div><br>
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<!-- Feature img -->
+								<i class="material-icons md-82">lock</i>
+								<h4><b>User authentication</b></h4>
+								<h5>The web portal and admin Portal should require user authentication</h5>
+							</div>
+						</div><br>
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<!-- Feature img -->
+								<i class="material-icons md-82">alarm_on</i>
+								<h4><b>Fast triggered alarms</b></h4>
+								<h5>When an alarm defined by the user is triggered, if an actuator is associated, the IoT Platform should trigger the actuator in less that one minute</h5>
+							</div>
+						</div><br>
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<!-- Feature img -->
+								<i class="material-icons md-82">rss_feed</i>
+								<h4><b>Moving sensors</b></h4>
+								<h5>The system must handle sensors with static or dynamic location</h5>
+							</div>
+						</div>
+						<br><br>
+					</div>
+				</div>
+				<br>
+				<div class="panel-group">
+					<div class="panel panel-default">
+					    <div class="panel-heading">
+						    <h4 class="panel-title">
+						        <a data-toggle="collapse" href="#collapse2">All technical requirements</a>
+						    </h4>
+						</div>
+						<div id="collapse2" class="panel-collapse collapse"><br>
+							<div class="header-inside">
+								<h3>Technical requirements</h3>
+								<hr class="half-rule"/>
+								
+								<br>
+
+								<ul>
+									<li>The platform should only show on the web portal the metrics allowed to that user (e.g. If a user does not have permission to manage any temperature sensor, the temperature sensor buttons should not appear.);</li>
+									<li>The platform needs at least one server with public access to be provided by Altice Labs or IT;</li>
+									<li>The platform will have the following types and subtypes of streams send by the sensors: Air (CO2 and Pressure), Temperature, Radiation (UV radiation, Visible Radiation and Infrared Radiation), Waste (Waste container fullness percentage, waste container internal temperature and waste container volume), Noise values, Public Lighting (light intensity values and dimming percentage actuator) and people counter (percentage of people in a closed space);</li>
+									<li>The web portal and admin Portal should require user authentication;</li>
+									<li>Passwords should not be stored in the database, or should be encrypted;</li>
+									<li>The web portal and admin portal must be fully functional in Google Chrome (version 41 or superior), Firefox (version 14 or superior) and Safari (version 7 or superior) and Edge (version 25 or superior) browsers;</li>
+									<li>The mobile application should be compatible with Android 4.0 or superior;</li>
+									<li>The IoT City web server should have a public IP, and be addressable in port 80;</li>
+									<li>The system should handle, at least, 100 online users in the web portal and admin portal simultaneously;</li>
+									<li>The system should handle, at least, 100 mobile users simultaneously;</li>
+									<li>The system should handle, at least, 50 sensors of any type simultaneously;</li>
+									<li>When an alarm defined by the user is triggered, if an actuator is associated, the IoT Platform should trigger the actuator in less that one minute;</li>
+									<li>The mobile app should be self-adjustable to the screen size (mobile and tablet regular screens);</li>
+									<li>The notes and alerts defined by each user should not appear for other user rather that the creator of the note or alert;</li>
+									<li>A user can only see the streams associated to the allowed groups;</li>
+									<li>A user can only see the sensors that have streams associated to the allowed groups;</li>
+									<li>The system must handle sensors with static or dynamic location.</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+					
+				<div class="header-inside" id="spec-2-2">
+					<h3>Functional tests</h3>
+					<hr class="half-rule"/>
+					<p>On this section we explain the functional tests of IoT City system using Gherkin syntax.</p><br>
+					
+					<h4>Web Portal</h4>
+					<table class="tbwdth">
+					  <tr bgcolor="#66CCFF">
+						<th>Title</th>
+						<td><b><i>Check the values from a sensor</i></b></td>
+					  </tr>
+					  <tr>
+						<th>Narrative</th>
+						<td>
+							As a city manager,<br>
+							I want to check the values from a sensor,<br>
+							So that I can understand what is happening in the city.
+						</td>
+					  </tr>
+					  <tr>
+						<th>Acceptance Criteria</th>
+						<td><b>Scenario 1: City manager sees all streams from a sensor<br></b>
+							Given an authenticated city manager,<br>
+							And a sensor,<br>
+							When the city manager selects the sensor,<br>
+							Then the system shows the information about all streams of the selected sensor.<br>
+							<b>Scenario 2: City manager toggled a specific stream from a sensor<br></b>
+							Given an authenticated city manager,<br>
+							And a sensor,<br>
+							When the city manager selects the sensor,<br>
+							And the stream,<br>
+							Then the system shows the information about all streams of the selected sensor.<br>
+							<b>Scenario 3: Server connection failed<br></b>
+							Given an authenticated city manager,<br>
+							When the city manager tries to check the values from a sensor,<br>
+							Then the system shows an error message indicating that there is no connection.
+						</td>
+					  </tr>
+					</table><br>
+					<table class="tbwdth">
+					  <tr bgcolor="#66CCFF">
+						<th>Title</th>
+						<td><b><i>Send a value to an actuator</i></b></td>
+					  </tr>
+					  <tr>
+						<th>Narrative</th>
+						<td>
+							As a city manager,<br>
+							I want to send a value to an actuator,<br>
+							So that I can change its state.
+						</td>
+					  </tr>
+					  <tr>
+						<th>Acceptance Criteria</th>
+						<td><b>Scenario 1: Value sent successfully<br></b>
+							Given an authenticated city manager,<br>
+							When the city manager selects the actuator stream,<br>
+							And the value he wants to send,<br>
+							Then the system sends that value to that stream.<br>
+							<b>Scenario 2: Server connection failed<br></b>
+							Given an authenticated city manager,<br>
+							When the city manager tries to send a value to an actuator,<br>
+							Then the system shows an error message indicating that there is no connection.
+						</td>
+					  </tr>
+					</table><br>
+					<table class="tbwdth">
+					  <tr bgcolor="#66CCFF">
+						<th>Title</th>
+						<td><b><i>Check the location of the sensors in a map</i></b></td>
+					  </tr>
+					  <tr>
+						<th>Narrative</th>
+						<td>
+							As a city manager,<br>
+							I want to check the location of the sensors in a map,<br>
+							So that I can know the locations where there are no sensors nearby.
+						</td>
+					  </tr>
+					  <tr>
+						<th>Acceptance Criteria</th>
+						<td><b>Scenario 1: User sees location of sensors<br></b>
+							Given an authenticated city manager,<br>
+							When the city manager selects the map,<br>
+							Then the system presents a map with the location of all sensors that the user has access to.<br>
+							<b>Scenario 2: Server connection failed<br></b>
+							Given an authenticated city manager,<br>
+							When the city manager tries to check the location of the sensors in a map,<br>
+							Then the system shows an error message indicating that there is no connection.
+						</td>
+					  </tr>
+					</table><br><br>
+
+					<h4>Mobile Application</h4>
+					<br>
+					<table class="tbwdth">
+					  <tr bgcolor="#DEDEFF">
+						<th>Title</th>
+						<td><b><i>Send a report</i></b></td>
+					  </tr>
+					  <tr>
+						<th>Narrative</th>
+						<td>
+							As a mobile user,<br>
+							I want to send a report,<br>
+							So that I can report a problem on my city.
+						</td>
+					  </tr>
+					  <tr>
+						<th>Acceptance Criteria</th>
+						<td><b>Scenario 1: Report sent successfully<br></b>
+							Given a mobile user,<br>
+							When the mobile user inputs the report information,<br>
+							And a photo or video of the problem,<br>
+							Then the application registers the report.<br>
+							<b>Scenario 2: Server connection failed<br></b>
+							Given a mobile user,<br>
+							When the mobile user tries to send a report,<br>
+							Then the application shows an error message indicating that there is no connection.
+						</td>
+					  </tr>
+					</table><br>
+
+					<h4>Admin Portal</h4>
+					<br>
+					<table class="tbwdth">
+					  <tr bgcolor="#AACCFF">
+						<th>Title</th>
+						<td><b><i>Add a sensor to the platform</i></b></td>
+					  </tr>
+					  <tr>
+						<th>Narrative</th>
+						<td>
+							As an administrator,<br>
+							I want to add a sensor to the platform,<br>
+							So that I can gather more data from the city.
+						</td>
+					  </tr>
+					  <tr>
+						<th>Acceptance Criteria</th>
+						<td><b>Scenario 1: Administrator input correct information<br></b>
+							Given an authenticated administrator,<br>
+							When the administrator inputs the sensor id,<br>
+							And inputs the sensor name,<br>
+							And inputs the date on which the sensor was added,<br>
+							And inputs the sensor type,<br>
+							And inputs the sensor localization,<br>
+							And inputs if its active,<br>
+							Then the system registers the new sensor.<br>
+							<b>Scenario 2: Administrator input wrong information<br></b>
+							Given an authenticated administrator,<br>
+							When the administrator inputs an already exisiting sensor id,<br>
+							Then the system shows an error message indicating that there was a problem.<br>
+							<b>Scenario 3: Server connection failed<br></b>
+							Given an authenticated administrator,<br>
+							When the administrator tries to add a sensor to the platform,<br>
+							Then the system shows an error message indicating that there is no connection.
+						</td>
+					  </tr>
+					</table><br>
+				</div>
+				<div class="panel-group">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+						  <h4 class="panel-title">
+							<a data-toggle="collapse" href="#collapse1">Other Functional Tests</a>
+						  </h4>
+						</div>
+						<div id="collapse1" class="panel-collapse collapse">
+							<br>
+							<h4>Admin portal</h4>
+							<table class="tbwdth">
+							  <tr bgcolor="#AACCFF">
+								<th>Title</th>
+								<td><b><i>Authentication on Admin Portal</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As an administrator,<br>
+									I want to authenticate in the IoT City Admin Portal,<br>
+									So that I can have access to the funcionalities of the Admin Portal.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: User inputs correct login credentials<br></b>
+									Given a username and a password,<br>
+									When the username and password match with a current username and password in the database,<br>
+									Then the user is authenticated.<br>
+									<b>Scenario 2: User inputs incorrect login credentials<br></b>
+									Given a username and a password,<br>
+									When the username and password do not match with a current username and password in the database,<br>
+									Then the user is not authenticated, and an error message is shown.
+								</td>
+							  </tr>
+							</table><br>
+						
+							<table class="tbwdth">
+							  <tr bgcolor="#AACCFF">
+								<th>Title</th>
+								<td><b><i>Add user</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As an administrator,<br>
+									I want to add a user to the platform,<br>
+									So that I can provide a user access to the funcionalities of the Web Portal.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: User added successfully<br></b>
+									Given authenticated administrator,<br>
+									When the administrator inputs the new user credentials,<br>
+									Then the system adds the new user.<br>
+									<b>Scenario 2: Server connection failed<br></b>
+									Given an authenticated administrator,<br>
+									When the administrator tries to add a user,<br>
+									Then the system shows an error message indicating that there is no connection.
+								</td>
+							  </tr>
+							</table><br>
+							<table class="tbwdth">
+							  <tr bgcolor="#AACCFF">
+								<th>Title</th>
+								<td><b><i>Add a subscription to the platform</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As an administrator,<br>
+									I want to add a subscription to the platform,<br>
+									So that I can receive data from registred sensors.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: Subscription added successfully<br></b>
+									Given authenticated administrator,<br>
+									When the administrator inputs the subscription id,<br>
+									And inputs the subscription name,<br>
+									And inputs the date on which the subscription was added,<br>
+									And chooses the subscription subtype,<br>
+									And toggles if the subscription is a receiver or a sender,<br>
+									And chooses the sensor,<br>
+									Then the system registers the new subscription.<br>
+									<b>Scenario 2: Administrator input wrong information<br></b>
+									Given an authenticated administrator,<br>
+									When the administrator inputs an already exisiting subscription id,<br>
+									Then the system shows an error message indicating that there was a problem.<br>
+									<b>Scenario 3: Server connection failed<br></b>
+									Given an authenticated administrator,<br>
+									When the administrator tries to add a subscription,<br>
+									Then the system shows an error message indicating that there is no connection.
+								</td>
+							  </tr>
+							</table><br>
+							<table class="tbwdth">
+							  <tr bgcolor="#AACCFF">
+								<th>Title</th>
+								<td><b><i>Add a subscription group to the platform</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As an administrator,<br>
+									I want to add a subscription group to the platform,<br>
+									So that registred users can have access to data from the streams.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: Subscription group added successfully<br></b>
+									Given authenticated administrator,<br>
+									When the administrator inputs the subscription group name,<br>
+									And inputs the subscription group information,<br>
+									And selects the users,<br>
+									And selects the subscriptions,<br>
+									Then the system registers the new subscription group.<br>
+									<b>Scenario 2: Administrator input wrong information<br></b>
+									Given an authenticated administrator,<br>
+									When the administrator inputs an already exisiting subscription group name,<br>
+									Then the system shows an error message indicating that there was a problem.<br>
+									<b>Scenario 3: Server connection failed<br></b>
+									Given an authenticated administrator,<br>
+									When the administrator tries to add a subscription group,<br>
+									Then the system shows an error message indicating that there is no connection.
+								</td>
+							  </tr>
+							</table><br><br>
+						
+							<h4>Web portal</h4>
+							<table class="tbwdth">
+							  <tr bgcolor="#66CCFF">
+								<th>Title</th>
+								<td><b><i>Authentication on Web Portal</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As a city manager,<br>
+									I want to authenticate in the IoT City Web Portal,<br>
+									So that I can have access to the funcionalities of Web Portal.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: User inputs correct login credentials<br></b>
+									Given a username and a password,<br>
+									When the username and password match with a current username and password in the database,<br>
+									Then the user is authenticated.<br>
+									<b>Scenario 2: User inputs incorrect login credentials<br></b>
+									Given a username and a password,<br>
+									When the username and password do not match with a current username and password in the database,<br>
+									Then the user is not authenticated, and an error message is shown.
+								</td>
+							  </tr>
+							</table><br>
+						
+							<table class="tbwdth">
+							  <tr bgcolor="#66CCFF">
+								<th>Title</th>
+								<td><b><i>Add a note</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As a city manager,<br>
+									I want to add a note to the system,<br>
+									So that I can remember what to do on my next access to the system.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: City manager input correct information<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager selects a name,<br>
+									And a begin and end date,<br>
+									And its description,<br>
+									Then the note is registred on the system for that city manager.<br>
+									<b>Scenario 2: City manager input wrong information<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager inputs a wrong begin and end date,<br>
+									Then the system shows an error message indicating that the dates were incorrect,<br>
+									And the note is not registred.<br>
+									<b>Scenario 3: Server connection failed<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager tries to add a note,<br>
+									Then the system shows an error message indicating that there is no connection.
+								</td>
+							  </tr>
+							</table><br>
+							<table class="tbwdth">
+							  <tr bgcolor="#66CCFF">
+								<th>Title</th>
+								<td><b><i>Add an alert with an actuator</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As a city manager,<br>
+									I want to add an alert and an actuator to public lighting,<br>
+									So that everytime that is dark in the city, the public lighting turns on.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: City manager input correct information<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager selects a public light,<br>
+									And sets an alert for when its dark,<br>
+									And sets an actuator to turn it on,<br>
+									Then the alert and actuator are registred on the system.<br>
+									<b>Scenario 2: City manager input wrong information while adding alert<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager does not select a subscription,<br>
+									Then the system shows an error message indicating that there was no subscription selected,<br>
+									And the alert is not registred.<br>
+									<b>Scenario 3: City manager input wrong information while adding actuator<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager does not select an exisiting alert,<br>
+									Then the system shows an error message indicating that there was no alert selected,<br>
+									And the actuator is not registred.<br>
+									<b>Scenario 4: Server connection failed<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager tries to add an alert and an actuator to public lighting,<br>
+									Then the system shows an error message indicating that there is no connection.
+								</td>
+							  </tr>
+							</table><br>
+
+						
+							<table class="tbwdth">
+							  <tr bgcolor="#66CCFF">
+								<th>Title</th>
+								<td><b><i>Change the state of a user report</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As a city manager,<br>
+									I want to change the state of a user report,<br>
+									So that I can keep track of development of the report.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: State changed successfully<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager selects a user report,<br>
+									And changes its state,<br>
+									Then the system registers the new state.<br>
+									<b>Scenario 2: Server connection failed<br></b>
+									Given an authenticated city manager,<br>
+									When the city manager tries to change the state of a user report,<br>
+									Then the system shows an error message indicating that there is no connection.
+								</td>
+							  </tr>
+							</table><br><br>
+						
+							<h4>Mobile Application</h4>
+							<table class="tbwdth">
+							  <tr bgcolor="#DEDEFF">
+								<th>Title</th>
+								<td><b><i>See all the sensors' location in a map</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As a mobile user,<br>
+									I want to check the location of the sensors in a map,<br>
+									So that I can know the locations of nearby sensors.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: Mobile user sees location of nearby sensors<br></b>
+									Given a mobile user,<br>
+									When the mobile user selects the map,<br>
+									Then the application presents a map with the location of all nearby sensors.<br>
+									<b>Scenario 2: Server connection failed<br></b>
+									Given a mobile user,<br>
+									When the mobile user tries to check the location of the sensors in a map,<br>
+									Then the application shows an error message indicating that there is no connection.
+								</td>
+							  </tr>
+							</table><br>
+							<table class="tbwdth">
+							  <tr bgcolor="#DEDEFF">
+								<th>Title</th>
+								<td><b><i>Check the values from sensor's stream</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As a mobile user,<br>
+									I want to check the values from a sensor,<br>
+									So that I can understand what is happening in my surroundings.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: Sensor does not exist in the platform and the data send is correct<br></b>
+									Given a non-registered sensor,<br>
+									When the technician runs the script for adding the sensor to the platform,<br>
+									Then the sensor is added to the platform and ready to be used.<br>
+									<b>Scenario 2: Sensor already exists in the platform<br></b>
+									Given a registered sensor,<br>
+									When the technician runs the script for adding the sensor to the platform,<br>
+									Then the sensor is not added and the status returned from the platform is 'Error'.<br>
+									<b>Scenario 3: Sensor data is not correct<br></b>
+									Given a non-registered sensor,<br>
+									When the technician runs the script for adding the sensor to the platform,<br>
+									Then the sensor is not added and the status returned from the platform is 'Error'.<br>
+								</td>
+							  </tr>
+							</table><br><br>
+						
+							<h4>Technician</h4>
+							<table class="tbwdth">
+							  <tr bgcolor="#66CCFF">
+								<th>Title</th>
+								<td><b><i>Register a sensor on the platform</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As a technician,<br>
+									I want to register a sensor on the platform,<br>
+									So that I can add streams to the sensor.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: Stream does not exist in the platform and the data send is correct<br></b>
+									Given a non-registered stream,<br>
+									When the technician runs the script for adding the stream to the platform,<br>
+									Then the stream is added to the platform and ready to receive values.<br>
+									<b>Scenario 2: Stream already exists in the platform<br></b>
+									Given a registered stream,<br>
+									When the technician runs the script for adding the stream to the platform,<br>
+									Then the stream is not added and the status returned from the platform is 'Error'.<br>
+									<b>Scenario 3: Stream data is not correct<br></b>
+									Given a non-registered stream,<br>
+									When the technician runs the script for adding the stream to the platform,<br>
+									Then the stream is not added and the status returned from the platform is 'Error'.<br>
+								</td>
+							  </tr>
+							</table><br>
+							<table class="tbwdth">
+							  <tr bgcolor="#66CCFF">
+								<th>Title</th>
+								<td><b><i>Register a stream on the platform</i></b></td>
+							  </tr>
+							  <tr>
+								<th>Narrative</th>
+								<td>
+									As a technician,<br>
+									I want to register a stream on the platform,<br>
+									So that I can start sending values to the platform.
+								</td>
+							  </tr>
+							  <tr>
+								<th>Acceptance Criteria</th>
+								<td><b>Scenario 1: User inputs correct login credentials<br></b>
+									Given a username and a password,<br>
+									When the username and password match with a current username and password in the database,<br>
+									Then the user is authenticated.<br>
+									<b>Scenario 2: User inputs incorrect login credentials<br></b>
+									Given a username and a password,<br>
+									When the username and password do not match with a current username and password in the database,<br>
+									Then the user is not authenticated, and an error message is shown.
+								</td>
+							  </tr>
+							</table><br>
+						
+						</div>
+					</div>
+				</div>
+				
+			</article>
+			<!-- /Article -->
+			
+			<!-- Sidebar -->
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<div id="sidebar" class="row widget affix">
+					<div class="col-xs-12">
+						<h4>Choose the topic you want to see</h4>
+						<ul class="list-unstyled list-spaces">
+							<li><a href="#spec-2-1">Technical requirements</a><br><span class="small text-muted">On this section we explore the technical requirements <br>identified for our platform to work as intended.</span></li>
+							<li><a href="#spec-2-2">Functional tests</a><br><span class="small text-muted">On this section we explain the functional tests<br>of IoT City system using Gherkin syntax.</span></li>
+						</ul>
+					</div>
+				</div>
+
+			</aside>
+			<!-- /Sidebar -->
+
+		</div>
+	</div>	<!-- /container -->
+	
+
+	<footer id="footer" class="top-space">
+
+		<div class="footer1">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">Associated with</h3>
+						<div class="widget-body">
+							<!-- UA/DETI Logo -->
+							<a href="https://www.ua.pt/deti/" target="_blank"><img src="assets/images/deti-ua.png" alt="UA/DETI Logo"></a>
+						</div>
+					</div>
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">In collaboration with</h3>
+						<div class="widget-body">
+							<!-- IT Logo -->
+							<a href="https://www.it.pt/" target="_blank"><img src="assets/images/it-logo.png" alt="IT Logo"></a>
+							<!-- Altice Labs Logo -->
+							<a href="http://www.alticelabs.com/pt/" target="_blank"><img src="assets/images/AlticeLabs-logo-cinza.png" alt="Altice Labs Logo"></a>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav">Project in Informatics Engineering - Computer and Telematics Engineering</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Copyright &copy; 2017, IoT City. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+	</footer>
+		
+
+
+
+
+	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/headroom.min.js"></script>
+	<script src="assets/js/jQuery.headroom.min.js"></script>
+	<script src="assets/js/template.js"></script>
+</body>
+</html>

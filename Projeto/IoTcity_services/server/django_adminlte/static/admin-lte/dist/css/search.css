@@ -1,0 +1,27 @@
+.results tr[visible='false'],
+.no-result{
+  display:none;
+}
+.results2 tr[visible='false'],
+.no-result2{
+  display:none;
+}
+.results3 tr[visible='false'],
+.no-result3{
+  display:none;
+}
+
+.results tr[visible='true']{
+  display:table-row;
+}
+.results2 tr[visible='true']{
+  display:table-row;
+}
+.results3 tr[visible='true']{
+  display:table-row;
+}
+
+.counter{
+  padding:8px; 
+  color:#ccc;
+}

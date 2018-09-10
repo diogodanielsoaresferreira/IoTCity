@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "255744133302",
+    "firebase_url": "https://iotcity-97beb.firebaseio.com",
+    "project_id": "iotcity-97beb",
+    "storage_bucket": "iotcity-97beb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255744133302:android:90b33ad0441dca2d",
+        "android_client_info": {
+          "package_name": "com.example.iot.iot_city_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255744133302-bqrcs6d1vpg7k6sncd0virm880pc06vr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCE22sxlRlTFjtaJgVaYr66gcD5Eijb9Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

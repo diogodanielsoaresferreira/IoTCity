@@ -1,0 +1,694 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" 	 content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IoT City">
+    <meta name="author" 	 content="Sergey Pozhilov, Luís Leira, Diogo Ferreira">
+
+    <title>IoT City > Features, system scenarios and use cases</title>
+
+    <link rel="shortcut icon" href="assets/images/icon.png">
+
+    <link rel="stylesheet" media="screen" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+    <!-- Custom styles for our template -->
+    <link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen">
+    <link rel="stylesheet" href="assets/css/main.css">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top headroom">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- Button for smallest screens -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                <a class="navbar-brand" href="index.html"><img src="assets/images/logo1.png" alt="IoT City logo"></a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav pull-right">
+                    <li><a href="index.html">Home</a></li> <!-- Client area -->
+                    <li><a href="about.html">How to use it</a></li> <!-- User area -->
+                    <li class="dropdown">
+                        <!-- Specification area -->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Specifications<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="active"><a href="specifications-1.html">Features, system scenarios and use cases</a></li>
+                            <li><a href="specifications-2.html">Requirements and tests</a></li>
+                            <li><a href="specifications-3.html">Architecture</a></li>
+                            <li><a href="specifications-4.html">Data model</a></li>
+                            <li><a href="deliverables.html">Deliverables</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="developer.html">Developer area</a></li> <!-- Developer area -->
+                    <li><a href="reports.html">Weekly reports</a></li> <!-- Team area -->
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+    <!-- /.navbar -->
+
+    <header id="head" class="secondary"></header>
+
+    <!-- container -->
+    <div class="container">
+
+        <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">Features, system scenarios and use cases</li>
+        </ol>
+
+        <div class="row">
+
+            <!-- Article main content -->
+            <article class="col-sm-8 maincontent">
+                <header class="page-header">
+                    <h1 class="page-title">Features, system scenarios and use cases</h1>
+                </header>
+
+                <div class="header-inside" id="spec-1-1">
+                    <h3>Features</h3>
+                    <hr class="half-rule" />
+                    <p>&emsp;On this section, we explore the main features of our applications (Admin Portal, Web Portal and Mobile Application).</p>
+                    <br>
+                    &emsp;The admin portal has the following main features:
+                    <ul>
+                        <li>Add sensors to the platform;</li>
+                        <li>Add streams to the sensors previously added;</li>
+                        <li>Add streams to subscription groups;</li>
+                        <li>Add users to subscription groups;</li>
+                        <li>Create, edit and delete data on the IoT City Data Persistence (database).</li>
+                    </ul>
+                    <br>
+                    &emsp;The web portal has the following main features:
+                    <ul>
+                        <li>Check all the sensors' streams values in real-time;</li>
+                        <li>Check the history of sensors' streams;</li>
+                        <li>Check the location of all the sensors allowed to the user on a map;</li>
+                        <li>Send values to actuators (e.g. change the dimming of lighting);</li>
+                        <li>Add alerts with actuators to sensors' streams;</li>
+                        <li>Add Rules to sensors' streams;</li>
+                        <li>Check the users reports;</li>
+                        <li>Add notes associated to the user.</li>
+                    </ul>
+                    <br>
+                    &emsp;The citizen mobile application has the following main features:
+                    <ul>
+                    	<li>Check the sensors' streams values in real-time and history;</li>
+                    	<li>Check the location of the sensors in real-time;</li>
+                    	<li>Send reports of problems or occurrences to the city manager.</li>
+                    </ul>
+                    <br>
+					&emsp;The city manager mobile application has the following main features:
+                    <ul>
+                    	<li>Check the sensors' streams values in real-time and history;</li>
+                    	<li>Check the location of the sensors in real-time;</li>
+                    	<li>Receive notifications about triggered alerts in real-time.</li>
+                    </ul>
+                    <br>
+                    &emsp;For the sensor technician, the platform has the following features:
+                    <ul>
+                     	<li>API to add sensors dynamically;</li>
+                     	<li>API to add streams dynamically;</li>
+                     	<li>Dynamic location of sensors.</li>
+                    </ul>
+                </div>
+
+                <div class="header-inside" id="spec-1-2">
+					<h3>Scenarios</h3>
+					<hr class="half-rule" />
+					<p>&emsp;This section will exemplify four possible scenarios of different type of users taking advantage of the IoT City solution for differentiated goals.</p><br>
+
+					<h4>Register sensors</h4><br>
+					 <p>&emsp;Mr. Peter, a city manager, wants to gather more metrics from its city. For that, he call to a technician to mounts a sensor in a location in the city where there are no sensors nearby. The tecnician previsouly configures the sensor with its information, and the streams associated. When the sensor is already configured, he mounts it and turns it on, and send the gathered values to the IoT Platform.
+					 <br>&emsp;On the IoT City Web Portal, the Administrator of the platform needs to add the new stream to the group of users allowed to see its values.</p><br>
+					 <div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/experience_map/E1.png" alt="Experience Map of Mr. Peter to Register Sensors."><br><h6>Experience Map of Mr. Peter to Register Sensors.</h6></div></div><br>
+					 <div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/register.png" alt="Sequence Diagram explaining the flow of messages when registering sensors and streams."><br><h6>Sequence Diagram explaining the flow of messages when registering sensors and streams.</h6></div></div><br>
+					 <br>
+
+					<h4>Daily monitoring of the city</h4><br>
+					 <p>&emsp;Mr. Peter, the city manager, has arrived to work. He wants to check what happened in the city overnight. For that, he authenticates himself into IoT City Web Portal and checks if there are any abnormal values gathered from the sensors or don't have connectivity, new alarms, new sensors or new situations reported by citizens in the city. Then, he checks if all the situations of the sensors are currently working.</p>
+					 <p>&emsp;After confirming that everything looks fine, Mr. Peter wants to see the triggered alarms of the subscriptions in his absence, as well as the reports sent by the users. As there are many reports by the users about public illumination failing during night, he talks to the city workers to solve the occurrence.</p>
+					 <div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/experience_map/E2.png" alt="Experience Map of Mr. Peter doing the daily monitoring of the city"><br><h6>Experience Map of Mr. Peter doing the daily monitoring of the city</h6></div></div><br><br>
+
+					<h4>Schedule alarm with actuator</h4><br>
+					 <p>&emsp;Mr. Peter, the city manager, wants to schedule an alarm with an actuator for the public illumination, so that every day from 7 pm to 8 am, all the public illumination is turned on. For that, he starts by defining the days that he wants the alarm to be triggered, and associates the action of turning the lights on and off with that alert.</p>
+					 <div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/experience_map/E3.png" alt="Experience Map of Mr. Peter scheduling an alarm with an actuator."><br><h6>Experience Map of Mr. Peter scheduling an alarm with an actuator.</h6></div></div><br><br>
+
+					<h4>Report problem</h4><br>
+					 <p>&emsp;Mr. John was having troubles sleeping because of the noise in his street. He decides to open the IoT City Mobile App to check if there are any noise sensors nearby. He notices that there are two noise sensors on his street, and he goes to see his noise level history.</p>
+					 <p>&emsp;As the noise level has been high for too long, he decides to report the problem to the city manager, hoping that it will be fixed soon. He writes in the IoT City Mobile App his concerns, also adding an audio file for a more complete description.</p>
+					 <div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/experience_map/E4.png" alt="Experience Map of Mr. John reporting a problem."><br><h6>Experience Map of Mr. John reporting a problem.</h6></div></div><br><br>
+                </div>
+
+                <div class="header-inside" id="spec-1-3">
+                    <h3>Use cases</h3>
+                    <hr class="half-rule" />
+                    <p>&emsp;On this section, we expose the most important use cases on the system, according to the frequency of use.</p><br>
+                    <h4>Web Portal</h4>
+					<table class="tbwdth">
+						<tr bgcolor="#66CCFF">
+							<th>Use case</th>
+							<td><b><i>Visualize city sensors' streams values in real-time</i></b></td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>The user visualizes the sensors' streams values that are included in the subscription groups that he is inserted, being divided by metrics.</td>
+						</tr>
+						<tr>
+							<th>Exceptions</th>
+							<td>If the user has chosen not to see data from a specific sensor (the streams for it are off), the user will not see data from it unless the stream is turned on.</td>
+						</tr>
+						<tr>
+							<th>Priority</th>
+							<td>High</td>
+						</tr>
+						<tr>
+							<th>Other information</th>
+							<td>A user can choose not to see data from a certain sensor by turning off the toggle button in the map marker or in the sensors table</td>
+						</tr>
+					</table>
+					<br>
+					<table class="tbwdth">
+						<tr bgcolor="#66CCFF">
+							<th>Use case</th>
+							<td><b><i>Visualize city sensors' stream history</i></b></td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>The user visualize the sensors' streams history, being shown the values gathered since they were added to the platform.</td>
+						</tr>
+						<tr>
+							<th>Exceptions</th>
+							<td>If the user doesn't have access to a sensor or has chosen not to see data from a certain sensor by turning off the stream this data will not be available; those sensors will not apear has an option to see the stream's history</td>
+						</tr>
+						<tr>
+							<th>Priority</th>
+							<td>High</td>
+						</tr>
+						<tr>
+							<th>Other information</th>
+							<td>When a sensor has more than one stream associated the history values are separated by tabs.</td>
+						</tr>
+					</table>
+					<br>
+					<table class="tbwdth">
+						<tr bgcolor="#66CCFF">
+							<th>Use case</th>
+							<td><b><i>Send values to a city actuator sensor</i></b></td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>The user act on a sensor, changing its state.</td>
+						</tr>
+						<tr>
+							<th>Exceptions</th>
+							<td>The sensor doesn't support actioning; the opipion isn't available to the user</td>
+						</tr>
+						<tr>
+							<th>Priority</th>
+							<td>Medium</td>
+						</tr>
+						<tr>
+							<th>Other information</th>
+							<td>One example of sensors that support action is the lighting sensors, which allow the user to turn the lights on/off and their intensity.</td>
+						</tr>
+					</table>
+					<br>
+					<table class="tbwdth">
+						<tr bgcolor="#66CCFF">
+							<th>Use case</th>
+							<td><b><i>Visualize city sensors' location on a map</i></b></td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>The user visualizes the sensors' location on a map and the general information about each sensor.</td>
+						</tr>
+						<tr>
+							<th>Exceptions</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Priority</th>
+							<td>High</td>
+						</tr>
+						<tr>
+							<th>Other information</th>
+							<td>The information about the sensor includes its streams, values and alerts</td>
+						</tr>
+					</table>
+					<br>
+					<br>
+					<h4>Mobile Application</h4>
+					<br>
+					<table class="tbwdth">
+						<tr bgcolor="#DEDEFF">
+							<th>Use case</th>
+							<td><b><i>Send report</i></b></td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>The user does a report based on faulty sensors or unusual metric values. Besides the text, he can attach images and audio files. When he finishes, he can send it.</td>
+						</tr>
+						<tr>
+							<th>Exceptions</th>
+							<td></td>
+						</tr>
+						<tr>
+							<th>Priority</th>
+							<td>Medium</td>
+						</tr>
+						<tr>
+							<th>Other information</th>
+							<td></td>
+						</tr>
+					</table>
+					<br>
+					<h4>Admin portal</h4>
+					<br>
+					<table class="tbwdth">
+						<tr bgcolor="#AACCFF">
+							<th>Use case</th>
+							<td><b><i>Add sensor</i></b></td>
+						</tr>
+						<tr>
+							<th>Description</th>
+							<td>The city administrator adds a sensor by filling a form with the sensor's information and saves it in the platform.</td>
+						</tr>
+						<tr>
+							<th>Exceptions</th>
+							<td>SmartIoT doesn't support the sensor type being introduced; the operation fails</td>
+						</tr>
+						<tr>
+							<th>Priority</th>
+							<td>High</td>
+						</tr>
+						<tr>
+							<th>Other information</th>
+							<td>The sensors must be compatible with the service to be successfully added</td>
+						</tr>
+					</table>
+					<br><br>
+					<div class="panel-group">
+					  <div class="panel panel-default">
+						<div class="panel-heading">
+						  <h4 class="panel-title">
+							<a data-toggle="collapse" href="#collapse1">Other Use Cases</a>
+						  </h4>
+						</div>
+						<div id="collapse1" class="panel-collapse collapse">
+						  
+							<br>
+							<h4>Admin portal</h4>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#AACCFF">
+									<th>Use case</th>
+									<td><b><i>Add stream</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The city administrator add a stream by filling a form with the stream's information and saves it in the plataform.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td>The stream's information provided is not valid; the operation fails</td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>High</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>The validity of the stream's information filed by the administrator is the responsability of the administrator himself</td>
+								</tr>
+							</table>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#AACCFF">
+									<th>Use case</th>
+									<td><b><i>Add stream to sensor</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The city administrator add a stream to a sensor by associating the stream to the choosen sensor and saves the changes made.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td>The stream is not compatible with the sensor it is being associated with; an error message is displayed and de operation fails</td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>High</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>In order to receive data from a sensor a stream has to associated with it.</td>
+								</tr>
+							</table>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#AACCFF">
+									<th>Use case</th>
+									<td><b><i>Create subscription group</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The city administrator creates a subscription group for a specific group of users that use the web portal.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td></td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>High</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>Subscription groups are what determines what each regular user has access to on the platform.</td>
+								</tr>
+							</table>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#AACCFF">
+									<th>Use case</th>
+									<td><b><i>Add sensor to subscription group</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The city administrator adds a sensor to a specific subscription group and saves the changes made.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td>The subscrition group already has that sensor added; that information is relayed to the administrator and the operation is not executed.</td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>High</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>Groups of sensor can be added to a stream simultaneously</td>
+								</tr>
+							</table>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#AACCFF">
+									<th>Use case</th>
+									<td><b><i>Add user to subscription group</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The city administrator adds a user to a subscription group and saves the changes made.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td>The subscrition group already has that user added; that information is relayed to the administrator and the operation is not executed.</td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>Medium</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>Subscription groups are what determines what each regular user has access to on the platform.</td>
+								</tr>
+							</table>
+							<br>
+							<br>
+							<h4>Web portal</h4>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#66CCFF">
+									<th>Use case</th>
+									<td><b><i>Create an alert</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The user creates an alert of a specific sensor's stream by filling a form for that and save it in the plataform.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td></td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>Medium</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>The triggered alerts can be later seen in the dashboard view.</td>
+								</tr>
+							</table>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#66CCFF">
+									<th>Use case</th>
+									<td><b><i>Visualize user reports</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The user can visualize the user reports, being divided by type of sensor, setting its state of progress.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td></td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>Medium</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td></td>
+								</tr>
+							</table>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#66CCFF">
+									<th>Use case</th>
+									<td><b><i>Create a note</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The user can create a note to remember something he wants by filling a form and save it in the plataform.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td></td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>Low</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>These notes can be seen in the main dashboard of the platform.</td>
+								</tr>
+							</table>
+							<br>
+							<br>
+							<h4>Mobile application</h4>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#DEDEFF">
+									<th>Use case</th>
+									<td><b><i>Visualize sensors' streams values in real-time</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The user can see the sensors' streams values that are allowed for everyone, being divided by metrics.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td>The user doesn't have access to a specific stream; its data isn't shown.</td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>High</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>In the dashboard, the values being show for each type are for the closest sensor to the user.</td>
+								</tr>
+							</table>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#DEDEFF">
+									<th>Use case</th>
+									<td><b><i>Visualize sensors' location on a map</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>The user visualizes the sensors' location on a map and the general information about each sensor.</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td>The user doesn't have access to a specific stream; that sensor's marker isn't shown.</td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>High</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td>The map by default centers in the users location.</td>
+								</tr>
+							</table>
+							<br>
+							<br>
+							<h4>Technician</h4>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#BBBBFF">
+									<th>Use case</th>
+									<td><b><i>Add sensor through the API</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>Add a sensor to the platform through the given API</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td>If a sensor with the given ID already exists, or the data is not in compliance with the requirements, the platform can't add the sensor.</td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>Medium</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td></td>
+								</tr>
+							</table>
+							<br>
+							<table class="tbwdth">
+								<tr bgcolor="#BBBBFF">
+									<th>Use case</th>
+									<td><b><i>Add stream through the API</i></b></td>
+								</tr>
+								<tr>
+									<th>Description</th>
+									<td>Add a stream of a sensor to the platform through the given API</td>
+								</tr>
+								<tr>
+									<th>Exceptions</th>
+									<td>If a stream with the given ID already exists, or the data is not in compliance with the requirements, the platform can't add the sensor.</td>
+								</tr>
+								<tr>
+									<th>Priority</th>
+									<td>Medium</td>
+								</tr>
+								<tr>
+									<th>Other information</th>
+									<td></td>
+								</tr>
+							</table>
+						</div>
+					  </div>
+					</div>
+
+                </div>
+
+            </article>
+            <!-- /Article -->
+            <!-- Sidebar -->
+            <aside class="col-sm-4 sidebar sidebar-right">
+
+                <div id="sidebar" class="row widget affix">
+                    <div class="col-xs-12">
+                        <h4>Choose the topic you want to see</h4>
+                        <ul class="list-unstyled list-spaces">
+                            <li><a href="#spec-1-1">Features</a><br><span class="small text-muted">On this section, we explore the main features of our<br>applications (Admin Portal, Web Portal and<br>Mobile Application).</span></li>
+                            <li><a href="#spec-1-2">Scenarios</a><br><span class="small text-muted">This section will exemplify three possible scenarios of different<br>type of users taking advantage of the IoT City solution for <br> differentiated goals.</span></li>
+                            <li><a href="#spec-1-3">Use cases</a><br><span class="small text-muted">On this section, we expose the most important use cases<br>on the system, according to the frequency of use.</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <!--
+                <div class="row widget">
+                    <div class="col-xs-12">
+                    </div>
+                </div>
+                -->
+
+            </aside>
+            <!-- /Sidebar -->
+
+        </div>
+    </div>	<!-- /container -->
+
+
+    <footer id="footer" class="top-space">
+
+        <div class="footer1">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-6 widget">
+                        <h3 class="widget-title">Associated with</h3>
+                        <div class="widget-body">
+                            <!-- UA/DETI Logo -->
+                            <a href="https://www.ua.pt/deti/" target="_blank"><img src="assets/images/deti-ua.png" alt="UA/DETI Logo"></a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 widget">
+                        <h3 class="widget-title">In collaboration with</h3>
+                        <div class="widget-body">
+                            <!-- IT Logo -->
+                            <a href="https://www.it.pt/" target="_blank"><img src="assets/images/it-logo.png" alt="IT Logo"></a>
+                            <!-- Altice Labs Logo -->
+                            <a href="http://www.alticelabs.com/pt/" target="_blank"><img src="assets/images/AlticeLabs-logo-cinza.png" alt="Altice Labs Logo"></a>
+                        </div>
+                    </div>
+
+                </div> <!-- /row of widgets -->
+            </div>
+        </div>
+
+        <div class="footer2">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-md-6 widget">
+                        <div class="widget-body">
+                            <p class="simplenav">Project in Informatics Engineering - Computer and Telematics Engineering</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 widget">
+                        <div class="widget-body">
+                            <p class="text-right">
+                                Copyright &copy; 2017, IoT City. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a>
+                            </p>
+                        </div>
+                    </div>
+
+                </div> <!-- /row of widgets -->
+            </div>
+        </div>
+    </footer>
+
+
+
+
+
+    <!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+    <script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/headroom.min.js"></script>
+    <script src="assets/js/jQuery.headroom.min.js"></script>
+    <script src="assets/js/template.js"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="IoT City">
+	<meta name="author"      content="Sergey Pozhilov, Luís Leira, Diogo Ferreira">
+	
+	<title>IoT City > Architecture</title>
+
+	<link rel="shortcut icon" href="assets/images/icon.png">
+	
+	<link rel="stylesheet" media="screen" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets/css/main.css">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="index.html"><img src="assets/images/logo1.png" alt="IoT City logo"></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+					<li><a href="index.html">Home</a></li> <!-- Client area -->
+					<li><a href="about.html">How to use it</a></li> <!-- User area -->
+					<li class="dropdown"> <!-- Specification area -->
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Specifications<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="specifications-1.html">Features, system scenarios and use cases</a></li>
+							<li><a href="specifications-2.html">Requirements and tests</a></li>
+							<li class="active"><a href="specifications-3.html">Architecture</a></li>
+							<li><a href="specifications-4.html">Data model</a></li>
+							<li><a href="deliverables.html">Deliverables</a></li>
+						</ul>
+					</li>
+					<li><a href="developer.html">Developer area</a></li> <!-- Developer area -->
+					<li><a href="reports.html">Weekly reports</a></li> <!-- Team area -->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->
+
+	<header id="head" class="secondary"></header>
+
+	<!-- container -->
+	<div class="container">
+		
+		<ol class="breadcrumb">
+			<li><a href="index.html">Home</a></li>
+			<li class="active">Architecture</li>
+		</ol>
+
+		<div class="row">
+
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Architecture</h1>
+				</header>
+
+				<div class="header-inside" id="spec-3-1">
+					<h3>Architecture</h3>
+					<hr class="half-rule"/>
+					<p>&emsp;This section briefly describes the planned overall architecture of our solution. Our architecture is divided into 3 layers: <b>(1) Distributed data sources</b> (Data Generation Layer); <b>(2) IoT Platform</b> (Business Layer) and <b>(3) Applications</b> (Presentation Layer).</p>
+					<p>&emsp;The distributed data sources layer sends the data gathered from the city to the IoT Platform, that stores and analyses all the data received. The IoT Platform also has the modules "AAA" and "IoT City Monitors and Alarms", that connect to the Application Layer to provide the user a fully functional and robust system. The application layer presents all the features to the user in a friendly way, with three custom applications, targeted for different users.</p>
+					<br>
+					<div class="arch-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/archv2.png" alt="The architecture of our solution"><br><h6>The architecture of our solution. It has three layers: Distributed data sources (Data Generation Layer), IoT Platform (Business Layer) and Applications (Presentation Layer).</h6></div></div>
+					<br>
+					<p>&emsp;On the <b>“Distributed data sources"</b> layer, we have a set of sensors for each type of data (lighting, waste, temperature,...). These sensors will collect data from the environment and send to an aggregator. The aggregators will send the information to a gateway, which will be the point of contact with the broker in the “IoT Platform”.</p>
+					<p>&emsp;On the <b>“IoT Platform”</b>, the broker will receive the data from all the aggregators. The broker already exists in Altice Labs, and goes by the name of SmartIoT. SmartIoT is a platform that collects the data from the Altice Labs sensors that will be used in our project. The "AAA" module, where AAA stands for "Authentication, Authorization and Accounting" will be responsible for authenticate registered users. The "IoT City Monitors & Alarms" module will allow the user to add alerts to the data streams, with optional actuators defined. If any threshold is crossed, this module will notify the user and act accordingly. The module "IoT City Data Persistence" will store all the data from the IoT Platform. In some cases, it is also possible for the “IoT City Web App” to send information for the sensors (actuators). On that case, the information is sent to the SmartIoT broker, and then is sent to the sensor (actuator).</p><br>
+					<p>&emsp;On the <b>“Applications”</b> layer we have the web portal, the administrator portal and the mobile application. The web portal is the interface for the city manager to see the current state of the city. The web portal uses the AAA module to authenticate its users, and receives the data from the IoT City Data Persistence. It also can add, change or delete alarms, notes and chage the state of user reports. The Administrator portal has the capability of adding sensors, streams, users, groups of users, and to do other changes on the IoT City Data Persistence Module. The IoT City Mobile Application requires no authentication, and it communicates with the IoT City Data Persistence to gather the values from sensors and create user reports.</p>
+					
+				</div>
+				
+				<div class="header-inside" id="spec-3-2">
+					<h3>Components</h3>
+					<hr class="half-rule"/>
+					<p>&emsp;On this section we give an insight into each and every one of the components, explaining its main function and the external interface.</p>
+
+					<br><h4><b>Sensors</b></h4><br>
+					<p>&emsp;The main role of sensors is to collect data from the environment and send it to the aggregator. This can be done using a device driver (proprietary or open-source). The aggregator and the sensors are physically connected, so the communication can be done with a protocol like I2C or similar. Some sensors can also receive information and change its state according to the information (e.g. public illumination turned on/off).</p>
+
+					<br><h4><b>Aggregators</b></h4><br>
+					<p>&emsp;The aggregators gather metrics from one or more sensors and send it to the SmartIoT broker with a defined period. The communication must be made through a RESTful API and the sensor should be registered in SmartIoT platform with a device name and password. Each sensor must have a stream created for him to send data to the broker. The aggregator also has the functionality of receiving the commands from the SmartIoT and send it to the sensors that are actuators.</p>
+
+					<br><h4><b>SmartIoT</b></h4><br>
+					<p>&emsp;The SmartIoT broker is an Altice Labs component. It communicates through a RESTful API with other services and its main function is to be a message middleware between the aggregators and IoT City Platform. All the devices communicated with him must be registered. A device can create a stream and post data into it. Other devices can read the data from the streams allowed or receive the information in real-time from SmartIoT if provided a point of contact (URL).</p>
+
+					<br><h4><b>IoT City Monitors and Alarms</b></h4><br>
+					<p>&emsp;This component creates and manages the alarms created by each user for a stream. If an alarm is triggered, this component registers the occurrence and activates the actuator, if defined, sending the command to SmartIoT broker.</p>
+				 
+					<br><h4><b>IoT City Data Persistence</b></h4><br>
+					<p>&emsp;The IoT City Data Persistence saves all the information gathered by the system, including the sensors registered, its location, the streams, the values, the users and other information (see Data Model). Others components (IoT City Web Portal, IoT City Mobile App,  AAA, IoT City Monitors and Alarms) will interact immensely with the IoT City Data Persistence. Within a defined interval, this component will fetch data from the current streams on SmartIoT and save it.</p>
+
+					<br><h4><b>AAA</b></h4><br>
+					<p>&emsp;The AAA (authentication, authorization, accounting) component is an external module (due to security reasons) that registers and authenticates the users to the platform securely. It also saves the login history of each user. A user that is not authenticated cannot log in into the web portal, but can see the public streams in the mobile app.</p>
+
+					<br><h4><b>IoT City Mobile App</b></h4><br>
+					<p>&emsp;The IoT City Mobile App is a mobile application for android users to see the public streams (defined by the administrator), in real-time and history. It does not require authentication. The user can also report occurrences in the city that a city manager needs to solve. It will communicate with the component IoT City Data Persistence.</p>
+
+					<br><h4><b>IoT City Web Portal</b></h4><br>
+					<p>&emsp;The IoT City Web Portal is the web interface between the IoT City Platform and the registered users. It shows the metrics gathered from the allowed streams in real-time and history, allowing to correlate the metrics among them. It also allows the user to create notes, alarms and actuators, and change the state of the user reports. It will communicate with the components IoT City Data Persistence, AAA, IoT City Monitors & Alarms and IoT City Analytics.</p>
+
+					<br><h4><b>IoT City Administrator Portal</b></h4><br>
+					<p>&emsp;The IoT City Administrator Portal allows the administrators to add sensors, streams, users, groups of users and to do other changes in the IoT City Data Persistence. It is only available to users marked as "Staff Users". It communicates with the IoT City Data Persistence for fetching and changing data in the IoT Platform.</p>
+
+				</div>
+					
+				<div class="header-inside" id="spec-3-3">
+					<h3>Deployment</h3>
+					<hr class="half-rule"/>
+					<p>&emsp;On this section we explain the deployment of our system, with a diagram for better understanding of the reader.</p>
+					<br>
+					<div class="arch-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/deployment.png" alt="The deployment diagram of IoT City."><br><h6>The deployment diagram of IoT City.</h6></div></div>
+					<br>
+					<p>&emsp;Each sensor will be sending the data of the streams associated, through a REST API, to the SmartIoT WebService (artifact "DataSender" on the diagram). On the IoT City Web Server, the "DataReceiver" will fetch the data periodically from the SmartIoT WebService, also through a REST API, and it will save it on the IoT City Database. That Database will be accessed by the Web Portal, Administrator Portal and Mobile API.</p>
+					<p>&emsp;The client PC needs a web browser for accessing the Web Portal and the Administrator Portal, through Http. The Client Smartphone must have an Andriod operating system (4.0 or superior). It also must have the IoT City Mobile App, that will communicate with the Mobile API with a REST API.</p>
+				</div>
+				
+			</article>
+			<!-- /Article -->
+			
+			<!-- Sidebar -->
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<div id="sidebar" class="row widget affix">
+					<div class="col-xs-12">
+						<h4>Choose the topic you want to see</h4>
+						<ul class="list-unstyled list-spaces">
+							<li><a href="#spec-3-1">Architecture</a><br><span class="small text-muted">This section briefly describes the architecture of our solution.</span></li>
+							<li><a href="#spec-3-2">Components</a><br><span class="small text-muted">On this section we give an insight into each and<br>every one of our components, explaining its<br>main function and the interface with the exterior.</span></li>
+							<li><a href="#spec-3-3">Deployment</a><br><span class="small text-muted">On this section we explain the deployment of our system,<br>with a diagram for better understanding of the reader.</span></li>
+						</ul>
+					</div>
+				</div>
+				<!--
+				<div class="row widget">
+					<div class="col-xs-12">
+					</div>
+				</div>
+				-->
+
+			</aside>
+			<!-- /Sidebar -->
+
+		</div>
+	</div>	<!-- /container -->
+	
+
+	<footer id="footer" class="top-space">
+
+		<div class="footer1">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">Associated with</h3>
+						<div class="widget-body">
+							<!-- UA/DETI Logo -->
+							<a href="https://www.ua.pt/deti/" target="_blank"><img src="assets/images/deti-ua.png" alt="UA/DETI Logo"></a>
+						</div>
+					</div>
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">In collaboration with</h3>
+						<div class="widget-body">
+							<!-- IT Logo -->
+							<a href="https://www.it.pt/" target="_blank"><img src="assets/images/it-logo.png" alt="IT Logo"></a>
+							<!-- Altice Labs Logo -->
+							<a href="http://www.alticelabs.com/pt/" target="_blank"><img src="assets/images/AlticeLabs-logo-cinza.png" alt="Altice Labs Logo"></a>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav">Project in Informatics Engineering - Computer and Telematics Engineering</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Copyright &copy; 2017, IoT City. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+	</footer>
+		
+
+
+
+
+	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/headroom.min.js"></script>
+	<script src="assets/js/jQuery.headroom.min.js"></script>
+	<script src="assets/js/template.js"></script>
+</body>
+</html>

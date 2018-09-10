@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="IoT City">
+	<meta name="author"      content="Sergey Pozhilov, Luís Leira, Diogo Ferreira">
+	
+	<title>IoT City > Data model</title>
+
+	<link rel="shortcut icon" href="assets/images/icon.png">
+	
+	<link rel="stylesheet" media="screen" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets/css/main.css">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="index.html"><img src="assets/images/logo1.png" alt="IoT City logo"></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+					<li><a href="index.html">Home</a></li> <!-- Client area -->
+					<li><a href="about.html">How to use it</a></li> <!-- User area -->
+					<li class="dropdown"> <!-- Specification area -->
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Specifications<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="specifications-1.html">Features, system scenarios and use cases</a></li>
+							<li><a href="specifications-2.html">Requirements and tests</a></li>
+							<li><a href="specifications-3.html">Architecture</a></li>
+							<li class="active"><a href="specifications-4.html">Data model</a></li>
+							<li><a href="deliverables.html">Deliverables</a></li>
+						</ul>
+					</li>
+					<li><a href="developer.html">Developer area</a></li> <!-- Developer area -->
+					<li><a href="reports.html">Weekly reports</a></li> <!-- Team area -->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->
+
+	<header id="head" class="secondary"></header>
+
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="index.html">Home</a></li>
+			<li class="active">Data model</li>
+		</ol>
+
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Data model</h1>
+				</header>
+
+				<div class="header-inside" id="spec-4-1">
+					<h3>Data model</h3>
+					<hr class="half-rule"/>
+					This section describes the IoT City data model, with an explanation of its entities (according to a class diagram).<br><br>
+					<div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/dm.png" alt="IoT City Data Model"><br><h6>The IoT City Data Model.</h6></div></div><br>
+					<p>&emsp;The IoT City Data Model contains information about the <b>sensors</b> being used by the platform, as well as its <b>location</b>, status (active/inactive), the sensor type (temperature/air conditions/radiation/people counter/noise levels/lighting/waste management) and other information.</p><br>
+					<p>&emsp;Each sensor can have <b>subscriptions</b> associated. The subscriptions are the streams that will send data from the sensor to the platform. Each subscription can have a subtype (e.g. “Co2 level” or “Pressure level”) and a flag that indicates if it is working (if the server could not fetch any data from the broker, it will set working to “False”). The subscriptions can have <b>values</b> that will be gathered by the server when in contact with the broker.</p><br>
+					<p>&emsp;All <b>users</b> will be registered on the platform with personal information (username, email, password). Each user can have <b>notes</b>, defined by a name, start and end date. It is also possible to define <b>alarms or rules</b> for each user, the subscription associated, the threshold value and the dates that the alarm is active. An <b>actuator</b> can be triggered by an alarm (e.g. “Every day, since 7 p.m. until 7 a.m., turn on all public illumination”).</p><br>
+					<p>&emsp;The user does not have access to any subscription by default. Instead, the administrator has the possibility to create <b>groups</b> to aggregate subscriptions and each user is only authorized to access the subscriptions that are associated to their groups. Finally, it is possible to the mobile user to <b>report</b> occurrences in the city for the city manager to resolve, indicating the title of the report, the user name, the user e-mail and the attachments to send to the server.</p>
+
+				</div>
+				
+			</article>
+			<!-- /Article -->
+			
+			<!-- Sidebar -->
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<div id="sidebar" class="row widget affix">
+					<div class="col-xs-12">
+						<h4>Choose the topic you want to see</h4>
+						<ul class="list-unstyled list-spaces">
+							<li><a href="#spec-4-1">Data model</a><br><span class="small text-muted">This section describes the IoT City data model, with an<br>explanation of its entities (according to a class diagram).</span></li>
+						</ul>
+					</div>
+				</div>
+
+			</aside>
+			<!-- /Sidebar -->
+
+		</div>
+	</div>	<!-- /container -->
+	
+
+	<footer id="footer" class="top-space">
+
+		<div class="footer1">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">Associated with</h3>
+						<div class="widget-body">
+							<!-- UA/DETI Logo -->
+							<a href="https://www.ua.pt/deti/" target="_blank"><img src="assets/images/deti-ua.png" alt="UA/DETI Logo"></a>
+						</div>
+					</div>
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">In collaboration with</h3>
+						<div class="widget-body">
+							<!-- IT Logo -->
+							<a href="https://www.it.pt/" target="_blank"><img src="assets/images/it-logo.png" alt="IT Logo"></a>
+							<!-- Altice Labs Logo -->
+							<a href="http://www.alticelabs.com/pt/" target="_blank"><img src="assets/images/AlticeLabs-logo-cinza.png" alt="Altice Labs Logo"></a>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav">Project in Informatics Engineering - Computer and Telematics Engineering</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Copyright &copy; 2017, IoT City. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+	</footer>
+		
+
+
+
+
+	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/headroom.min.js"></script>
+	<script src="assets/js/jQuery.headroom.min.js"></script>
+	<script src="assets/js/template.js"></script>
+</body>
+</html>

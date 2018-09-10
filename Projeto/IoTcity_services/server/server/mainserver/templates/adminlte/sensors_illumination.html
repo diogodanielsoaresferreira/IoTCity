@@ -1,0 +1,2833 @@
+{% extends 'adminlte/sensor_details.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		{{ type }}
+		<small>Sensor {{id}} details</small>
+		<input type="checkbox" class="sensor_toggle" id="{{id}}" data-toggle="toggle" data-on="Sensor On" data-off="Sensor Off" data-onstyle="primary" data-offstyle="default" 
+		{% if turned_on %}
+			checked
+		{%endif%}
+		>
+	</h1>
+	<ol class="breadcrumb">
+		<li class="active"><a href="/lighting"><i class="fa "></i> Lighting</a>  <a href="/sensors/details/{{ id }}"></a></li>
+	</ol>
+</section>
+
+
+{% endblock %}
+
+{% block content %}
+
+<div class="modal fade" id="changeReportState" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Change report state</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to change the state of the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="changeReportStateButton">Change state</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel5">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="changeReportSeen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Change report state</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to change the state of the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="changeReportStateButton2">Change state</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel8">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Modal for information about a triggered alert -->
+<div class="modal fade" id="taInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span id="ta_name"></span></h4>
+      </div>
+      <div class="modal-body">
+        <p>Was active from <span id="ta_start_date"></span> to <span id="ta_end_date"></span>.</p>
+        <br>
+        <p><b>Streams names</b></p>
+        <div id="ta_sen_name"></div>
+        <br>
+        <p><b>Sensors names</b></p>
+        <div id="ta_sub_name"></div>
+        <br>
+        <p><b>Sensors types</b></p>
+        <div id="ta_SenType"></div>
+        <br>
+        <div id="ta_threshold"></div>
+        <br>
+        <p><span id="ta_peak"></span></p>
+        <p>Alert is active from <span id="ta_hours_act"></span> to <span id="ta_hours_end"></span>, <span id="ta_daysWeek"></span></p>
+        <br>
+        <p><b>State</b></p>
+        <div id="ta_activestate"></div>
+        <br>
+        <p><b>Activity state</b></p>
+        <div id="ta_state"></div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="sendValue" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Send Value to actuator</h4>
+			</div>
+
+			<div class="modal-body" id="contentSendValue">
+				<div class="form-group">
+					<div class="range-slider">
+					  <label for="usr">Value:</label>
+					  <input id="val" class="range-slider__range" type="range" value="50" min="0" max="100">
+					  <span class="range-slider__value">0</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="submit" value="Submit" class="btn btn-primary" id="sendValueButton">Send value</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="sendValueCancel">Cancel</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<div class="modal fade" id="deleteReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete report</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteReportButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteRule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete rule</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the rule?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteRuleButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel3">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal for information about a Alarm -->
+<div class="modal fade" id="alarmInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     	<div class="modal-header">
+        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       		<h4 class="modal-title" id="myModalLabel"><span id="a_name"></span></h4>
+        </div>
+		<div class="modal-body">
+			<p>Active from <span id="a_start_date"></span> to <span id="a_end_date"></span>.</p>
+			<br>
+			<p><b>Streams associated</b></p>
+			<div id="a_subscription_name"></div>
+			<br>
+			<p><b>Sensors associated</b></p>
+			<div id="a_sen_name"></div>
+			<br>
+			<p><b>Sensors types</b></p>
+			<div id="a_sen_type"></div>
+			<br>
+			<div id="a_threshold"></div>
+			<br>
+			<p>Alert is active from <span id="a_hours_beg"></span> to <span id="a_hours_end"></span>, <span id="a_daysOfWeek"></span></p>
+			<br>
+			<span id="actVis"><b>Actuators associated</b></span><span id="actuators"></span>
+		</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for information about a Rule -->
+<div class="modal fade" id="ruleInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     	<div class="modal-header">
+        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+       		<h4 class="modal-title" id="myModalLabel"><span id="r_name"></span></h4>
+        </div>
+		<div class="modal-body">
+			<p><b>Actuators associated </b></p>
+			<p><span id="actuators"></span><br></p>
+
+			<p><b>Beginning date</b></p>
+			<p><span id="r_start_date"></span><br></p>
+
+			<p><b>End date</b></p>
+			<p><span id="r_end_date"></span><br></p>
+
+			<p><b>Days of Week Active</b></p>
+			<p><span id="r_daysOfWeek"></span><br></p>
+			
+			<p><b>Hour to trigger rule</b></p>
+			<p><span id="r_hours_beg"></span><br></p>
+			
+		</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addActuatorModal2" role="dialog">
+	<div class="modal-dialog">
+		
+		<div class="modal-content">
+			<form id="actform2" action="/addActuator/" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add actuator to rule</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if actform2.errors %}
+					<p style="color: red;">
+						Please correct the error{{ actform2.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					
+
+					<div class="field">
+						{{ actform2.streams.errors }}
+						<label for="id_max" class="tooltip-test" title="Select streams to actuate over." style="font-size:16px;">* Select actuator</label> 
+						{{ actform2.streams }}
+						<p class="helptext">Select streams to actuate over.</p><br><br>
+					</div>
+
+
+					<div class="field">
+						{{ actform2.value.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the value to be sent to the streams.">* Value </label> 
+						{{ actform2.value }}
+						<p class="helptext">Select the value to be sent to the streams.</p><br><br>
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="submit" value="Submit" class="btn btn-primary">Add actuator</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+
+<div class="modal fade" id="addActuatorModal" role="dialog">
+	<div class="modal-dialog">
+		
+		<div class="modal-content">
+			<form id="actform" action="/addActuator/" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add actuator to alert</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if actform.errors %}
+					<p style="color: red;">
+						Please correct the error{{ actform.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					
+
+					<div class="field">
+						{{ actform.streams.errors }}
+						<label for="id_max" class="tooltip-test" title="Select streams to actuate over." style="font-size:16px;">* Select actuator</label> 
+						{{ actform.streams }}
+						<p class="helptext">Select streams to actuate over.</p><br><br>
+					</div>
+
+					<div class="field">
+						{{ actform.value.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the value to be sent to the streams.">* Value </label> 
+						{{ actform.value }}
+						<p class="helptext">Select the value to be sent to the streams.</p><br><br>
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="submit" value="Submit" class="btn btn-primary">Add actuator</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+
+
+<div class="modal fade" id="changeAlertState" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Change alert state</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to change the state of the alert?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="changeAlertStateButton">Change state</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel7">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete alert</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the alert?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteAlertButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel3">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteTriggAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete triggered alert</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the triggered alert?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteTriggAlertButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel3">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form action="" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add alert</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if form.errors %}
+					<p style="color: red;">
+						Please correct the error{{ form.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					<div class="field">
+						{{ form.name.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the name for the alarm">* Name</label> 
+						{{ form.name }}
+						<p class="helptext">Select the name for the alarm</p><br><br>
+					</div>
+					<div class="field">
+						{{ form.subscriptions.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the streams that will trigger the alarm">* Streams</label> 
+						{{ form.subscriptions }}
+						<p class="helptext">Select the streams that will trigger add the alarm</p><br><br>
+					</div>
+					<div class="field" id="maxminthreshold">
+						{{ form.type_alarm.errors }}
+						<label for="id_max" class="tooltip-test" title="Select if threshold applies to maximum value. Leave unchecked if threshold applies to minimum value">* Type of alarm</label> 
+						{{ form.type_alarm}}
+						<p class="helptext">Select if threshold applies to maximum value or minimum value.</p><br><br>
+					</div>
+					<div class="field" id="threshold">
+
+						{{ form.threshold.errors }}
+						<label for="id_threshold" class="tooltip-test" title="Choose the desired threshold value for the alarm trigger">* Threshold</label>
+						<p class="helptext">Choose the desired threshold value for the alarm trigger (ex: 20.4)</p>
+						{{ form.threshold }}
+						{{ form.max.errors }}<br><br>
+
+					</div>
+					<div class="field">
+						<label for="id_max" class="tooltip-test" title="Unselect the days of week when the alarm is turned off">Days of week</label>
+						<div class="weekDays-selector">
+							{{ form.mo }}
+							<label for="weekday-mon">Monday</label>
+							{{ form.tu }}
+							<label for="weekday-tue">Tuesday</label>
+							{{ form.we }}
+							<label for="weekday-wed">Wednesday</label>
+							{{ form.th }}
+							<label for="weekday-thu">Thursday</label>
+							{{ form.fr }}
+							<label for="weekday-fri">Friday</label>
+							{{ form.sa }}
+							<label for="weekday-sat">Saturday</label>
+							{{ form.su }}
+							<label for="weekday-sun">Sunday</label>
+						</div>
+						<p class="helptext">Unselect the days of week when the alarm is turned off. If no day is selected, the alarm will be applied to all of them.</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.beg_date.errors }}
+						{{ form.beg_hour.errors }}
+						{{ form.beg_min.errors }}
+						<label for="id_max" class="tooltip-test" title="Select day to turn on alert (ex: November/12/2019 20:00)">* Turn on alert date </label> 
+						{{ form.beg_date}} <br>at {{ form.beg_hour }}:{{ form.beg_min }}
+						<p class="helptext">Select date to turn on alert (ex: November/12/2019 20:00)</p><br><br>
+					</div>
+					<div class="field">
+						{{ form.end_date.errors }}
+						{{ form.beg_min.errors }}
+						{{ form.beg_hour.errors }}
+						<label for="id_max" class="tooltip-test" title="Select day to turn off alarm (ex: November/12/2019 20:00)">* Turn off alert date </label>  {{ form.end_date }} <br>at  {{ form.end_hour }}:{{ form.end_min }}
+
+						<p class="helptext">Select date to turn off alarm (ex: November/12/2019 20:00)</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.hours_active_beg.errors }}
+						{{ form.minutes_active_beg.errors }}
+						<label for="id_max" class="tooltip-test" title="Hour to turn on the alarm (ex: 20:03).">* Turn on at  </label> 
+						{{ form.hours_active_beg }} : {{form.minutes_active_beg}}
+						<p class="helptext">Hour to turn on the alarm (ex: 20:03).</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.hours_active_end.errors }}
+						{{ form.minutes_active_end.errors }}
+						<label for="id_max" class="tooltip-test" title="Hour to turn off the alarm (ex: 8:00). If it is lower that hour to turn on the alarm, will be set for next day.">* Turn off at  </label> 
+						{{ form.hours_active_end }} : {{form.minutes_active_end}}
+						<p class="helptext">Hour to turn off the alarm (ex: 8:00). If it is earlier that time to turn on the alarm, will be set for next day.</p><br><br>
+
+
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="submit" value="Submit" class="btn btn-primary">Add alert</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+
+<div class="modal fade" id="addRuleModal" role="dialog">
+	<div class="modal-dialog">
+		
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form action="" id="ruleform" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add rule</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if ruleform.errors %}
+					<p style="color: red;">
+						Please correct the error{{ ruleform.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					<div class="field">
+						{{ ruleform.name.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the name for the rule">* Name</label> 
+						{{ ruleform.name }}
+						<p class="helptext">Select the name for the rule</p><br><br>
+					</div>
+					
+					<div class="field">
+						<label for="id_max" class="tooltip-test" title="Unselect the days of week when the rule is turned off">Days of week</label>
+						<div class="weekDays-selector">
+							{{ ruleform.mo }}
+							<label for="weekday-mon2">Monday</label>
+							{{ ruleform.tu }}
+							<label for="weekday-tue2">Tuesday</label>
+							{{ ruleform.we }}
+							<label for="weekday-wed2">Wednesday</label>
+							{{ ruleform.th }}
+							<label for="weekday-thu2">Thursday</label>
+							{{ ruleform.fr }}
+							<label for="weekday-fri2">Friday</label>
+							{{ ruleform.sa }}
+							<label for="weekday-sat2">Saturday</label>
+							{{ ruleform.su }}
+							<label for="weekday-sun2">Sunday</label>
+						</div>
+						<p class="helptext">Select the days of week when the rule is turned on. If no day is selected, the rule will be applied to all of them.</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ ruleform.beg_date.errors }}
+						{{ ruleform.beg_hour.errors }}
+						{{ ruleform.beg_min.errors }}
+						<label for="id_max" class="tooltip-test" title="Select day to turn on rule (ex: November/12/2019 20:00)">* Turn on rule date </label> 
+						{{ ruleform.beg_date}} <br>at {{ ruleform.beg_hour }}:{{ form.beg_min }}
+						<p class="helptext">Select date to turn on rule (ex: November/12/2019 20:00)</p><br><br>
+					</div>
+					<div class="field">
+						{{ ruleform.end_date.errors }}
+						{{ ruleform.beg_min.errors }}
+						{{ ruleform.beg_hour.errors }}
+						<label for="id_max" class="tooltip-test" title="Select day to turn off rule (ex: November/12/2019 20:00)">* Turn off rule date </label>  {{ ruleform.end_date }} <br>at  {{ ruleform.end_hour }}:{{ form.end_min }}
+
+						<p class="helptext">Select date to turn off rule (ex: November/12/2019 20:00)</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ ruleform.hours_active_beg.errors }}
+						{{ ruleform.minutes_active_beg.errors }}
+						<label for="id_max" class="tooltip-test" title="Hour to trigger the rule (ex: 20:03).">* Trigger everyday at </label> 
+						{{ form.hours_active_beg }} : {{ruleform.minutes_active_beg}}
+						<p class="helptext">Hour to turn on the rule (ex: 20:03).</p><br><br>
+					</div>
+					
+
+					<div class="field">
+						{{ ruleform.streams.errors }}
+						<label for="id_max" class="tooltip-test" title="Select streams to actuate over.">* Select actuator</label> 
+						{{ ruleform.streams }}
+						<p class="helptext">Select streams to actuate over.</p><br><br>
+					</div>
+
+					<div class="field">
+						{{ ruleform.value.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the value to be sent to the streams.">* Value </label> 
+						{{ ruleform.value }}
+						<p class="helptext">Select the value to be sent to the streams.</p><br><br>
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="submit" value="Submit" class="btn btn-primary">Add rule</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+
+
+
+
+<!-- Main content -->
+		<!-- Modal -->
+		<div class="alert error">
+			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+		</div>
+		<div class="alert success">
+			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+		</div>
+		<div class="row">
+			<!-- Map -->
+			<div class="col-md-4">
+				<div class="box box-primary">
+					<div class="box-header">
+						<h3 class="box-title">Location</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div id="map" style="height: 400px; width: 100%;"></div>	
+					</div>
+					<!-- /.box-body-->
+				</div>
+				<!-- /.box -->
+			</div>
+
+			<!-- Subscriptions -->
+			<div class="col-md-8">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">Streams</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+						<div class="box-body">
+							<table class="table table-bordered table-striped results">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Name</th>
+										<th>Registration date</th>
+										<th>Subtype</th>
+										<th>Is it working?</th>
+										<th>Is an actuator?</th>
+										<th>Send values</th>
+									</tr>
+									<tr class="warning no-result">
+										<td colspan="5"><i class="fa fa-warning"></i> No result</td>
+									</tr>
+								</thead>
+								<tbody>
+									{% for sub in subscriptions %}
+									<tr>
+										<td>{{ sub.id }}</td>
+										<td>{{ sub.name }}</td>
+										<td>{{ sub.date }}</td>
+										<td>{{ sub.subtype }}</td>
+
+										{% if sub.working %}
+											<td><span class="label label-success">Yes</span></td>
+										{% else %}
+											<td><span class="label label-danger">No</span></td>
+										{% endif %}
+
+										{% if sub.sender %}
+											<td><span class="label label-success">Yes</span></td>
+											<td><button href="#" class="btn btn-sm btn-primary" onclick="send_value(&quot;{{ sub.id}}&quot;);"><span class="glyphicon glyphicon-cloud-upload"></span> Send</button></td>
+										{% else %}
+											<td><span class="label label-danger">No</span></td>
+											<td><button class="btn btn-sm btn-primary" disabled="disabled" data-toggle="tooltip" title="You can only send values to actuators"><span class="glyphicon glyphicon-cloud-upload"></span> Send</button></td>
+										{% endif %}
+
+
+										
+									</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+
+		<div class="row">
+			
+			<!--  -->
+			<div class="col-md-6">
+				<div class="box box-default">
+					<div class="box-header with-border">
+						<h3 class="box-title">Lighting values</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="chart">
+							<div id="containerlig"></div>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+
+			<!--  -->
+			<div class="col-md-6">
+				<div class="box box-default">
+					<div class="box-header with-border">
+						<h3 class="box-title">Actuator values sent</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="chart">
+							<div id="containeract"></div>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+		</div>
+
+		
+		<div class="row">
+			<div class="col-md-12">
+			  <!-- Alerts / Rules -->
+			   <div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Alerts {% if has_senders %} & Rules {% endif %}</h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="nav-tabs-custom">
+			            <ul class="nav nav-tabs">
+							<li class="active"><a href="#tab_1-1" data-toggle="tab" aria-expanded="true">Configured alerts</a></li>
+							<li class=""><a href="#tab_2-2" data-toggle="tab" aria-expanded="false">Triggered alerts</a></li>
+							{% if has_senders %}
+							<li class=""><a href="#tab_3-3" data-toggle="tab" aria-expanded="false">Rules</a></li>
+							{% endif %}
+			            </ul>
+			            <div class="tab-content">
+							<div class="tab-pane fade in active" id="tab_1-1">
+								<div class="table-responsive">
+									<table class="table table-bordered table-striped results" id="lightingActiveTable">
+										<thead>
+											<tr>
+												<th>Alert name</th>
+												<th>Stream name</th>
+												<th>Threshold (type)</th>
+												<th>Alert lifetime</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for alert in alerts %}
+											<tr id="alert_{{alert.id}}">
+												<td> <a href="/alerts/details/{{alert.id}}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view more <br> information about the alert">{{ alert.name }}</a></td>
+												<td>{{ alert.subscription_name }}</td>
+												{% if alert.threshold != None %}
+									                {% if alert.type_alarm != None %}
+									                	<td>{{ alert.threshold }} ( {{ alert.type_alarm}} )</td>
+									            	{% else %}
+									              		<td>-</td>
+									                {% endif %}
+									            {% else %}
+									            	<td>-</td>
+									            {% endif %}
+												<td><span style="display:none;">{{alert.beg_date|date:"YmdHi"}}</span>{{ alert.beg_date }} to {{alert.end_date}}</td>
+												<td>
+													<div class="btn-group">
+														<div style="display: inline-block;">
+															<button class="btn btn-sm btn-primary" onclick="add_actuator({{alert.id}});""><span class="glyphicon glyphicon-cloud-upload"></span> Add actuator</button>
+															
+														</div>
+														<div style="display: inline-block;">
+															<button class="btn btn-sm btn-info" type="button" onclick="show_alarm({{alert.id}});"><i class="glyphicon glyphicon-search"></i> Quick view</button>
+														</div>
+														<div style="display: inline-block;">
+															<button class="btn btn-sm btn-default" type="button" onclick="delete_alert({{alert.id}});"><i class="glyphicon glyphicon-remove"></i></a></a></button>
+														</div>
+													</div>
+												</td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>	
+							</div>
+							<div class="tab-pane fade" id="tab_2-2">
+					        	<div class="table-responsive">
+			                		<table class="table table-bordered table-striped results" id="lightingTriggeredTable">
+										<thead>
+										<tr>
+											<th>Name</th>
+											<th>Peak value date</th>
+											<th>Threshold (type)</th>
+											<th>Activity state</th>
+											<th>Action</th>
+										</tr>
+										</thead>
+										<tbody>
+											{% for occurrence in triggered_alerts %}
+											<tr id="triggered_alert_{{occurrence.id}}">
+												<td><a href="/alerts/details/{{occurrence.alert_id}}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view more <br> information about the alert">{{ occurrence.name }}</a></td>
+
+												{% if occurrence.peak_date != None %}	
+												    <td><span style="display:none;">{{occurrence.peak_date|date:"YmdHi"}}</span>{{ occurrence.peak_date }} </td>
+												{% else %}
+												   	<td>-</td>
+												{% endif %}
+
+												{% if occurrence.threshold != None %}
+												    {% if occurrence.maximum_minimum != None %}
+												    	<td>{{ occurrence.threshold }} ({{ occurrence.maximum_minimum}} )</td>
+													{% else %}
+												  		<td>-</td>
+												    {% endif %}
+												{% else %}
+													<td>-</td>
+												{% endif %}
+
+												{% if occurrence.state == "Active" %}
+													<td> {{ occurrence.state }}</td>
+												{% else %}
+													<td> Inactive</td>
+												{% endif %}
+												<td>
+													<div class="btn-group">
+														<div style="display: inline-block;">
+															<button class="btn btn-sm btn-info" type="button" onclick="show_talarm({{occurrence.id}})"><i class="glyphicon glyphicon-search"></i> Quick view</button>
+														</div>
+														<div style="display: inline-block;">
+															<button class="btn btn-sm btn-default" title="Delete triggered alert" type="button" onclick="delete_triggAlert({{occurrence.id}});"><i class="glyphicon glyphicon-remove"></i></a></button>
+														</div>
+													</div>
+												</td>
+											</tr>
+	                  						{% endfor %}
+	                  					</tbody>
+	                				</table>
+	              				</div>
+	            			</div>
+	            			{% if has_senders %}
+	            			<!-- /.box-body -->
+	            			<div class="tab-pane fade" id="tab_3-3">
+		              			<div class="table-responsive">
+			                		<table class="table no-margin table-hover table-striped" id="lightingRuleTable">
+			                  			<thead>
+			                  				<tr>
+			                    				<th>Name</th>
+			                    				<th>Streams name</th>
+			                    				<th>Rule lifetime</th>
+			                    				<th>Actions</th>
+			                 				</tr>
+			                  			</thead>
+			                  			<tbody>
+			                  				{% for rule in rules%}
+			                  					<tr id="rule_{{rule.id}}">
+			                  						<td><a href="/rules/details/{{rule.id}}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view more <br> information about the rule">{{ rule.name }}</a></td>
+			                  						<td> {{rule.subscription_name}} </td>
+			                  						<td><span style="display:none;">{{rule.beg_date|date:"YmdHi"}}</span>{{rule.beg_date}} to {{rule.end_date}} </td>
+			                  						<td>
+														<div class="btn-group">
+															<div style="display: inline-block;">
+																<button class="btn btn-sm btn-primary" onclick="add_actuator2({{rule.id}});""><span class="glyphicon glyphicon-cloud-upload"></span> Add actuator</button>
+															</div>
+															<div style="display: inline-block;">
+																<button class="btn btn-sm btn-info" onclick="show_rule( {{rule.id}} );"><i class="glyphicon glyphicon-search"></i> Quick view</button>
+															</div>
+															<div style="display: inline-block;">
+																<button class="btn btn-sm btn-default" type="button" onclick="delete_rule({{rule.id}});"><i class="glyphicon glyphicon-remove"></i></a></a></button>
+															</div>
+														</div>
+													</td>
+			                  					</tr>
+			                  				{% endfor %}
+			                  			</tbody>
+			                		</table>
+			              		</div>
+			              		<!-- /.table-responsive -->
+		              		</div>
+		              		{% endif %}
+	        			</div>
+						<!-- /.box -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+      			<!-- TABLE: Last occurrencies -->
+	          <div class="box box-info">
+	            <div class="box-header with-border">
+	              <h3 class="box-title">User reports</h3>
+
+	              <div class="box-tools pull-right">
+	                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+	                </button>
+	              </div>
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body">
+	              <div class="mailbox-controls">
+	              	<!-- Show all -->
+	              	<button type="button" class="btn btn-default btn-sm" id="allButton" onclick="showAll()"><i class="fa fa-th-list"></i> All</button>
+ 
+	                <div class="btn-group">
+	                  	<button type="button" class="btn btn-default btn-sm" id="seenButton" onclick="showSeen()"><i class="fa fa-eye"></i> Seen</button>
+	                  	<button type="button" class="btn btn-default btn-sm" id="notSeenButton" onclick="showNotSeen()"><i class="fa fa-eye-slash"></i> Not seen</button>
+	                </div>
+	                <div class="btn-group">
+	                	<button type="button" class="btn btn-default btn-sm" id="waitingButton" onclick="showWaiting()"><i class="fa fa-hourglass-start"></i> Waiting</button>
+	                	<button type="button" class="btn btn-default btn-sm" id="workingButton" onclick="showWorking()"><i class="fa fa-cogs"></i> Working on</button>
+	                  	<button type="button" class="btn btn-default btn-sm" id="solvedButton" onclick="showSolved()"><i class="fa fa-check-circle"></i> Solved</button>
+	                </div>
+
+	                <!-- /.btn-group -->
+	              </div>
+	              <div class="table-responsive mailbox-messages">
+	                <table class="table table-bordered table-striped results" id="lightingReportsTable">
+	                  <thead>
+	                  <tr>
+	                    <th>Subject</th>
+	                    <th>Stream</th>
+	                    <th>Date</th>
+	                    <th>User</th>
+	                    <th>Working state</th>
+	                    <th>Actions</th>
+	                  </tr>
+	                  </thead>
+	                  <tbody>
+	                  {% for occurrence in reports %}
+	                  <tr id="rep_{{occurrence.id}}">
+
+	                  	{% if occurrence.state == "Not Seen" %}
+	                  		<!--<i class="fa fa-eye-slash"></i>-->
+	                  		<script>
+	                  			document.getElementById('rep_{{ occurrence.id }}').className += ' NotSeen';
+	                  		</script>
+	                  	{% else %}
+	                  		<!--<i class="fa fa-eye"></i>-->
+	                  		<script>
+	                  			document.getElementById('rep_{{ occurrence.id }}').className += ' Seen';
+	                  		</script>
+	                  	{% endif %}
+	                  	 {% if occurrence.working_state == "Waiting" %}
+	                    	<script>
+	                  			document.getElementById('rep_{{ occurrence.id }}').className += ' Waiting';
+	                  		</script>
+	                    {% elif occurrence.working_state == "Working On" %}
+	                    	<script>
+	                  			document.getElementById('rep_{{ occurrence.id }}').className += ' Working';
+	                  		</script>
+	                    {% elif occurrence.working_state == "Solved" %}
+	                    	<script>
+	                  			document.getElementById('rep_{{ occurrence.id }}').className += ' Solved';
+	                  		</script>
+	                    {% else %}
+	                    	{{ occurrence.working_state }}
+	                    {% endif %}
+
+	                    <td><a href="/reports/read/id={{occurrence.id}}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view more <br> information about the report">{{ occurrence.title }}</a></td>
+	                    <td>{{ occurrence.stream }}</td>
+	                    <td style="min-width:100px"><span style="display:none;">{{occurrence.date|date:"YmdHi"}}</span>{{ occurrence.date }}</td>
+	                    <td style="word-wrap: break-word; max-width: 150px;">
+		                    {% if occurrence.name != None %}
+		                    	{{ occurrence.name }}
+		                   	{% else %}
+		                   		-
+		                   	{% endif %}
+		                   	<br>
+		                   	<small>
+		                    {% if occurrence.email != None %}
+		                    	{{ occurrence.email }}
+		                   	{% else %}
+		                   		-
+		                   	{% endif %}
+		                   	</small>
+	                    </td>
+	                    <td>
+		                    <div class="dropdown">
+								<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+									{% if occurrence.working_state == "Waiting" %}
+									<label id="dropdown2_title_{{occurrence.id}}" class="WA">
+										<i class="fa fa-hourglass-start"></i> Waiting
+									</label>
+									{% elif occurrence.working_state == "Working On" %}
+									<label id="dropdown2_title_{{occurrence.id}}" class="WI">
+										<i class="fa fa-cogs"></i> Working on
+									</label>
+									{% elif occurrence.working_state == "Solved" %}
+									<label id="dropdown2_title_{{occurrence.id}}" class="SO">
+										<i class="fa fa-check-circle"></i> Solved
+									</label>
+									{% else %}
+										-
+									{% endif %}
+
+									<span class="caret" ></span>
+								</button>
+								<ul class="dropdown-menu" id="options2" aria-labelledby="dropdownMenu2">
+								  	<li onclick="drop_report_changed({{occurrence.id}}, this);" class="WA"><i class="fa fa-hourglass-start"></i> Waiting</li>
+									<li onclick="drop_report_changed({{occurrence.id}}, this);" class="WI"><i class="fa fa-cogs"></i> Working on</li>
+								    <li onclick="drop_report_changed({{occurrence.id}}, this);" class="SO"><i class="fa fa-check-circle"></i> Solved</li>
+
+								</ul>
+							</div>
+	                    </td>
+	                    <td><button class="btn btn-sm btn-default" type="button" onclick="delete_report({{occurrence.id}});"><i class="glyphicon glyphicon-remove"></i></a></td>
+	                  </tr>
+	                  {% endfor %}
+	                  </tbody>
+	                </table>
+	              </div>
+	              <!-- /.table-responsive -->
+	            </div>
+	            <!-- /.box-body -->
+	            <div class="box-footer clearfix">
+
+	            </div>
+	            <!-- /.box-footer -->
+	          </div>
+	          <!-- /.box -->
+      		</div>
+	</div>
+	
+	<div class="row">
+			<div class="col-md-12">
+				<div class="box box-info">
+					<div class="box-header with-border">
+						<h3 class="box-title">User reports by day</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="chart">
+							<div id="containerreports"></div>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+		</div>
+
+		<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Sensor changed state</span></button>
+					</div>
+					<div class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="change"></button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	<!-- /.content -->
+
+
+{% endblock %}
+
+{% block jspage %}
+
+
+	<!-- Maps -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqpWDakNAEswg5ZOBHnS4jGBu5lgj8WD0"></script>
+
+	{% load static %}
+	<script defer src="{% static "admin-lte/dist/js/oms.min.js" %}"></script>
+	<script defer src="{% static "info_bubble/infobubble.js" %}"></script>
+	<script src="https://code.highcharts.com/stock/highstock.js"></script>
+	<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
+	<script type="text/javascript">
+	$('#lightinglink').addClass('active');
+
+	$(document).ready(function(){
+	    $('a[data-toggle="tooltip"]').tooltip();   
+	});
+
+	$('[rel=tooltip]').tooltip({container: 'body'});
+
+
+	var rangeSlider = function(){
+	  var slider = $('.range-slider'),
+	      range = $('.range-slider__range'),
+	      value = $('.range-slider__value');
+	    
+	  slider.each(function(){
+
+	    value.each(function(){
+	      var value = $(this).prev().attr('value');
+	      $(this).html(value);
+	    });
+
+	    range.on('input', function(){
+	      $(this).next(value).html(this.value);
+	    });
+	  });
+	};
+
+	
+
+	loaded = false;
+	loaded1 = false;
+	$(document).ready(function(){
+		rangeSlider();
+	    $('#lightingActiveTable').DataTable( {
+	    	'fnDrawCallback': function (oSettings) {
+				if(!loaded){
+					$('.dataTables_filter').append(' <button type="button" class="btn btn-default btn-flat" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add alert</button>');
+					loaded = !loaded;
+				}
+			},
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers",
+	    	order: [[ 3, "desc" ]]
+		} );
+
+		$('#lightingTriggeredTable').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers",
+	    	order: [[ 1, "desc" ]]
+		} );
+
+		$('#lightingRuleTable').DataTable( {
+			'fnDrawCallback': function (oSettings) {
+				if(!loaded1){
+					$('#lightingRuleTable_filter').append(' <button type="button" class="btn btn-default btn-flat" onclick="add_rule();"><i class="fa fa-plus"></i> Add rule</button>');
+					loaded1 = !loaded1;
+				}
+			},
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers",
+	    	order: [[ 2, "desc" ]]
+		} );
+
+		$('#lightingReportsTable').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers",
+	    	order: [[ 2, "desc" ]]
+		} );
+	});
+
+	function add_rule(){
+		document.getElementById("ruleform").action = window.location.href+"/addRule";
+		$('#addRuleModal').modal('show');
+
+	}
+	
+
+	// Get all elements with class="closebtn"
+	var close = document.getElementsByClassName("closebtn");
+	var i;
+
+
+	// Loop through all close buttons
+	for (i = 0; i < close.length; i++) {
+
+	    // When someone clicks on a close button
+	    close[i].onclick = function(){
+
+	        // Get the parent of <span class="closebtn"> (<div class="alert">)
+	        var div = this.parentElement;
+
+	        // Set the opacity of div to 0 (transparent)
+	        div.style.opacity = "0";
+
+	        // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+	        setTimeout(function(){ div.style.display = "none"; }, 600);
+	    }
+	}
+
+	temp = []
+	lchecked = false;
+
+	/* Create map */
+	function initMap() {
+		// Define bounds of map
+		bounds = new google.maps.LatLngBounds();
+
+
+		var map = new google.maps.Map(document.getElementById('map'), {mapTypeId: 'satellite',
+			center: {lat: parseFloat('{{ lat|escapejs }}'), lng: parseFloat('{{ lon|escapejs }}')},
+			zoom: 14,
+		});
+
+		var oms = new OverlappingMarkerSpiderfier(map);
+
+		infoBubble = new InfoBubble({
+				map: map,
+				shadowStyle: 1,
+				padding: 10,
+				borderRadius: 20,
+				arrowSize: 10,
+				borderWidth: 1,
+				disableAutoPan: true,
+				hideCloseButton: false,
+				arrowPosition: 30,
+				arrowStyle: 2,
+				width: 500 ,
+				height: 250 ,
+				backgroundColor: '#f5f5f5'
+			});
+
+		oms.addListener('click', function(marker, event) {			     
+
+			marker.content = "";
+
+			/* Add the content to sensors */
+			if ('{{ information|escapejs }}' != null && '{{ information|escapejs }}' != ""){
+				marker.content += "<br>Info: "+'{{ information|escapejs }}';
+			}
+
+			marker.content += "<br>Address:";
+			if('{{ address|escapejs }}' != null)
+				marker.content += '{{ address|escapejs }}';
+
+			marker.content += '<br><small>{{ lat|escapejs }}; {{ lon|escapejs }}</small>';
+
+			marker.desc = marker.content;
+			infoBubble.removeTab(0);
+			infoBubble.addTab(marker.title, marker.desc);
+			infoBubble.open(map, marker);
+
+		});
+
+		
+		var marker = new google.maps.Marker({
+			position:{lat: parseFloat('{{ lat|escapejs }}'), lng: parseFloat('{{ lon|escapejs }}')},
+			map: map,
+			content: '',
+			title: '{{ name|escapejs }}'
+
+		});
+
+		if ("{{ turned_on|escapejs }}"=="True"){
+			lchecked = true;
+		}
+		else{
+			lchecked = false;
+		}
+			
+		loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+		bounds.extend(loc);
+		oms.addMarker(marker);
+			
+	}
+
+	del_report = -1;
+	function delete_report(id){
+		del_report = id;
+
+		$('#deleteReport').modal('show');
+	}
+
+
+		$("#deleteReportButton").on('click', function(){
+
+		var modal = $("#deleteReport");
+		modal.modal("hide");
+
+		/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/reports/delete/id="+del_report,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully deleted";
+
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#lightingReportsTable').DataTable();
+	        			var row = table.row(document.getElementById("rep_"+del_report.toString()));
+	        			row.remove().draw(false);
+
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	del_rule = -1;
+    function delete_rule(id){
+    	del_rule = id;
+
+    	$('#deleteRule').modal('show');
+    }
+
+    $("#deleteRuleButton").on('click', function(){
+
+    	$('#deleteRule').modal('hide');
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/alerts/delete/"+del_rule.toString(),
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Rule successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#lightingRuleTable').DataTable();
+	        			var row = table.row(document.getElementById("rule_"+del_rule.toString()));
+	        			row.remove().draw(false);
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	window.onload = initMap;
+
+	last_object = null;
+
+		$('#cancel').on('click', function(){
+			if (document.getElementById('{{id}}').checked == false){
+				$('#{{id}}').prop('checked', true).change();
+			}
+			else{
+				$('#{{id}}').prop('checked', false).change();
+			}
+		});
+
+		$("#change").on('click', function(){
+
+			var modal = $("#confirm");
+			modal.modal("hide");
+
+			if (document.getElementById('{{id}}').checked)
+				checked = "on";
+			else
+				checked = "off";
+
+			/* Get the csrf token */
+			var csrftoken = getCookie('csrftoken');
+			$.ajaxSetup({
+				beforeSend: function(xhr, settings) {
+					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+					}
+				}
+			});
+
+			/* Send an ajax request */
+			$.ajax({
+				type: "POST",
+				url: "/sensors/"+checked+"/"+document.getElementById('{{id}}').id,
+				data: {},
+				success: function(data){
+					if(data["status"]=="Success"){
+
+						var close = document.getElementsByClassName("alert success");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+document.getElementById('{{id}}').id+"\" sensor successfully turned "+checked;
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+						}
+					}
+					else{
+						var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			}
+					}
+				},
+				failure: function(data){
+					var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			}
+				},
+			});
+	});
+
+	values = JSON.parse('{{value|escapejs}}');
+
+	act_series = []
+
+	/* If air pressure is on list, process it */
+	if (values["LA"]){
+
+		/* For all subscriptions, add them to the list */
+		temp = JSON.parse(values["LA"]);
+		for (var subscription in temp){
+			s_data = []
+			
+			for (j=0; j<temp[subscription].length; j++){
+				entry = temp[subscription];
+				s_data.push([Date.UTC(entry[j][0][0], entry[j][0][1]-1, entry[j][0][2], entry[j][0][3], entry[j][0][4]), entry[j][1]]);
+			}
+			
+			// Add the data to the series
+			if (s_data.length > 0){
+				act_series.push({name:subscription, data:s_data, visible:true});
+			}
+		}
+
+		Highcharts.stockChart('containeract', {
+			chart: {
+				zoomType: 'x'
+			},
+			title: {
+				text: ''
+			},
+			subtitle: {
+				text: ''
+			},
+			xAxis: {
+				type: 'datetime',
+				title: {
+					text: 'Date'
+				}
+			},
+			yAxis: {
+				title: {
+					text: '',
+					textAlign: 'left'
+				},
+				min: 0
+			},
+			tooltip: {
+				headerFormat: '{point.x:%e. %b}',
+				pointFormat: '<span style="color:{series.color}"><b>{series.name}</b></span>: {point.y:.2f}',
+				split: true
+			},
+
+			plotOptions: {
+				spline: {
+					marker: {
+						enabled: true
+					}
+				}
+			},
+
+			rangeSelector: {
+				selected: 0
+			},
+
+			series: act_series
+		});
+	}
+
+	ill_series = []
+	/* If air pressure is on list, process it */
+	if (values["LI"]){
+
+		/* For all subscriptions, add them to the list */
+		temp = JSON.parse(values["LI"]);
+		for (var subscription in temp){
+			s_data = []
+			
+			for (j=0; j<temp[subscription].length; j++){
+				entry = temp[subscription];
+				s_data.push([Date.UTC(entry[j][0][0], entry[j][0][1]-1, entry[j][0][2], entry[j][0][3], entry[j][0][4]), entry[j][1]]);
+			}
+			
+			
+			// Add the data to the series
+			if (s_data.length > 0){
+				ill_series.push({name:subscription, data:s_data, visible:true});
+			}
+
+		}
+
+		Highcharts.stockChart('containerlig', {
+			chart: {
+				zoomType: 'x'
+			},
+			title: {
+				text: ''
+			},
+			subtitle: {
+				text: ''
+			},
+			xAxis: {
+				type: 'datetime',
+				title: {
+					text: 'Date'
+				}
+			},
+			yAxis: {
+				title: {
+					text: '',
+					textAlign: 'left'
+				},
+				min: 0
+			},
+			tooltip: {
+				headerFormat: '{point.x:%e. %b}',
+				pointFormat: '<span style="color:{series.color}"><b>{series.name}</b></span>: {point.y:.2f}',
+				split: true
+			},
+
+			plotOptions: {
+				spline: {
+					marker: {
+						enabled: true
+					}
+				}
+			},
+
+			rangeSelector: {
+				selected: 0
+			},
+
+			series: ill_series
+		});
+	}
+
+	if ('{{ success|escapejs }}' == "True"){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+
+		text = "The alarm was sucessfully added."
+
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if ('{{ success|escapejs }}' == "Trueactuator"){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+
+		text = "The actuator was sucessfully added."
+
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if ('{{ success|escapejs }}' == "TrueRule"){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+
+		text = "The rule was sucessfully added."
+
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if('{{ success|escapejs }}' == "False"){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			text = "The alarm could not be added. Check if the dates are correct and that you selected a stream."
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if('{{ success|escapejs }}' == "Falseactuator"){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			text = "The actuator could not be added. You must select a stream from the provided."
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if('{{ success|escapejs }}' == "FalseRule"){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			text = "The rule could not be added. You must select a stream from the provided."
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+
+	$(function() {
+    	$('.sensor_toggle').change(function() {
+	     	var checked = "";
+
+	     	tog = document.getElementById("{{id}}");
+
+			if (tog.checked){
+				checked = "on";
+			}
+			else{
+				checked = "off";
+			}
+
+			var modal = $("#confirm").modal({backdrop: 'static', keyboard: false});
+			modal.text = "Are you sure you want to turn " + checked + " " + tog.id + "?";
+			modal.find('.modal-body').text("Are you sure you want to turn " + checked + " " + tog.id + "?");
+			
+			var b = document.getElementById("change")
+
+			modal.modal("show");
+			if (tog.checked)
+				b.innerHTML = "Turn on " + tog.id
+			else
+				b.innerHTML = "Turn off " + tog.id
+
+			last_object = tog;
+    	})
+  	})
+
+
+	alert_id = -1;
+	function alert_changed(id){
+
+    	alert_id = id;
+
+    	$('#changeAlertState').modal('show');
+    }
+
+    $("#changeAlertStateButton").on('click', function(){
+    	$('#changeAlertState').modal('hide');
+
+    	state = "SE"
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/alerts/state/"+alert_id.toString()+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Alert successfully changed state";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#lightingTriggeredTable').DataTable();
+	        			var row = table.row(document.getElementById("triggered_alert_"+alert_id.toString()));
+	        			row.remove().draw(false);
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+
+});
+
+    del_alert = -1;
+    function delete_alert(id){
+    	del_alert = id;
+
+    	$('#deleteAlert').modal('show');
+    }
+
+    $("#deleteAlertButton").on('click', function(){
+
+    	$('#deleteAlert').modal('hide');
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/alerts/delete/"+del_alert.toString(),
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Alert successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#lightingActiveTable').DataTable();
+	        			var row = table.row(document.getElementById("alert_"+del_alert.toString()));
+	        			row.remove().draw(false);
+
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+
+});
+
+    del_triggAlert = -1;
+    function delete_triggAlert(id){
+    	del_triggAlert = id;
+
+    	$('#deleteTriggAlert').modal('show');
+    }
+
+    $("#deleteTriggAlertButton").on('click', function(){
+
+    	$('#deleteTriggAlert').modal('hide');
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/trigg/delete/"+del_triggAlert.toString(),
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Triggered alert successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#lightingTriggeredTable').DataTable();
+	        			var row = table.row(document.getElementById("triggered_alert_"+del_triggAlert.toString()));
+	        			row.remove().draw(false);
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+function show_alarm(alarm){
+		var modal = $('#alarmInfo');
+
+		$.ajax({
+			type: "GET",
+			url: "/alerts/info/"+alarm,
+			data: {},
+			success: function(data){
+				if(data['status']=='OK'){
+					modal.find('#a_name').text(data['name']);
+
+					if(data['threshold']!='-')
+						modal.find('#a_threshold').html("<p><b> Threshold </b></p> " + data['threshold']+"("+data['type']+")");
+					else
+						modal.find('#a_threshold').html("");
+					
+					modal.find('#a_start_date').text(new Date(data['beg_date']).toString());
+					modal.find('#a_end_date').text(new Date(data['end_date']));
+					modal.find('#a_peak').text(data['peak']);
+					modal.find('#a_peak_date').text(new Date(data['peak_date']));
+					modal.find('#a_daysOfWeek').text(data['daysOfWeek']);
+					modal.find('#a_hours_beg').text(data['hours_act']);
+					modal.find('#a_hours_end').text(data['hours_end']);
+					modal.find('#a_subscription_name').text(data['subscription_name']);
+					modal.find('#a_sen_name').text(data['sen_name']);
+					modal.find('#a_sen_type').text(data['sen_type']);
+					act = "<br>";
+					if(data['actuators'].length>0){
+						document.getElementById("actVis").style.display = "initial";
+					}
+					else{
+						document.getElementById("actVis").style.display = "none";
+					}
+					for(var a in data['actuators']){
+						act += data['actuators'][a][1].join(", ")+data['actuators'][a][0]+"<br>";
+					}
+					modal.find('#actuators').html(act);
+					modal.modal('show');
+
+				}
+				else{
+					modal.find('#a_name').text(data['info']);
+				}
+				
+			},
+			failure: function(data){
+				modal.find('#a_name').text(data['info']);
+			}
+		});
+	}
+
+	function show_rule(alarm){
+		var modal = $('#ruleInfo');
+
+		/* Get all the info */
+		$.ajax({
+			type: "GET",
+			url: "/"+"alerts/info/"+alarm,
+			data: {},
+			success: function(data){
+				if(data['status']=='OK'){
+					modal.find('#r_name').text(data['name']);
+					modal.find('#r_subscription_name').text(data['subscription_name']);
+					modal.find('#r_sen_name').text(data['sen_name']);
+					modal.find('#r_sen_type').text(data['sen_type']);
+					modal.find('#r_start_date').text(new Date(data['beg_date']).toString());
+					modal.find('#r_end_date').text(new Date(data['end_date']));
+
+					modal.find('#r_daysOfWeek').text(data['daysOfWeek']);
+					modal.find('#r_hours_beg').text(data['hours_act']);
+					modal.find('#r_hours_end').text(data['hours_end']);
+					modal.find('#actuators').text(data['actuators']);
+					modal.modal('show');
+
+				}
+				else{
+					modal.find('#r_name').text(data['info']);
+				}
+			},
+			failure: function(data){
+				modal.find('#r_name').text(data['info']);
+			}	
+		});
+	}
+
+	
+
+	function show_talarm(alarm){
+		var modal = $('#taInfo');
+
+		$.ajax({
+			type: "GET",
+			url: "/alerts/triginfo/"+alarm,
+			data: {},
+			success: function(data){
+				if(data['status']=='OK'){
+					modal.find('#ta_name').text(data['name']);
+					
+					if(data['threshold'] != '-')
+						modal.find('#ta_threshold').html("<p><b>Threshold</b></p>"+data['threshold']+"("+data['types']+")");
+					else
+						modal.find('#ta_threshold').html("");
+
+					modal.find('#ta_start_date').text(new Date(data['start_date']).toString());
+					modal.find('#ta_end_date').text(new Date(data['end_date']));
+
+					if(data['peak']!='-' && data['peak_date']!='-')
+						modal.find('#ta_peak').html("<p><b>Peak value </b></p>" + data['peak'] + "at" + new Date(data['peak_date']));
+					else
+						modal.find('#ta_peak').html("");
+					
+					if(data['state']=="Active"){
+						modal.find('#ta_state').text('Active');
+						modal.find('#ta_activestate').text('Not seen');
+					}
+					else{
+						modal.find('#ta_state').text('Inactive');
+						modal.find('#ta_activestate').text(data['state']);
+					}
+					
+					modal.find('#ta_dateCreated').text(data['dateCreated']);
+					modal.find('#ta_daysWeek').text(data['daysWeek']);
+					modal.find('#ta_hours_act').text(data['hours_act']);
+					modal.find('#ta_hours_end').text(data['hours_end']);
+					modal.find('#ta_sub_name').text(data['sub_name']);
+					modal.find('#ta_sen_name').text(data['sen_name']);
+					modal.find('#ta_SenType').text(data['SenType']);
+					modal.modal('show');
+				}
+				else{
+					modal.find('#ta_name').text(data['info']);
+				}
+				
+			},
+			failure: function(data){
+				modal.find('#ta_name').text(data['info']);
+			}
+		});
+	}
+    send_id = "";
+    function send_value(id){
+    	send_id = id;
+    	$('#sendValue').modal('show');
+    }
+
+    $("#sendValueButton").on('click', function(){
+
+    	value = $('#val')[0].value;
+    	$('#val')[0].value = "";
+    	$('#sendValue').modal('hide');
+    	waitingDialog.show('Sending value...');
+
+
+    	//<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		if (value==""){
+			var close = document.getElementsByClassName("alert error");
+			var i;
+			for (i = 0; i < close.length; i++) {
+
+				var div = close[i];
+
+			    // When someone clicks on a close button
+			    div.style.display = "block";
+			    div.style.opacity = 1;
+			    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Value cannot be empty";
+
+			    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        	setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        }
+		}
+		else{
+
+			/* Send an ajax request */
+			$.ajax({
+				type: "POST",
+				url: "/sensors/send/"+send_id.toString()+"/"+value,
+				data: {},
+				success: function(data){
+					if(data["status"]=="Success"){
+
+						var close = document.getElementsByClassName("alert success");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span> Value sucessfully sent to actuator";
+
+							// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+		        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+		        			waitingDialog.hide();
+						}
+					}
+					else{
+						var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+		        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+		        			waitingDialog.hide();
+		        		}
+					}
+				},
+				failure: function(data){
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+		        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+		        	}
+		        	waitingDialog.hide();
+				},
+			});
+		}
+	});
+
+	function add_actuator(id){
+
+		document.getElementById("actform").action = window.location.href+"/addActuator/"+id.toString();
+		$('#addActuatorModal').modal('show');
+
+	}
+
+	function add_actuator2(id){
+
+		document.getElementById("actform2").action = window.location.href+"/addActuator/"+id.toString();
+		$('#addActuatorModal2').modal('show');
+
+	}
+
+
+	report_id = -1;
+	title = "";
+	content = "";
+	last_text = "";
+	eleme = null;
+
+	function drop_report_changed(id, elem){
+    	
+    	report_id = id;
+    	title = $('#dropdown2_title_'+id);
+
+    	content = elem.className;
+    	eleme = elem;
+    	last_text=title[0].className;
+
+    	if (title[0].className!=content){
+    		$('#changeReportState').modal('show');
+    	}
+    }
+
+    $("#changeReportStateButton").on('click', function(){
+
+    	$('#changeReportState').modal('hide');
+
+    	state = content
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"reports/workingstate/"+report_id.toString()+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully changed working state";
+					    title.html(content);
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			rep = document.getElementById("rep_"+report_id);
+
+	        			title.html(eleme.innerHTML);
+
+					    title[0].className = state;
+	        			
+
+	        			if (last_text=="WA"){
+	        				rep.classList.remove('Waiting');
+	        			}
+	        			else if(last_text=="WI"){
+	        				rep.classList.remove('Working');
+	        			}
+	        			else{
+	        				rep.classList.remove('Solved');
+	        			}
+
+	        			if (state=="WA"){
+	        				rep.className += " Waiting";
+	        			}
+	        			else if(state=="WI"){
+	        				rep.className += " Working";
+	        			}
+	        			else{
+	        				rep.className += " Solved";
+	        			}
+
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+
+    last_text2 = "";
+	function state_report_changed(id, elem){
+    	
+    	report_id = id;
+    	title = $('#dropdown3_title_'+id);
+    	content = $(elem).find('a').html();
+    	last_text2 = title[0].outerText;
+    	if (title[0].outerText!=content){
+    		$('#changeReportSeen').modal('show');
+    	}
+    }
+
+    $("#changeReportStateButton2").on('click', function(){
+
+    	$('#changeReportSeen').modal('hide');
+
+    	state = ""
+
+    	if (content == "Not Seen"){
+    		state = "NS";
+    	}
+    	else if(content == "Seen"){
+    		state = "SE";
+    	}
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"reports/state/"+report_id.toString()+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully changed state";
+					    title.html(content);
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			rep = document.getElementById("rep_"+report_id);
+	        			
+
+	        			if (last_text2=="Seen"){
+	        				rep.classList.remove('Seen');
+	        			}
+	        			else{
+	        				rep.classList.remove('NotSeen');
+	        			}
+
+	        			if (state=="NS"){
+	        				rep.className += " NotSeen";
+	        			}
+	        			else{
+	        				rep.className += " Seen";
+	        			}
+
+	        			$(".NotSeen").css("font-weight", "bold");
+	        			$(".Seen").css("font-weight", "normal");
+	        		
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+		reports = JSON.parse('{{report_days|escapejs}}')
+
+	sen_series = []
+			
+	s_data = []
+	for (var key in reports){
+
+		array = key.split("/");
+
+		s_data.push([Date.UTC(array[0], array[1]-1, array[2]), reports[key]]);
+	}
+
+	// Add the data to the series
+	if (s_data.length > 0){
+		sen_series.push({name:'Number of User Reports', data:s_data, visible:true, type: 'column'}, {name:'Number of User Reports', data:s_data, visible:true, type: 'line', color:'#ff8000'});
+
+		Highcharts.stockChart('containerreports', {
+			chart: {
+				alignTicks: false,
+				zoomType: 'x'
+			},
+			title: {
+				text: 'Number of user reports by day'
+			},
+			subtitle: {
+				text: ''
+			},
+			xAxis: {
+				type: 'datetime',
+			},
+			yAxis: {
+				title: {
+					text: 'User reports',
+					textAlign: 'left'
+				},
+			},
+			tooltip: {
+				formatter: function () {
+					var date = new Date(this.x)
+	                return date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+': <span style="color:{series.color}"><b></b></span>User Reports: '+this.y;
+	            }
+			},
+
+			plotOptions: {
+				spline: {
+					marker: {
+						enabled: true
+					}
+				},
+				 series: {
+			        pointRange: 24 * 3600 * 1000 // one day
+			    }
+			},
+
+			rangeSelector: {
+				selected: 0
+			},
+
+			series: sen_series,
+
+			colors: ['#058DC7']
+		});
+	}
+	
+
+	$('.table-responsive').on('show.bs.dropdown', function () {
+	     $('.table-responsive').css( "overflow", "inherit" );
+	});
+
+	$('.table-responsive').on('hide.bs.dropdown', function () {
+	     $('.table-responsive').css( "overflow", "auto" );
+	})
+
+	var waitingDialog = waitingDialog || (function ($) {
+    'use strict';
+
+	// Creating modal dialog's DOM
+	var $dialog = $(
+		'<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
+		'<div class="modal-dialog modal-m">' +
+		'<div class="modal-content">' +
+			'<div class="modal-header"><h3 style="margin:0;"></h3></div>' +
+			'<div class="modal-body">' +
+				'<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+			'</div>' +
+		'</div></div></div>');
+
+	return {
+		/**
+		 * Opens our dialog
+		 * @param message Custom message
+		 * @param options Custom options:
+		 * 				  options.dialogSize - bootstrap postfix for dialog size, e.g. "sm", "m";
+		 * 				  options.progressType - bootstrap postfix for progress bar type, e.g. "success", "warning".
+		 */
+		show: function (message, options) {
+			// Assigning defaults
+			if (typeof options === 'undefined') {
+				options = {};
+			}
+			if (typeof message === 'undefined') {
+				message = 'Loading';
+			}
+			var settings = $.extend({
+				dialogSize: 'm',
+				progressType: '',
+				onHide: null // This callback runs after the dialog was hidden
+			}, options);
+
+			// Configuring dialog
+			$dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+			$dialog.find('.progress-bar').attr('class', 'progress-bar');
+			if (settings.progressType) {
+				$dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+			}
+			$dialog.find('h3').text(message);
+			// Adding callbacks
+			if (typeof settings.onHide === 'function') {
+				$dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+					settings.onHide.call($dialog);
+				});
+			}
+			// Opening dialog
+			$dialog.modal();
+		},
+		/**
+		 * Closes dialog
+		 */
+		hide: function () {
+			$dialog.modal('hide');
+		}
+	};
+
+})(jQuery);
+
+	$('#withT').change(function() { 
+        $('#threshold').slideToggle('slow');
+        $('#maxminthreshold').slideToggle('slow');
+        
+    }); 
+
+	/* CSRF Helpers */
+	function csrfSafeMethod(method) {
+	    // these HTTP methods do not require CSRF protection
+	    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+
+	/* Reports */
+	$.fn.dataTable.ext.search.push(
+
+		function (oSettings, aData, iDataIndex) {
+
+		    var myRowClasses = oSettings.aoData[iDataIndex].nTr.className.split(" ");
+		    
+
+		    for(var rclass in myRowClasses){
+		    	if(filter1=="SE"){
+				    if (myRowClasses[rclass] === 'Seen') {
+				        return true;
+				    }
+				}
+				else if(filter1=="NS"){
+				    if (myRowClasses[rclass] === 'NotSeen') {
+				        return true;
+				    }
+				}
+				else if(filter1=="WA"){
+				    if (myRowClasses[rclass] === 'Waiting') {
+				        return true;
+				    }
+				}
+				else if(filter1=="WO"){
+				    if (myRowClasses[rclass] === 'Working') {
+				        return true;
+				    }
+				}
+				else if(filter1=="SO"){
+				    if (myRowClasses[rclass] === 'Solved') {
+				        return true;
+				    }
+				}
+			    else if(filter1 == "AL"){
+			    	return true;
+			    }
+		    }
+
+		    return false;
+	});
+
+	var filter1 = "AL"
+
+	function showAll(){
+		filter1 = "AL"
+		var table = $('#lightingReportsTable').DataTable();
+		table.draw();
+	}
+
+	function showSeen(){
+		filter1 = "SE"
+		var table = $('#lightingReportsTable').DataTable();
+		table.draw();
+	}
+
+	function showNotSeen(){
+		filter1 = "NS"
+		var table = $('#lightingReportsTable').DataTable();
+		table.draw();
+	}
+
+	function showWaiting(){
+		filter1 = "WA"
+		var table = $('#lightingReportsTable').DataTable();
+		table.draw();
+	}
+
+	function showWorking(){
+		filter1 = "WO"
+		var table = $('#lightingReportsTable').DataTable();
+		table.draw();
+	}
+
+	function showSolved(){
+		filter1 = "SO"
+		var table = $('#lightingReportsTable').DataTable();
+		table.draw();
+	}
+
+	$(document).ready(function()
+	{
+	  $(".NotSeen").css("font-weight", "bold");
+	});
+</script>	
+
+{% endblock %}

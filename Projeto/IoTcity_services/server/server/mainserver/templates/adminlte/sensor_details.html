@@ -1,0 +1,650 @@
+
+{% extends 'adminlte/sensor_details.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+	<h1>
+		{{ type }}
+		<small>Sensor {{id}} details</small>
+	</h1>
+
+</section>
+
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+		
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form action="" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add alert</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if form.errors %}
+					<p style="color: red;">
+						Please correct the error{{ form.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					<div class="field">
+						{{ form.name.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the name for the alarm">Name</label> 
+						{{ form.name }}
+						<p style="font-size: 10px;">Select the name for the alarm</p><br><br>
+					</div>
+					<div class="field">
+						{{ form.subscriptions.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the streams that will trigger the alarm">Streams</label> 
+						{{ form.subscriptions }}
+						<p style="font-size: 10px;">Select the streams that will trigger add the alarm</p><br><br>
+					</div>
+					<div class="field">
+						{{ form.type_alarm.errors }}
+						<label for="id_max" class="tooltip-test" title="Select if threshold applies to maximum value. Leave unchecked if threshold applies to minimum value">Type of alarm</label> 
+						{{ form.type_alarm}}
+						<p style="font-size: 10px;">Select if threshold applies to maximum value or minimum value.</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.threshold.errors }}
+						<label for="id_threshold" class="tooltip-test" title="Choose the desired threshold value for the alarm trigger">Threshold</label>
+						<p style="font-size: 10px;">Choose the desired threshold value for the alarm trigger (ex: 20.4 ºC)</p>
+						{{ form.threshold }} ºC
+						{{ form.max.errors }}<br><br>
+
+					</div>
+					<div class="field">
+						<label for="id_max" class="tooltip-test" title="Unselect the days of week when the alarm is turned off">Days of week</label>
+						<div class="weekDays-selector">
+							{{ form.mo }}
+							<label for="weekday-mon">Monday</label>
+							{{ form.tu }}
+							<label for="weekday-tue">Tuesday</label>
+							{{ form.we }}
+							<label for="weekday-wed">Wednesday</label>
+							{{ form.th }}
+							<label for="weekday-thu">Thursday</label>
+							{{ form.fr }}
+							<label for="weekday-fri">Friday</label>
+							{{ form.sa }}
+							<label for="weekday-sat">Saturday</label>
+							{{ form.su }}
+							<label for="weekday-sun">Sunday</label>
+						</div>
+						<p style="font-size: 10px;">Unselect the days of week when the alarm is turned off. If no day is selected, the alarm will be applied to all of them.</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.beg_date.errors }}
+						{{ form.beg_hour.errors }}
+						{{ form.beg_min.errors }}
+						<label for="id_max" class="tooltip-test" title="Select day to turn on alert (ex: November/12/2019 20:00)">Turn on alert date </label> 
+						{{ form.beg_date}} <br>at {{ form.beg_hour }}:{{ form.beg_min }}
+						<p style="font-size: 10px;">Select date to turn on alert (ex: November/12/2019 20:00)</p><br><br>
+					</div>
+					<div class="field">
+						{{ form.end_date.errors }}
+						{{ form.beg_min.errors }}
+						{{ form.beg_hour.errors }}
+						<label for="id_max" class="tooltip-test" title="Select day to turn off alarm (ex: November/12/2019 20:00)">Turn off alert date </label>  {{ form.end_date }} <br>at  {{ form.end_hour }}:{{ form.end_min }}
+
+						<p style="font-size: 10px;">Select date to turn off alarm (ex: November/12/2019 20:00)</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.hours_active_beg.errors }}
+						{{ form.minutes_active_beg.errors }}
+						<label for="id_max" class="tooltip-test" title="Hour to turn on the alarm (ex: 20:03).">Turn on at  </label> 
+						{{ form.hours_active_beg }} : {{form.minutes_active_beg}}
+						<p style="font-size: 10px;">Hour to turn on the alarm (ex: 20:03).</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.hours_active_end.errors }}
+						{{ form.minutes_active_end.errors }}
+						<label for="id_max" class="tooltip-test" title="Hour to turn off the alarm (ex: 8:00). If it is lower that hour to turn on the alarm, will be set for next day.">Turn off at  </label> 
+						{{ form.hours_active_end }} : {{form.minutes_active_end}}
+						<p style="font-size: 10px;">Hour to turn off the alarm (ex: 8:00). If it is earlier that time to turn on the alarm, will be set for next day.</p><br><br>
+
+
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" value="Submit" class="btn btn-primary">Save changes</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+
+
+
+<!-- Main content -->
+		<!-- Modal -->
+		<div class="alert error">
+			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+		</div>
+		<div class="alert success">
+			<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+		</div>
+		<div class="row">
+			<!-- Map -->
+			<div class="col-md-4">
+				<div class="box box-primary">
+					<div class="box-header">
+						<h3 class="box-title">Location</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div id="map" style="height: 400px; width: 100%;"></div>	
+					</div>
+					<!-- /.box-body-->
+				</div>
+				<!-- /.box -->
+			</div>
+
+			<!-- Subscriptions -->
+			<div class="col-md-8">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">Streams</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+		</div>
+
+		<!-- Fullness -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">Values</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="chart">
+							<div id="containerm" style="height: 400px; width: 100%;"></div>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+		</div>
+
+		{% ifequal type "WA" %}
+		<div class="row">
+			<!-- Internal temperature -->
+			<div class="col-md-6">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">Internal temperature</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="chart">
+							<div id="containert" style="height: 400px; width: 100%;"></div>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+
+			<!-- Volume -->
+			<div class="col-md-6">
+				<div class="box box-primary">
+					<div class="box-header with-border">
+						<h3 class="box-title">Volume</h3>
+						<div class="box-tools pull-right">
+							<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+						</div>
+					</div>
+					<div class="box-body">
+						<div class="chart">
+							<div id="containerv" style="height: 400px; width: 100%;"></div>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+			</div>
+		</div>
+
+		{% endifequal %}
+
+		<div class="row">
+			<div class="col-md-12">
+				<div>	
+					<div class="box box-primary">
+						<div class="box-header">
+							<h3 class="box-title">Active alerts</h3>
+							<!-- Search -->
+							<div class="form-group pull-right">
+								<input type="text" class="search form-control" placeholder="search">
+							</div>
+							<!-- / -->
+						</div>
+						<!-- /.box-header -->
+						<div class="box-body">
+							<table class="table table-bordered table-striped results">
+								<thead>
+									<tr>
+										<th>Stream name</th>
+										<th>Alert name</th>
+										<th>Alarm type</th>
+										<th>Threshold value</th>
+										<th>Alert lifetime</th>
+										<th>Active</th>
+										<th>Change</th>
+									</tr>
+									<tr class="warning no-result">
+										<td colspan="5"><i class="fa fa-warning"></i> No result</td>
+									</tr>
+								</thead>
+								<tbody>
+									{% for alert in alerts %}
+									<tr>
+										<td>{{ alert.subscription_name }}</td>
+										<td>{{ alert.name }}</td>
+										<td>{{ alert.type_alarm }}</td>
+										<td>{{ alert.threshold }}</td>
+										<td>{{ alert.beg_date }} to {{alert.end_date}}</td>
+										<td>{{ alert.daysOfWeek }} from {{ alert.hours_act }} to {{ alert.hours_beg }}</td>
+										<td><a href="#"><i class="fa fa-info-circle"></i> Change details</a></td>
+									</tr>
+									{% endfor %}
+
+								</tbody>
+							</table>
+						</div>
+						<!-- /.box-body -->
+						<div class="box-footer clearfix no-border">
+							<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Alert</button>
+						</div>
+					</div>
+				</div>
+				<div>
+					<div class="box box-primary">
+						<div class="box-header">
+							<h3 class="box-title">Alerts history in the last 90 days</h3>
+							<!-- Search -->
+							<div class="form-group pull-right">
+								<input type="text" class="search2 form-control" placeholder="search">
+							</div>
+							<!-- / -->
+						</div>
+						<!-- /.box-header -->
+						<div class="box-body">
+							<table class="table table-bordered table-striped results2">
+								<thead>
+									<tr>
+										<th>Sensor ID</th>
+										<th>Alert name</th>
+										<th>Type</th>
+										<th>Threshold</th>
+										<th>Value</th>
+										<th>Date</th>
+										<th>More details</th>
+									</tr>
+									<tr class="warning no-result2">
+										<td colspan="5"><i class="fa fa-warning"></i> No result</td>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<td>{{id}}</td>
+										<td>Name</td>
+										<td>Minimum</td>
+										<td>5 ºC</td>
+										<td>2 ºC</td>
+										<td>26/03/2017 21:58 pm</td>
+										<td><a href="#"><i class="fa fa-info-circle"></i> Use modal</a></td>
+									</tr>
+									<tr>
+										<td>{{id}}</td>
+										<td>Name</td>
+										<td>Minimum</td>
+										<td>5 ºC</td>
+										<td>4 ºC</td>
+										<td>26/03/2017 20:58 pm</td>
+										<td><a href="#"><i class="fa fa-info-circle"></i> Use modal</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- /.box-body -->
+					</div>
+					<!-- /.box -->
+				</div>
+			</div>
+		</div>
+	<!-- /.content -->
+
+
+	{% endblock %}
+
+	{% block jspage %}
+
+
+	<!-- Maps -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqpWDakNAEswg5ZOBHnS4jGBu5lgj8WD0"></script>
+
+	{% load static %}
+	<script defer src="{% static "admin-lte/dist/js/oms.min.js" %}"></script>
+	<script defer src="{% static "info_bubble/infobubble.js" %}"></script>
+
+	<script type="text/javascript">		
+	// Get all elements with class="closebtn"
+	var close = document.getElementsByClassName("closebtn");
+	var i;
+
+
+	// Loop through all close buttons
+	for (i = 0; i < close.length; i++) {
+
+	    // When someone clicks on a close button
+	    close[i].onclick = function(){
+
+	        // Get the parent of <span class="closebtn"> (<div class="alert">)
+	        var div = this.parentElement;
+
+	        // Set the opacity of div to 0 (transparent)
+	        div.style.opacity = "0";
+
+	        // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+	        setTimeout(function(){ div.style.display = "none"; }, 600);
+	    }
+	}
+
+</script>
+
+<!-- Page script -->
+<script>
+
+	temp = []
+
+	/* Create map */
+	function initMap() {
+		// Define bounds of map
+		bounds = new google.maps.LatLngBounds();
+
+
+		var map = new google.maps.Map(document.getElementById('map'), {mapTypeId: 'satellite',
+			center: {lat: parseFloat('{{ lat|escapejs }}'), lng: parseFloat('{{ lon|escapejs }}')},
+			zoom: 14,
+		});
+
+		var infoBubble;
+
+		var oms = new OverlappingMarkerSpiderfier(map);
+
+		var iw = new google.maps.InfoWindow();
+		oms.addListener('click', function(marker, event) {
+			infoBubble = new InfoBubble({
+				map: map,
+				shadowStyle: 1,
+				padding: 10,
+				borderRadius: 20,
+				arrowSize: 10,
+				borderWidth: 1,
+				disableAutoPan: true,
+				hideCloseButton: false,
+				arrowPosition: 30,
+				arrowStyle: 2,
+				width: 500 ,
+				height: 250 ,
+				backgroundColor: '#f5f5f5'
+			});
+			infoBubble.addTab(marker.title, marker.desc);
+			infoBubble.open(map, marker)
+		});
+
+		oms.addListener('spiderfy', function(markers) {
+			infoBubble.close();
+		});
+
+		// Create sensor
+
+		var marker = new google.maps.Marker({
+			position:{lat: parseFloat('{{ lat|escapejs }}'), lng: parseFloat('{{ lon|escapejs }}')},
+			map: map,
+			content: '',
+			title: '<b><a href="/sensors/details/' + '{{ id|escapejs }}' + '">' + '{{ name|escapejs }}'+ '</a></b>'
+
+		});
+
+		/* Add the content to sensor */
+		if ('{{ information|escapejs }}' != null && '{{ information|escapejs }}' != ""){
+			marker.content += "<br>Info: "+'{{ information|escapejs }}'
+		}
+
+		if ('{{ active|escapejs }}' != null && '{{ inactive|escapejs }}' != null){
+			marker.content += "<br>Streams Active/Inactive: "+'{{ active|escapejs }}'+"/"+'{{ inactive|escapejs }}'
+		}
+
+		values = jQuery.parseJSON('{{ value|escapejs }}');
+
+		if (values!=[]){
+			for (j=0; j<values.length; j++){
+				marker.content += "<br>"+values[j][0]+" last value: "+values[j][1];
+			}
+		}
+
+		marker.content += "<form action=\"\" method=\"post\">{% csrf_token %}<br><label class=\"switch\"><input onclick=\"togglechanged(this)\"  ";
+
+		if ('{{ turned_on|escapejs }}'=='True'){
+			marker.content += "checked";
+		}
+
+		marker.content +=" type=\"checkbox\" id=\""+'{{ id|escapejs }}'+"\"><div class=\"slider round\"></div></label></form>"
+
+		loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+
+		marker.desc = marker.content;
+		oms.addMarker(marker);
+		
+
+	}
+	window.onload = initMap;
+
+	// Turn on or off sensors
+	function togglechanged(Object){
+
+		var checked = "";
+
+		if (Object.checked){
+			checked = "on";
+		}
+		else{
+			checked = "off";
+		}
+
+		var retVal = confirm("Are you sure you want to turn " + checked + " " + Object.id + "?");
+
+		if( retVal == false ){
+			if (Object.checked == false)
+				Object.checked = true;
+			else
+				Object.checked = false;
+			return;
+		}
+
+		/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "../"+checked+"/"+Object.id,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+					window.alert(Object.id+" sensor successfully turned "+checked);
+				}
+				else{
+					window.alert(data["info"]);
+				}
+			},
+			failure: function(data){
+				window.alert(data["info"]);
+			},
+		});
+
+		/* CSRF Helpers */
+		function csrfSafeMethod(method) {
+		    // these HTTP methods do not require CSRF protection
+		    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+		}
+
+		function getCookie(name) {
+			var cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				var cookies = document.cookie.split(';');
+				for (var i = 0; i < cookies.length; i++) {
+					var cookie = jQuery.trim(cookies[i]);
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		            	break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+	}
+</script>
+
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
+<script>
+	
+
+	sen_series = []
+	Highcharts.stockChart('containerm', {
+		chart: {
+			zoomType: 'x'
+		},
+		title: {
+			text: '{{series.name}}'
+		},
+		subtitle: {
+			text: ''
+		},
+		xAxis: {
+			type: 'datetime',
+			title: {
+				text: 'Date'
+			}
+		},
+		yAxis: {
+			title: {
+				text: 'Temperature (º Celsius)',
+				textAlign: 'left'
+			},
+			min: 0
+		},
+		tooltip: {
+			headerFormat: '{point.x:%e. %b}',
+			pointFormat: '<span style="color:{series.color}"><b>{series.name}</b></span>: {point.y:.2f} ºC',
+			split: true
+		},
+
+		plotOptions: {
+			spline: {
+				marker: {
+					enabled: true
+				}
+			}
+		},
+
+		rangeSelector: {
+			selected: 1
+		},
+
+		series: sen_series
+	});
+
+	console.log('{{ success|escapejs }}');
+	if ('{{ success|escapejs }}' == true){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+"texto";
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if('{{ success|escapejs }}' == false){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+"texto";
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	
+</script>	
+
+{% endblock %}

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="IoT City">
+	<meta name="author"      content="Sergey Pozhilov, Luís Leira, Diogo Ferreira">
+	
+	<title>IoT City > How to use it</title>
+
+	<link rel="shortcut icon" href="assets/images/icon.png">
+	
+	<link rel="stylesheet" media="screen" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets/css/main.css">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+
+	<!-- Modal for images -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<img class="img-responsive" src="" />
+				</div>
+				<div class="modal-footer">
+					<h4 class="text-center title"></h4>
+					<h5 class="text-center desc"></h5>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="myModal2" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<img class="img-responsiveapp" src="" />
+				</div>
+				<div class="modal-footer">
+					<h4 class="text-center title"></h4>
+					<h5 class="text-center desc"></h5>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="myModal3" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<img class="img-responsiveapp2" src="" />
+				</div>
+				<div class="modal-footer">
+					<h4 class="text-center title"></h4>
+					<h5 class="text-center desc"></h5>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="index.html"><img src="assets/images/logo1.png" alt="IoT City logo"></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+					<li><a href="index.html">Home</a></li> <!-- Client area -->
+					<li class="active"><a href="about.html">How to use it</a></li> <!-- User area -->
+					<li class="dropdown"> <!-- Specification area -->
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Specifications<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="specifications-1.html">Features, system scenarios and use cases</a></li>
+							<li><a href="specifications-2.html">Requirements and tests</a></li>
+							<li><a href="specifications-3.html">Architecture</a></li>
+							<li><a href="specifications-4.html">Data model</a></li>
+							<li><a href="deliverables.html">Deliverables</a></li>
+						</ul>
+					</li>
+					<li><a href="developer.html">Developer area</a></li> <!-- Developer area -->
+					<li><a href="reports.html">Weekly reports</a></li> <!-- Team area -->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->
+
+	<header id="head" class="secondary"></header>
+
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="index.html">Home</a></li>
+			<li class="active">How to use it</li>
+		</ol>
+
+		<div class="row">
+			
+			<!-- Article main content -->
+            <article class="col-sm-8 maincontent">
+                <header class="page-header">
+                    <h1 class="page-title">How to use it</h1>
+                </header>
+
+                <div class="header-inside" id="about-1">
+                    <h3>Description &amp; main features</h3>
+                    <hr class="half-rule" />
+                    <p>&emsp;On this section, we explain some of the main features of the system, as well as an explanation on its usage.
+                    <br><br>
+                    &emsp;IoT City is a platform designed to provide the city manager a web application for gathering metrics from the city, and act upon them, as well as a mobile application with all the city data and notifications about triggered alerts. It also provide the citizens a mobile application that allows them to track in real-time the state of the city, and to report possible problems to the city manager.
+                    <br><br>
+                    &emsp;The platform has many interfaces with different goals:
+                    <ul>
+	                    <li>The admin portal, designed to the administrators of the platform;</li>
+	                    <li>The web portal, designed to the city managers and workers;</li>
+						<li>The city manager mobile application, designed to the city managers.</li>
+	                    <li>The citizen mobile application, designed for the citizens.</li>
+                    </ul><br>
+                    &emsp;There are seven types of sensor metrics allowed on the system: temperature, waste (waste containers), radiation, noise, air (CO2, ...), lighting and people counter. An administrator can add sensors on-the-fly to the platform, and also add streams to sensors. A stream is a flow of data from the sensor to the platform, that has a subtype (e.g. A waste sensor can have three streams: Waste Container Usage Percentage, Internal Container Temperature and Waste Container Volume). It is also possible to send commands to actuators (e.g. the lighting sensors, setting the dimming value).
+                    <br><br>
+                    &emsp;In the Web portal, each user can be associated to groups of streams, which can be modified by the administrator. This means that the user will only see the streams and sensors associated to their groups (e.g. The Aveiro administrator wants to have two city managers: one for the north side of the city, other for the south side of the city. With two stream groups, he can separate the streams for each city manager account).
+                    <br><br>
+                    &emsp;A city manager, besides the access to all data allowed by the group that he is inserted, he can add alerts to subscriptions, with a threshold value and a schedule for them to be turned on. It is also possible to add actuators when alarms are triggered (e.g. turn on all the public lighting when the CO2 values are above a threshold).
+                    <br><br>
+                    &emsp;The platform also allows the city manager to add rules to streams, that are triggered everyday at some defined hour between specified dates (e.g. everyday, at 7 p.m., turn off the public lighting).
+                    <br><br>
+					&emsp;Finally, the city manager of each city will receive reports from the citizens in the web portal, being sent through the mobile application.
+					<br><br>
+                    &emsp;The mobile application, destinated to the citizens, also displays relevant information from the city and allows reporting problems or occurrences in the city directly to the city manager, sending a plain-text description of the problem along with photos and videos.
+                    <br><br>
+					&emsp;The city manager mobile application is very similar to the destinated to the citizens but it does not allow to do reports and it notifies the user about triggered alerts.
+					<br><br>
+                    &emsp;The admin portal has the following main features:
+                    <ul>
+                    	<li>Add sensors to the platform;</li>
+                   		<li>Add streams to the sensors previously added;</li>
+						<li>Create, edit and delete subscription groups;</li>
+                   		<li>Add streams to subscription groups;</li>
+                   		<li>Add users to subscription groups;</li>
+						<li>Create, edit and delete data on the IoT City Data Persistence (database).</li>
+                    </ul>
+                    <br>
+                    &emsp;The web portal has the following main features:
+                    <ul>
+                    	<li>Check all sensors' streams values in real-time;</li>
+                    	<li>Check the history of sensors' streams;</li>
+                    	<li>Check the location of all the sensors allowed to the user in a map;</li>
+                    	<li>Send values to actuators (e.g. turn on/off public lighting);</li>
+                    	<li>Add alerts (optionally with actuators) to sensors' streams;</li>
+                        <li>Add rules to sensors' streams;</li>
+                    	<li>Check the user reports;</li>
+						<li>Add notes associated to the user.</li>
+                    </ul>
+                    <br>
+                    &emsp;The citizen mobile application has the following main features:
+                    <ul>
+                    	<li>Check the sensors' streams values in real-time and history;</li>
+                    	<li>Check the location of the sensors in real-time;</li>
+                    	<li>Send reports of problems or occurrences to the city manager.</li>
+                    </ul>
+                    <br>
+					&emsp;The city manager mobile application has the following main features:
+                    <ul>
+                    	<li>Check the sensors' streams values in real-time and history;</li>
+                    	<li>Check the location of the sensors in real-time;</li>
+                    	<li>Receive notifications about triggered alerts in real-time.</li>
+                    </ul>
+                    <br>
+                    &emsp;For the sensor technician, the platform has the following features:
+                     <ul>
+                        <li>API to add sensors dynamically;</li>
+                        <li>API to add streams dynamically;</li>
+                        <li>Dynamic location of sensors.</li>
+                     </ul>
+
+                    </p>
+                </div>
+
+                <div class="header-inside" id="about-2">
+                    <h3>How to access it</h3>
+                    <hr class="half-rule" />
+                    <p>&emsp;In this section, we explain how to have access to the different IoT City applications.</p>
+                    <br>
+                    <h4 align="left">Web portal and admin portal</h4>
+                    <p>&emsp;For accessing the web portal and admin portal you just need to go to <a href="http://http://178.62.255.129/" target="_blank">this link</a>. When logged, you will be redirected to the dashboard web portal page. If you want to go to the admin portal, click on the top right button ("Change to admin view"). You will need an account, that can only be created by an administrator of the system.</p><br>
+                    <h4 align="left">Mobile application</h4>
+                    <p>&emsp;The mobile applications are designed to run on android operating system (version 4.0 or higher). You need to download the .apk file and install it on your smartphone. The apps are free to use, and no login is required.</p>
+                </div>
+
+                <div class="header-inside" id="about-3">
+                    <h3>How it works</h3>
+                    <hr class="half-rule" />
+                    <p>&emsp;In this section, we present the web portal, the admin portal and the mobile application along with an explanation of usage.</p>
+                    <br>
+                    <h4 align="left">Web portal</h4>
+                    <p>
+
+                        &emsp;The first view of the web portal is the authentication page. If the user is not authenticated, it doesn’t have the permission to see any information of the metrics gathered. If the username and password entered by the user match with a valid account, the webpage will redirect the user to the main dashboard page. Each account can have streams associated. A stream is a flow of data send by the sensors (for example: pressure of air sensor x, or waste containter percentage of waste sensor y). If an account doesn't have any streams, it will not be possible to see any information of the sensors.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Authentication view" data-desc=""><img id="Authentication_View" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Login.png" alt="Authentication View"></a><br><h6>Authentication view</h6></div>
+                        <br>
+                        &emsp;The main page of the web portal contains a dashboard with information about the type of metrics gathered by the sensors (temperature/lighting/air/waste/noise/radiation/people). For each type of metric, there is a card with information about the last values retrieved by the sensors.
+                        <ul>
+                        <li>For the temperature sensors, will be displayed the average temperature of all temperature sensors allowed to the user, as well as the maximum and minimum value.</li>
+                        <li>For the lighting sensors, will be displayed the number of sensors that have dimming higher than 75% and between 50% and 75%.</li>
+                        <li>For the air sensors, will be displayed the average carbon dioxide values, as well as the maximum and minimum values.</li>
+                        <li>For the waste containers sensors, it will be displayed the number of containers that have a waste usage higher than 75% and between 50% and 75%.</li>
+                        <li>For the noise sensors, it will be displayed the maximum noise value detected, as well as the average for the allowed streams</li>
+                        <li>For the radiation sensors, it will be displayed the number of sensors with UV Radiation index above 7 and between 4 and 7.</li>
+                        <li>For the people counter sensors, it will be displayed the number of places that have their lotation higher than 75% and between 50% and 75%.</li>
+                        </ul>
+                        &emsp;For all the cards, it will also be shown the number of active and inactive streams and the date from last reading. All this information will be from the sensors that are currently working.
+                        <br><br>
+                        &emsp;Bellow the cards, there is a notification panel. The first tab contains a list of all the triggered alerts, alongside with its information. An alert can be added by the user on the sensor metrics page or alerts page. An alert is a maximum or minimum threshold for a number of subscriptions, that can be turned on or off according to a schedule. It is also possible to act when an alarm is triggered by adding a actuator (e.g. when it is 7 p.m., turn on public lighting), sending a message to all the actuators.
+                        <br><br>
+                        &emsp;The "Triggered alerts" tab shows the occurrences by date. These can have two states: <i>active</i> and <i>inactive</i>. If an triggered alert is <i>active</i>, it means that the sensor values are currently crossing a threshold. When it stops, the state will be <i>inactive</i>. If the user wants to dismiss the alert notification, he can do it and it will no longer be in the "Triggered alerts".
+                        <br><br>
+                        &emsp;The "User reports" tab shows the information about the reports sent by the citizens through the mobile app. Each user report can be on one of three states: <i>waiting</i>, <i>working on</i> and <i>solved</i>. When the state is changed to <i>solved</i>, the report will no longer be shown on this tab.
+                        <br><br>
+						&emsp;The "Sensors with inactive streams" tab shows an exaustive list of all sensors that have one or more inactive streams. Besides that, it shows the sensors' status in the platform (on or off, defined by the user).
+						<br><br>
+                        &emsp;Finally, there is also a panel with notes added by the user. If the user wants to add a note, he can click on "Add note" and fill the popup form with the adequate information.
+                        <br><br>
+                        &emsp;On the left sidebar, we can access different pages of the web portal.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Main dashboard page" data-desc=""><img id="Main_Dashboard_Page" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/main_Dash.png" alt="Main Dashboard Page"></a><br><h6>Main dashboard page (Click to enlarge)</h6></div><br>
+                        &emsp;The map view contains a map with the location of all the sensors allowed to that user, with a filter to select the sensor types that are visible on the map. When the user clicks on top of a sensor, it will appear a popup box with information about that sensor and a toggle switch to turn on or off the streams of that sensor (the toggle will NOT be used to turn on or off the sensor, but to turn on or off the retrieval of data from streams of that sensor). 
+                        If several sensors are too close to use separate markers only one will appear and clicking on it will expand all the sensors' markers.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Map page" data-desc=""><img id="Map" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Map.png" alt="Map with markers that show the allowed sensors for that user"></a><br><h6>Map with markers that shows the allowed sensors for that user (Click to enlarge)</h6></div><br>
+                        
+                        &emsp;There is a view for each one of the seven types of sensors. That view will have a chart with the values of all the sensors of that type. In case of the sensors have more that one subtype (e.g. waste sensors can have streams of usage container percentage, internal temperature and volume), each subtype will have a chart (separated by tabs). It is possible to zoom in on a date on the chart and filter by the subscriptions wanted.
+                        <br><br>
+                        &emsp;Below there is a table with all the sensors of that type and associated information. There is also a toggle switch to turn on or off the streams of that sensor (the toggle will NOT be used to turn on or off the sensor, but to turn on or off the retrieval of data from streams of that sensor).
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Temperature page" data-desc="Temperature page with a chart and the sensors associated"><img id="Temperature" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Metrics.png" alt="Temperature page with a chart and the sensors associated"></a><br><h6>Temperature page (Click to enlarge)</h6></div>
+                        <br>
+                        &emsp;There is a page dedicated to every sensor associated for more detailed information. That page has a map with the location of the sensor, as well as a table with all the streams associated to that sensor and their information (an indicator that shows if the stream is working and other indicator that tells if the stream is an actuator). If the stream is an actuator, it is possible to send data by clicking on the "Send" button on the "Send values" column. After that, a popup is open, where the user can insert a numeric value to send to the stream.
+                        
+                        <br><br>Below the map and table, we have a chart with the streams values associated to the sensor.
+                        There is also a table with all the alerts and associated information. It is possible to create alerts by clicking on the Button "Add alert" and filling the popup form.
+                        We can also see the triggered alerts, alongside with its information.
+						If the sensor has possible actuator, it will show the rules that include the current sensor.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Sensor page" data-desc="We can see the location of the sensor, the streams associated, the values retrieved, the active alerts and the triggered alerts."><img id="Sensor" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Details.png" alt="We can see the location of the sensor, the streams associated, the values retrieved, the active alerts and the triggered alerts."></a><br><h6>Sensor page (Click to enlarge)</h6></div>
+                        <br>
+                        &emsp;The alerts page contains every configured and triggered alerts of all the sensors allowed to that user, with a filter to select the sensor types that are visible on the page. It has the information divided in tabs: "Configured" and "Triggered". It shows the most relevant information about each configured or triggered alert, being possible to have more information about the specific alert by clicking on the name of the alert. In the tab “Configured” it is possible to create an alert by clicking on the button “Add alert” and filling the popup form. To add an actuator, there is a button “Add actuator”. In the tab “Triggered”, all triggered alerts are displayed by date and it is also possible to delete them. 
+                        
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Alerts page" data-desc="Alerts page with all configured and triggered alerts."><img id="Alerts" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Alerts.png" alt="Alerts page with all configured and triggered alerts."></a><br><h6>Alerts page (Click to enlarge)</h6></div>
+                        <br>
+                        &emsp;There is a view for each alert. It has a section with general information about the alert and a section dedicated to the configurations, with a list of all streams and actuators associated to alert. It also has a section with all occurrences and below a chart that displays the occurrences by day.
+
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Alert details page" data-desc="Alert details page with all information about it."><img id="Alert" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Alert_details.png" alt="Alert details page with all information about it."></a><br><h6>Alert details page (Click to enlarge)</h6></div>
+                        <br>
+						&emsp;The rules page contains a list of every rule defined and active. We can filter by metrics, as in the other pages. Each rule on the table shows specific information about it and we can easily add an actuator or have a quick view from the rule, where we can see the most relevant information. We can also delete the rule.
+                        
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Rules page" data-desc="Rules page with all configured rules."><img id="Rules" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Rules.png" alt="Rules page with all configured rules."></a><br><h6>Rules page (Click to enlarge)</h6></div>
+                        <br>
+                        &emsp;There is a page dedicated to every rule that shows all the details such as general information about the rule and actuators added. We can also add an actuator by clicking on "Add actuator".
+						
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Rule details page" data-desc="Rule details page with all information about it."><img id="Rule" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Rule_details.png" alt="Rule details page with all information about it."></a><br><h6>Rule details page (Click to enlarge)</h6></div>
+                        <br>
+						&emsp;The citizen area page has all the user reports done through the citizen mobile application, working as a mailbox. This reports can be about problems or some kind of occurrence in the city. These reports can be "seen" or "not seen" and will be in one of three states: "Waiting", "Working on" and "Solved". The first state means that the user report is waiting for resolution. The second means that the problem or occurrence reported is being solved (on progress). The third state means that it is solved. The city manager can filter by metrics and by the user reports' states.
+						
+						<br><br><div class="h-caption"><a href="#" class="pop" data-title="Citizen area page" data-desc="Citizen area with all user reports done through the citizen mobile app."><img id="CitizenArea" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Citizen.png" alt="Citizen area with all user reports done through the citizen mobile app."></a><br><h6>Citizen area page (Click to enlarge)</h6></div>
+                        <br>
+						&emsp;Each user report has a dedicated page that contains every information from the report. Besides the citizen information, subject and sensor associated, we can see the text and images and/or videos (if they where included). We can also change the state of the user report and print in any case.
+						
+						<br><br><div class="h-caption"><a href="#" class="pop" data-title="User reports details page" data-desc="User report detailed information."><img id="UserReport" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/UserReport_detail.png" alt="User report detailed information."></a><br><h6>User report details page (Click to enlarge)</h6></div>
+                        <br>
+
+                    </p>
+                    <br><br>
+                    <h4 align="left">Admin portal</h4>
+                    <p>
+                        &emsp;The users marked as "Staff users" have access to the admin portal, where they can add, change or remove users, sensors, subscriptions, and have access to all the data saved on the IoT City Data Persistence. On this section, we are going to exemplify the process of adding a sensor, subscriptions and associate the subscriptions to specific users.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Admin view" data-desc="We can see the different data saved on the Web Portal and change according to what we need"><img id="Admin" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/index.png" alt="e can see the different data saved on the Web Portal, and change according to what we need"></a><br><h6>Admin view (Click to enlarge)</h6></div><br>
+                        
+                        &emsp;After we log in, we want to add a sensor, so we click on "Add" button, on the "Sensors" card. Then, we can fill the form with the description of the sensor: Id, Name, date added to the IoT Platform, other information, sensor type, its' localization and if it is active.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Add a sensor" data-desc="We need to fill form with sensor ID, name, information, date added, type, localization and if it is active"><img id="add_Sensor" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/add_sensor.png" alt=""></a><br><h6>Add a sensor (Click to enlarge)</h6></div><br>
+                        
+                        &emsp;After we add a sensor, we can see all the sensors in the platform, including the recently added one.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="All the sensors in the platform" data-desc=""><img id="All_Sensors" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/sensors.png" alt="All the sensors in the platform"></a><br><h6>All the sensors in the platform (Click to enlarge)</h6></div><br>
+                        
+                        &emsp;Then, we want to add the subscriptions of that sensor to the platform. For that, we click on "Add" Button, on the "Subscriptions" card, and we enter the information of the subscription in the form. The subscription id is the id returned by the broker when adding the IoT City Web Portal as a subscriptor to the stream. The sensor subtype is the subtype of that subscription (e.g. For the waste container type there are the subtypes of waste percentage of containter, internal container temperature and waste volume). We can also specify if the subscription sends or receives values (if receives values is an actuator), by checking or unchecking the "sender" checkbox.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Add a subscriptions" data-desc="To add a subscription, we need the subscriptionID, the name, the date when it was added, the sensor associated, the subtype, if it is currently working and if it is a sender or an actuator"><img id="Add_Subscription" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/add_subsc.png" alt="To add a subscription, we need the subscriptionID, the name, the date when it was added, the sensor associated, the subtype, if it is currently working and if it is a sender or an actuator"></a><br><h6>Add a subscription (Click to enlarge)</h6></div><br>
+
+                        &emsp;After we add a subscription to a sensor, we can see all the subscriptions in the platform, including the recently added one.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="All the subscriptions in the platform" data-desc=""><img id="all_subscriptions" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/subscriptions.png" alt="All the subscriptions in the platform"></a><br><h6>All subscriptions in the platform (Click to enlarge)</h6></div><br>
+
+                        &emsp;Finally, we want to allow all the users in a group to see the values of the subscriptions. For that, we go to the "Subscription_group" to see the available groups.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="All subscription groups" data-desc=""><img id="subsc_groups" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/subsc_groups.png" alt="All subscription groups"></a><br><h6>All subscription groups (Click to enlarge)</h6></div><br>
+
+                        &emsp;After we select a group, on "Subscriptions", we add the new subscription to that group.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Add subscription to subscription group" data-desc=""><img id="Add_Subscription_Group" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/add_group.png" alt="Add subscription to subscription group"></a><br><h6>Add subscription to subscription group (Click to enlarge)</h6></div><br>
+                    </p>
+
+                    <h4 align="left">Mobile applications</h4>
+                    <p>
+                        &emsp;On the initial view of the mobile application, the user can see a dashboard with seven cards, one for each type of sensor. Each card will have the values gathered from the sensor that is currently closer to the user in real-time. On the top right corner the user can select which cards are visible, or select them all.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Dashboard view" data-desc=""><img class="mockups-app-img-mm" id="mobile_dash_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/Main_Dashboard.png" alt="Dashboard view"></a><br><h6>Dashboard view</h6></div><br>
+                        <br>
+                        &emsp;As said before, to filter the visible metrics on the dashboard, the user can do so by clicking in pen shaped button on the top right corner of the dashboard. A menu will appear with a checkbox for each metric (and another one for "All visible"). The logic is simple: if the checbox is ticked, the respective metric is visible on the dashboard, if it is not checked, the metric is not visible. If the option "All visible" is checked, all metrics are visible.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Dashboard filter" data-desc="Filter metrics menu"><img class="mockups-app-img-mm" id="mobile_filterdash_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/tutorial_7.png" alt="Sidebar menu"></a><br><h6>Filter metrics menu</h6></div><br>
+                        <br>
+						&emsp;Below, we can see the result of making the temperature and the lighting metric invisible on the dashboard.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Dashboard filtered" data-desc="Filtered temperature and lighting metric on the dashboard"><img class="mockups-app-img-mm" id="mobile_dashfiltered_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/tutorial_8.png" alt="Sidebar menu"></a><br><h6>Filtered temperature and lighting metric on the dashboard</h6></div><br>
+						<br>
+                        &emsp;The application has a left sidebar menu, which the user can access by sliding the finger from the left to right in the application, or by tapping on the top left icon. The menu has the following items: "Dashboard", "Map", "Metrics", which includes all the types of values collected by the app, and "Help". The "Dashboard" option redirects us to the dashboard, the "Map" takes us to the map view. The "Metrics" option group takes the user to the selected metric page. The "Help" option shows a page detailed tutorial to help the user navigate through the app.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Sidebar menu" data-desc=""><img class="mockups-app-img-mm" id="mobile_sidebar_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/Menu.png" alt="Sidebar menu"></a><br><h6>Sidebar menu</h6></div><br>
+                        <br>
+                        &emsp;The map page will show a map with markers on the location of the sensors. On the top of the page there is a search bar the user can use to jump to a location without scrolling on the map. Beneath the search bar there is a group of checkboxes where the user can select which types of sensors are visible on the map. By clicking on the markers, the user will see a tooltip with information about that sensor. Clicking on the tooltip will take the user to a report page about that sensor.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Map" data-desc=""><img class="mockups-app-img-mm" id="mobile_map_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/map.jpg" alt="Map view"></a><br><h6>Map view</h6></div><br>
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Map" data-desc=""><img class="mockups-app-img-mm" id="mobile_map_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/tutorial_3.jpg" alt="Map view"></a><br><h6>Pop up with detailed information of the sensor.</h6></div><br>
+                        <br>
+                        &emsp;Bellow, it is shown the effect of filtering metrics on the map.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Map filtered" data-desc=""><img class="mockups-app-img-mm" id="mobile_sidebar_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/tutorial_4.jpg" alt="Map filtered"></a><br><h6>Map view with filtered metrics</h6></div><br>
+                        <br>
+                         &emsp;After clicking on the pop up windows over the sensor icon, the user will be redirected to the "Reports screen", where he can report a problem he finds. He can click on the camara icon to take a photo or the film icon to take a video. He can also write the problem using plain text. The user has to specify his name and e-mail address. The "send" button uploads the report to the platform.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Reports view" data-desc=""><img class="mockups-app-img-mm" id="mobile_reports_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/report.jpg" alt="Reports view"></a><br><h6>Reports view</h6></div></br>
+                        &emsp;Clicking on a given type of data (e.g. temperature), the user is redirected to a page with a chart showing the data retrieved by all the temperature sensors and a table with the same information. Beneath the graph there are two buttons to set the minimum and maximum date for the graph to show. In the table the graph column allows he used to select which graphs will be visible. Besides, the checkbox color matches the line color of the respective graph. Also in the table the location column has a button that leads to the map page, where the asked sensor is already selected, and its tooltip is showing.
+
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Temperature view" data-desc=""><img class="mockups-app-img-mm" id="mobile_temperature_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/Temperature.png" alt="Temperature view"></a><br><h6>Temperature view</h6></div><br>
+                        &emsp;The "Help" option takes the user to a page where he can read a descriptive text about the mobile app context and the correct way to use it.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Help view" data-desc=""><img class="mockups-app-img-mm" id="mobile_help_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/help.png" alt="Help view"></a><br><h6>Help view</h6></div></br>
+                        
+                        <br>
+						
+						<h4 align="left">Exclusive to the city manager mobile application</h4>
+						<br>
+						The city manager (on the IoT City city manager app) can be notified and see the triggered alerts. For each triggered alert, he can see his relevant information and dismmiss it.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Alerts view" data-desc="Alerts view"><img class="mockups-app-img-mm2" id="mobile_sidebar_view" data-toggle="modal" data-target="#myModal3" src="./assets/images/android_app/Alerts.png" alt="Sidebar menu"></a><br><h6>Triggered alerts view</h6></div><br>
+                        <br>
+						When an alert is triggered, the city manager will be notified, by a push notification that will appear in is mobile device.
+                        <br><br><div class="h-caption"><a href="#" class="pop" data-title="Triggered alert notification" data-desc="Triggered alert notification"><img class="mockups-app-img-mm" id="mobile_sidebar_view" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/pushNotification.png" alt="Sidebar menu"></a><br><h6>Triggered alert notification</h6></div><br>
+
+
+                    </p>
+                    <h4 align="left">APIs available for the sensor technician</h4>
+                    <p>
+                        &emsp;When the sensor technician sets up the sensors, he can use the APIs available on the platform to automatically add sensors and streams. To add a sensor to the platform, the technician can send a 'POST' request to /ws/addsensor. The body of the request must contain the following fields:
+                        <ul>
+                        <li>ID - Id of the device</li>
+                        <li>password - A Password for device authentication</li>
+                        <li>name - Name of the device on the Platform</li>
+                        <li>description - Description of the device</li>
+                        <li>type - Type of the device (Available types: 'TE' (Temperature), 'AI' (Air), 'WA' (Waste), 'SO' (Noise), 'PE' (People), 'IL' (Lighting), 'RA' (Radiation))</li>
+                        <li>lat - Latitude of the device</li>
+                        <li>lon - Longitude of the device</li>
+                        </ul>
+                        &emsp;To facilitate the changes of the parameters, exists a default scripts for adding sensors, it is only needed a file "configadd.json" on the same folder than the script, with the parameters configured (you can see an example on the folder sensors).<br>
+                        &emsp;After adding a sensor, there is also an API for adding streams, with a 'POST' request to /ws/addsubscription.
+                        The body of the request must contain the following fields:
+                        <ul>
+                        <li>sensor_id - Id of the sender device</li>
+                        <li>subtype - Subtype of the stream (Available subtypes: 'C2' (CO2), 'VR' (Visible Radiation), 'IR' (Infrared Radiation), 'WV' (Waste Volume), 'WT' (Waste Internal Temperature), 'LI' (Lighting Illumination), 'PC' (People Counter), 'NL' (Noise Level), 'UV' (UV Radiation), 'AP' (Air Pressure), 'WP' (Waste Fullness Percentage), 'TE' (Temperature), 'LT' (Latitude), 'LO' (Longitude))</li>
+                        <li>subs_name - Name of the stream</li>
+                        <li>sub_description - Description of the stream</li>
+                        </ul>
+                        &emsp;To facilitate the changes of the parameters, exists a default scripts for adding streams, it is only needed a file "configstream.json" on the same folder than the script, with the parameters configured (you can see an example on the folder sensors).
+                    </p>
+                </div>
+
+            </article>
+			<!-- /Article -->
+			
+			<!-- Sidebar -->
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<div id="sidebar" class="widget affix">
+					<h4>Choose the topic you want to see</h4>
+					<ul class="list-unstyled list-spaces">
+						<li><a href="#about-1">Description &amp; main features</a><br><span class="small text-muted">On this section, we explain some of the main features<br>of the system,as well as an explanation on its usage.</span></li>
+						<li><a href="#about-2">How to access it</a><br><span class="small text-muted">In this section, we explain how to have<br>access to the different IoT City applications.</span></li>
+						<li><a href="#about-3">How it works</a><br><span class="small text-muted">In this section, we present the web portal,<br>admin portal and mobile aplication <br> views along with an explanation of usage.
+						</span></li>
+					</ul>
+				</div>
+
+			</aside>
+			<!-- /Sidebar -->
+
+		</div>
+	</div>	<!-- /container -->
+	
+
+	<footer id="footer" class="top-space">
+
+		<div class="footer1">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">Associated with</h3>
+						<div class="widget-body">
+							<!-- UA/DETI Logo -->
+							<a href="https://www.ua.pt/deti/" target="_blank"><img src="assets/images/deti-ua.png" alt="UA/DETI Logo"></a>
+						</div>
+					</div>
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">In collaboration with</h3>
+						<div class="widget-body">
+							<!-- IT Logo -->
+							<a href="https://www.it.pt/" target="_blank"><img src="assets/images/it-logo.png" alt="IT Logo"></a>
+							<!-- Altice Labs Logo -->
+							<a href="http://www.alticelabs.com/pt/" target="_blank"><img src="assets/images/AlticeLabs-logo-cinza.png" alt="Altice Labs Logo"></a>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav">Project in Informatics Engineering - Computer and Telematics Engineering</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Copyright &copy; 2017, IoT City. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+	</footer>
+		
+
+
+
+
+	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/headroom.min.js"></script>
+	<script src="assets/js/jQuery.headroom.min.js"></script>
+	<script src="assets/js/template.js"></script>
+</body>
+</html>

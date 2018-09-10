@@ -1,0 +1,1016 @@
+{% extends 'adminlte/map.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+<section class="content-header">
+	<h1>
+		Map
+		<small>Sensors' location</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li class="active"><a href="#"><i class="fa fa-map-marker"></i> Map</a></li>
+	</ol>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<div class="alert error">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+</div>
+<div class="alert success">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+
+</div>
+
+
+	<!-- Filter -->
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading filterheader">
+					<b>Filter by the metric associated to each sensor</b>
+				</div>
+				<div class="panel-body">
+				<!-- the events -->
+					<div id="mapFilter">
+            			{% if "TE" in user_types %}
+						<button type="button" id="bt" class="btn btn-default btn-sm bg-red" onclick="changeTemp();" style="width:12%; border-width: thin; border-color: #dd4b39;" data-toggle="tooltip" title=""><i class="fa fa-thermometer-half" ></i> Temperature </button>
+						{% endif %}
+            			{% if "IL" in user_types %}
+						<button type="button" id="bl" class="btn btn-default btn-sm bg-yellow" onclick="changeLight();" style="width:12%; border-width: thin; border-color: #f39c12;" data-toggle="tooltip" title=""><i class="fa fa-lightbulb-o" ></i> Lighting</button>
+						{% endif %}
+            			{% if "AI" in user_types %}
+						<button type="button" id="ba" class="btn btn-default btn-sm bg-blue" onclick="changeAir();" style="width:12%; border-width: thin; border-color: #0073b7;" data-toggle="tooltip" title=""><i class="fa fa-cloud"  ></i> Air</button>
+						{% endif %}
+            			{% if "WA" in user_types %}
+						<button type="button" id="bw" class="btn btn-default btn-sm bg-olive" onclick="changeWaste();" style="width:12%; border-width: thin; border-color: #3d9970;" data-toggle="tooltip" title=""><i class="fa fa-trash-o" ></i> Waste</button>
+						{% endif %}
+            			{% if "SO" in user_types %}
+						<button type="button" id="bn" class="btn btn-default btn-sm bg-aqua" onclick="changeNoise();" style="width:12%; border-width: thin; border-color: #00c0ef;" data-toggle="tooltip" title=""><i class="fa fa-volume-up" ></i> Noise</button>
+						{% endif %}
+            			{% if "RA" in user_types %}
+						<button type="button" id="br" class="btn btn-default btn-sm bg-orange" onclick="changeRadiation();" style="width:12%; border-width: thin; border-color: #ff851b;" data-toggle="tooltip" title=""><i class="fa fa-sun-o" ></i> Radiation</button>
+						{% endif %}
+            			{% if "PE" in user_types %}
+						<button type="button" id="bp" class="btn btn-default btn-sm bg-purple" onclick="changePeople();" style="width:12%; border-width: thin; border-color: #605ca8;" data-toggle="tooltip" title=""><i class="fa fa-users" id="ball" ></i> People</button>
+						{% endif %}
+						<button id ="allnone" type="button" class="btn btn-default btn-sm" onclick="changeAll();" style="width:12%; border-width: thin; border-color: #f4f4f4;"><i class="fa fa-th-list" ></i> None</button>
+					</div>
+				</div>
+				<!-- /.panel-body --> 
+			</div>
+          	<!-- /. panel -->
+        </div>
+    </div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div id="map" style="height: 600px; width: 100%;"></div>
+		</div>
+	</div>
+
+	<!-- iCheck -->
+	<br>
+	<div class="row">
+		<div class="col-md-12">
+
+			<div class="box box-primary">
+					
+	            <div class="box-header with-border">
+	              <h3 class="box-title">Sensors</h3>
+
+	              <div class="box-tools pull-right">
+	                <!-- Search
+					<div class="form-group pull-right">
+						<input type="text" class="search form-control" placeholder="search">
+					</div>-->
+					<!-- / -->
+	              </div>
+	              <!-- /.box-tools -->
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body">
+	              <div class="table-responsive mailbox-messages">
+	                <table class="table table-hover table-striped results" id="mapTable">
+						<thead>
+						<tr>
+						  <th>Name</th>
+						  <th>Location</th>
+						  <th>Streams</th>
+						  <th>Active/All streams</th>
+						  <th>Sensor status</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for sensor in sensors2 %}
+							{% if sensor.type == "TE" %}
+							<tr class="TE">
+							{% elif sensor.type == "WA" %}
+							<tr class="WA" >
+							{% elif sensor.type == "AI" %}
+							<tr class="AI" >
+							{% elif sensor.type == "SO" %}
+							<tr class="SO" >
+							{% elif sensor.type == "PE" %}
+							<tr class="PE" >
+							{% elif sensor.type == "IL" %}
+							<tr class="IL" >
+							{% elif sensor.type == "RA" %}
+							<tr class="RA" >
+							{% endif %}
+
+							  <td>
+							  	{% if sensor.type == 'TE' %}
+		                    		<i class="fa fa-thermometer-half"></i> 
+		                    	{% elif sensor.type == 'WA' %}
+		                    		<i class="fa fa-trash-o"></i> 
+		                    	{% elif sensor.type == 'SO' %}
+		                    		<i class="fa fa-volume-up"></i> 
+		                    	{% elif sensor.type == 'AI' %}
+		                    		<i class="fa fa-cloud"></i> 
+		                    	{% elif sensor.type == 'PE' %}
+		                    		<i class="fa fa-user-o"></i> 
+		                    	{% elif sensor.type == 'RA' %}
+		                    		<i class="fa fa-sun-o"></i> 
+		                    	{% elif sensor.type == 'IL' %}
+		                    		<i class="fa fa-lightbulb-o"></i> 
+		                    	{% else %}
+		                    		{{ type }} 
+		                    	{% endif %}
+							  <a href="/sensors/details/{{ sensor.id }}" data-toggle="tooltip" data-placement="right" data-html="true" title="Click to view <br> sensor page" >{{ sensor.name }}</a>
+							  </td>
+							  <td>
+								{% if sensor.address != "" %}
+								{% if sensor.address != None %}
+								{{ sensor.address }}<br>
+								{% endif %}
+								{% endif %}
+								<small>{{ sensor.lat }}; {{ sensor.lon }}</small>
+								</td>
+							  <td>
+							  	{% for stream in sensor.all_streams %}
+							  		{{ stream}}
+							  		{% if not forloop.last %}
+							  		<br>
+							  		{% endif %}
+
+							  		{% empty %}
+							  		-
+							  	{% endfor %}
+							  	</td>
+							  <td>{{ sensor.active }}/{{ sensor.all }}</td>
+							  <td>
+							  <span style="vertical-align:inherit;">Off</span>
+								<label style="margin-left:10px;" class="checkboxspace switch">
+								  	<input  type="checkbox" id="m2_{{sensor.id}}"
+									{% if sensor.turned_on %}
+										 checked 
+									{% endif %}
+									onclick="togglechanged(this)"> <div class="slider round">{% csrf_token %}</div>
+								</label>
+								<span style="vertical-align:inherit;">On</span>
+							  </td>
+							</tr>
+							
+						{% endfor %}
+						</tbody>
+					  </table>
+	                <!-- /.table -->
+	              </div>
+	              <!-- /.mail-box-messages -->
+	            </div>
+				<!-- /.box-body -->
+	  		</div>
+	  		<!-- /.box -->
+		</div>
+	</div>
+	<!-- /.row -->
+
+		<!-- Modal -->
+		<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Sensor changed state</span></button>
+					</div>
+					<div class="modal-body">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="change"></button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+
+
+{% endblock %}
+
+{% block jspage %}
+
+
+
+<!-- Maps -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqpWDakNAEswg5ZOBHnS4jGBu5lgj8WD0"></script>
+
+
+{% load static %}
+<script defer src="{% static "admin-lte/dist/js/oms.min.js" %}"></script>
+<script defer src="{% static "admin-lte/dist/js/markerclusterer.min.js" %}"></script>
+<script defer src="{% static "info_bubble/infobubble.js" %}"></script>
+
+<script type="text/javascript">
+	$('#maplink').addClass('active');
+
+	$(document).ready(function(){
+	    $('a[data-toggle="tooltip"]').tooltip();   
+	});
+
+	$('[rel=tooltip]').tooltip({container: 'body'});
+
+	$(document).ready(function(){
+	    $('#mapTable').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers"
+		} );
+	});
+
+	
+
+	// Get all elements with class="closebtn"
+	var close = document.getElementsByClassName("closebtn");
+	var i;
+
+
+	// Loop through all close buttons
+	for (i = 0; i < close.length; i++) {
+	    // When someone clicks on a close button
+	    close[i].onclick = function(){
+
+	        // Get the parent of <span class="closebtn"> (<div class="alert">)
+	        var div = this.parentElement;
+
+	        // Set the opacity of div to 0 (transparent)
+	        div.style.opacity = "0";
+
+	        // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+	        setTimeout(function(){ div.style.display = "none"; }, 600);
+	    }
+	}
+
+		last_object = null;
+		last_object2 = null;
+
+		$('#cancel').on('click', function(){
+			if (last_object.checked == false){
+				last_object.checked = true;
+				last_object2.checked = true;
+			}
+			else{
+				last_object.checked = false;
+				last_object2.checked = false;
+			}
+		});
+
+		$("#change").on('click', function(){
+
+			var modal = $("#confirm");
+			modal.modal("hide");
+
+			if (last_object.checked)
+				lchecked = "on";
+			else
+				lchecked = "off";
+
+			/* Get the csrf token */
+			var csrftoken = getCookie('csrftoken');
+			$.ajaxSetup({
+				beforeSend: function(xhr, settings) {
+					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+					}
+				}
+			});
+
+			/* Send an ajax request */
+			$.ajax({
+				type: "POST",
+				url: "/sensors/"+lchecked+"/"+last_object.id.split("_").pop().toString(),
+				data: {},
+				success: function(data){
+					if(data["status"]=="Success"){
+
+
+						var close = document.getElementsByClassName("alert success");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+last_object.id.split("_").pop().toString()+"\" sensor successfully turned "+lchecked;
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+						}
+
+						checked[n] = last_object.checked;
+						if (last_object2!=null)
+							last_object2.checked = !last_object2.checked;
+
+
+					}
+					else{
+						var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			}
+					}
+				},
+				failure: function(data){
+					var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			}
+				},
+			});
+
+			/* CSRF Helpers */
+			function csrfSafeMethod(method) {
+	    // these HTTP methods do not require CSRF protection
+	    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+});
+
+		sensors = JSON.parse('{{sensors|escapejs}}')
+		temp = []
+		air = []
+		waste = []
+		sound = []
+		people = []
+		uv = []
+		illum = []
+		var infoBubble;
+
+
+		checked = []
+		var n;
+		var markerCluster;
+		var map;
+		var markers = [];
+
+		/* Create map */
+		function initMap() {
+
+			// Define bounds of map
+			bounds = new google.maps.LatLngBounds();
+
+			map = new google.maps.Map(document.getElementById('map'), {mapTypeId: 'roadmap'});
+
+			var oms = new OverlappingMarkerSpiderfier(map);
+
+
+			infoBubble = new InfoBubble({
+				map: map,
+				shadowStyle: 1,
+				padding: 10,
+				borderRadius: 20,
+				arrowSize: 10,
+				borderWidth: 1,
+				disableAutoPan: true,
+				hideCloseButton: false,
+				arrowPosition: 30,
+				arrowStyle: 2,
+				width: 500 ,
+				height: 250 ,
+				backgroundColor: '#f5f5f5'
+			});
+
+			oms.addListener('click', function(marker, event) {			     
+
+			sensor = sensors[marker.id];
+
+			marker.content = "";
+
+			/* Add the content to sensors */
+			if (sensor["information"] != null && sensor["information"] != ""){
+				marker.content += "<br>Info: "+sensor["information"];
+			}
+
+			if (sensor["active"] != null && sensor["inactive"] != null){
+				marker.content += "<br>Streams Active/Inactive: "+sensor["active"]+"/"+sensor["inactive"];
+			}
+			
+
+			if (sensor["value"]!=[]){
+				for (j=0; j<sensor["value"].length; j++){
+					marker.content += "<br>"+sensor["value"][j][0]+" last value: "+sensor["value"][j][1]+"<br> Last reading at "+sensor["value"][j][2];
+				}
+			}
+
+			if(sensor["address"] != null)
+				marker.content += "<br>"+sensor["address"];
+
+			marker.content += "<br><small>"+sensor["lat"]+"; "+sensor["lon"]+"</small>";
+
+			marker.content += "<form action=\"\" method=\"post\">{% csrf_token %}<br><span style=\"vertical-align:top;\">Off</span><label id=\""+marker.id+"\" style=\"margin:0px 5px 0px 5px;\" class=\"switch\"><input onclick=\"togglechanged(this)\" ";
+
+			if (checked[marker.id]==true){
+				marker.content += "checked";
+			}
+
+			marker.content +=" type=\"checkbox\" id=\"m1_"+sensor["id"]+"\"><div class=\"slider round\"></div></label><span style=\"vertical-align:top;\">On</span></form><br><b><a href='/sensors/details/" + sensor["id"] + "'>Click here for more details</a></b>";
+
+			marker.desc = marker.content;
+
+			
+			infoBubble.removeTab(0);
+			infoBubble.addTab(marker.title, marker.desc);
+			infoBubble.open(map, marker);
+		});
+		
+		
+		// Create sensors
+		for (i=0; i<sensors.length; i++){
+			sensor = sensors[i]
+
+			var marker = new google.maps.Marker({
+				position:{lat: parseFloat(sensor["lat"]), lng: parseFloat(sensor["lon"])},
+				map: map,
+				label: {
+					fontFamily: 'Fontawesome',
+					text: '',
+				},
+				content: '',
+				title: sensor["name"]
+			});
+			marker['id'] = i;
+			markers.push(marker);
+
+			checked.push(sensor["turned_on"]);
+
+			n = 0;
+
+			/* Change the symbol for each type of sensor */
+			if (sensor["type"] == "TE"){
+				n = temp.length;
+				temp.push(marker);
+				marker.label.text = '\uf2c7';
+			}
+			else if(sensor["type"] == "AI"){
+				n = air.length;
+				air.push(marker);
+				marker.label.text = '\uf0c2';
+			}
+			else if(sensor["type"] == "WA"){
+				n = waste.length;
+				waste.push(marker);
+				marker.label.text = '\uf014';
+			}
+			else if(sensor["type"] == "SO"){
+				n = sound.length;
+				sound.push(marker);
+				marker.label.text = '\uf028';
+			}
+			else if(sensor["type"] == "PE"){
+				n = people.length;
+				people.push(marker);
+				marker.label.text = '\uf007';
+			}
+			else if(sensor["type"] == "RA"){
+				n = uv.length;
+				uv.push(marker);
+				marker.label.text = '\uf185';
+			}
+			else if(sensor["type"] == "IL"){
+				n = illum.length;
+				illum.push(marker);
+				marker.label.text = '\uf0eb';
+			}
+			
+			loc = new google.maps.LatLng(marker.position.lat(), marker.position.lng());
+			bounds.extend(loc);
+			oms.addMarker(marker);
+			
+		}
+
+		markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+        	maxZoom:14});
+      
+
+		// Adjust the position of map
+		map.fitBounds(bounds);
+		map.panToBounds(bounds);
+
+		// Disable button if there are no sensors for that type
+		var array = [["temp", temp.length], ["air", air.length], ["waste", waste.length], ["sound", sound.length], ["people", people.length], ["uv", uv.length], ["illum", illum.length]];
+		for(var k = 0; k < array.length; k++){
+			if(array[k][1] == 0){
+				if(k == 0)
+					$('#bt').attr("disabled", true);
+				if(k == 1)
+					$('#bl').attr("disabled", true);
+				if(k == 2)
+					$('#ba').attr("disabled", true);
+				if(k == 3)
+					$('#bw').attr("disabled", true);
+				if(k == 4)
+					$('#bn').attr("disabled", true);
+				if(k == 5)
+					$('#br').attr("disabled", true);
+				if(k == 6)
+					$('#bp').attr("disabled", true);
+			}
+		}
+
+	}
+
+
+	// Turn on or off sensors
+	function togglechanged(Object){
+
+		var checked = "";
+
+		if (Object.checked){
+			checked = "on";
+		}
+		else{
+			checked = "off";
+		}
+
+
+		var id = Object.id.split("_").pop();
+
+		var modal = $("#confirm").modal({backdrop: 'static', keyboard: false});
+		modal.text = "Are you sure you want to turn " + checked + " " + id + "?";
+		modal.find('.modal-body').text("Are you sure you want to turn " + checked + " " + id + "?");
+		
+		var b = document.getElementById("change")
+
+		modal.modal("show");
+		if (Object.checked)
+			b.innerHTML = "Turn on " + id;
+		else
+			b.innerHTML = "Turn off " + id;
+
+		var ob1 = document.getElementById('m1_'+id);
+		var ob2 = document.getElementById('m2_'+id);
+
+		if(Object==ob1){
+			last_object = ob1;
+			last_object2 = ob2;
+		}
+		else{
+			last_object2 = ob1;
+			last_object = ob2;
+		}
+
+		if(ob1==null)
+			n = ob2.parentElement.id;
+		else
+			n = ob1.parentElement.id;
+
+	}
+
+	/* Filter */
+	tempf = true;
+	lighf = true;
+	airf = true;
+	wastef = true;
+	noisef = true;
+	radiationf = true;
+	peoplef = true;
+
+	$.fn.dataTable.ext.search.push(
+
+		function (oSettings, aData, iDataIndex) {
+
+		    var myRowClasses = oSettings.aoData[iDataIndex].nTr.className.split(" ");
+		    
+
+		    for(var rclass in myRowClasses){
+		    	if(airf==true && myRowClasses[rclass]=='AI'){
+				    return true;
+				}
+				if(lighf==true && myRowClasses[rclass]=='IL'){
+					return true;
+				}
+				if(wastef==true && myRowClasses[rclass]=='WA'){
+					return true;
+				}
+				if(noisef==true && myRowClasses[rclass]=='SO'){
+					return true;
+				}
+				if(radiationf==true && myRowClasses[rclass]=='RA'){
+					return true;
+				}
+			    if(peoplef==true && myRowClasses[rclass]=='PE'){
+			    	return true;
+			    }
+			    if(tempf==true && myRowClasses[rclass]=='TE'){
+			    	return true;
+			    }
+		    }
+
+		    return false;
+	});
+
+	function changeTemp(){
+		if(tempf==true){
+			//document.getElementById('bt').style.opacity="0.5";
+			document.getElementById('bt').style.backgroundColor="white";
+			document.getElementById('bt').style.color="black";
+			document.getElementById('bt').classList.remove('bg-red');
+			for (i=0; i<temp.length; i++){
+				temp[i].setVisible(false);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		else{
+			//document.getElementById('bt').style.opacity="1";
+
+			document.getElementById('bt').className += ' bg-red';
+			for (i=0; i<temp.length; i++){
+				temp[i].setVisible(true);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		tempf = !tempf;
+		var table = $('#mapTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeLight(){
+		if(lighf==true){
+			//document.getElementById('bl').style.opacity="0.5";
+			document.getElementById('bl').style.backgroundColor="white";
+			document.getElementById('bl').style.color="black";
+			document.getElementById('bl').classList.remove('bg-yellow');
+			for (i=0; i<illum.length; i++){
+				illum[i].setVisible(false);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		else{
+			//document.getElementById('bl').style.opacity="1";
+			document.getElementById('bl').className += ' bg-yellow';
+			for (i=0; i<illum.length; i++){
+				illum[i].setVisible(true);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		lighf = !lighf;
+		var table = $('#mapTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeAir(){
+		if(airf==true){
+			//document.getElementById('ba').style.opacity="0.5";
+			document.getElementById('ba').style.backgroundColor="white";
+			document.getElementById('ba').style.color="black";
+			document.getElementById('ba').classList.remove('bg-blue');
+			for (i=0; i<air.length; i++){
+				air[i].setVisible(false);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		else{
+			//document.getElementById('ba').style.opacity="1";
+			document.getElementById('ba').className += ' bg-blue';
+			for (i=0; i<air.length; i++){
+				air[i].setVisible(true);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		airf = !airf;
+		var table = $('#mapTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeWaste(){
+		if(wastef==true){
+			//document.getElementById('bw').style.opacity="0.5";
+			document.getElementById('bw').style.backgroundColor="white";
+			document.getElementById('bw').style.color="black";
+			document.getElementById('bw').classList.remove('bg-olive');
+			for (i=0; i<waste.length; i++){
+				waste[i].setVisible(false);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		else{
+			//document.getElementById('bw').style.opacity="1";
+			document.getElementById('bw').className += ' bg-olive';
+			for (i=0; i<waste.length; i++){
+				waste[i].setVisible(true);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		wastef = !wastef;
+		var table = $('#mapTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeNoise(){
+		if(noisef==true){
+			//document.getElementById('bn').style.opacity="0.5";
+			document.getElementById('bn').style.backgroundColor="white";
+			document.getElementById('bn').style.color="black";
+			document.getElementById('bn').classList.remove('bg-aqua');
+			for (i=0; i<sound.length; i++){
+				sound[i].setVisible(false);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		else{
+			//document.getElementById('bn').style.opacity="1";
+			
+			document.getElementById('bn').className += ' bg-aqua';
+			for (i=0; i<sound.length; i++){
+				sound[i].setVisible(true);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		noisef = !noisef;
+		var table = $('#mapTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeRadiation(){
+		if(radiationf==true){
+			//document.getElementById('br').style.opacity="0.5";
+			document.getElementById('br').style.backgroundColor="white";
+			document.getElementById('br').style.color="black";
+			document.getElementById('br').classList.remove('bg-orange');
+			for (i=0; i<uv.length; i++){
+				uv[i].setVisible(false);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		else{
+			//document.getElementById('br').style.opacity="1";
+			document.getElementById('br').className += ' bg-orange';
+			for (i=0; i<uv.length; i++){
+				uv[i].setVisible(true);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		radiationf = !radiationf;
+		var table = $('#mapTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changePeople(){
+		if(peoplef==true){
+			//document.getElementById('bp').style.opacity="0.5";
+			document.getElementById('bp').style.backgroundColor="white";
+			document.getElementById('bp').style.color="black";
+			document.getElementById('bp').classList.remove('bg-purple');
+			for (i=0; i<people.length; i++){
+				people[i].setVisible(false);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		else{
+			//document.getElementById('bp').style.opacity="1";
+			document.getElementById('bp').className += ' bg-purple';
+			for (i=0; i<people.length; i++){
+				people[i].setVisible(true);
+			}
+			markerCluster.setIgnoreHidden(true);
+			markerCluster.repaint();
+		}
+		peoplef = !peoplef;
+		var table = $('#mapTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function analyseAllNone(){
+		if(peoplef && tempf && radiationf && wastef && noisef && airf && lighf)
+			$('#allnone').html('<i class="fa fa-th-list" ></i> None');
+		else
+			$('#allnone').html('<i class="fa fa-th-list" ></i> All');
+	}
+
+	function changeAll(){
+		if(peoplef && tempf && radiationf && wastef && noisef && airf && lighf){
+			peoplef = false;
+			tempf = false;
+			radiationf = false;
+			wastef = false;
+			noisef = false;
+			airf = false;
+			lighf = false;
+			
+			/*
+			document.getElementById('bt').style.opacity="0.5";
+			document.getElementById('bl').style.opacity="0.5";
+			document.getElementById('ba').style.opacity="0.5";
+			document.getElementById('bw').style.opacity="0.5";
+			document.getElementById('bn').style.opacity="0.5";
+			document.getElementById('br').style.opacity="0.5";
+			document.getElementById('bp').style.opacity="0.5";
+			*/
+
+			document.getElementById('bt').style.backgroundColor="white";
+			document.getElementById('bt').style.color="black";
+			document.getElementById('bt').classList.remove('bg-red');
+			document.getElementById('bl').style.backgroundColor="white";
+			document.getElementById('bl').style.color="black";
+			document.getElementById('bl').classList.remove('bg-yellow');
+			document.getElementById('ba').style.backgroundColor="white";
+			document.getElementById('ba').style.color="black";
+			document.getElementById('ba').classList.remove('bg-blue');
+			document.getElementById('bw').style.backgroundColor="white";
+			document.getElementById('bw').style.color="black";
+			document.getElementById('bw').classList.remove('bg-olive');
+			document.getElementById('bn').style.backgroundColor="white";
+			document.getElementById('bn').style.color="black";
+			document.getElementById('bn').classList.remove('bg-aqua');
+			document.getElementById('br').style.backgroundColor="white";
+			document.getElementById('br').style.color="black";
+			document.getElementById('br').classList.remove('bg-orange');
+			document.getElementById('bp').style.backgroundColor="white";
+			document.getElementById('bp').style.color="black";
+			document.getElementById('bp').classList.remove('bg-purple');
+			i = 0;
+			end = 0;
+			while(end == 0){
+				end = 1;
+				if(i < temp.length){
+					temp[i].setVisible(false);
+					end = 0;
+				}
+				if(i < illum.length){
+					illum[i].setVisible(false);
+					end = 0;
+				}
+				if(i < air.length){
+					air[i].setVisible(false);
+					end = 0;
+				}
+				if(i < waste.length){
+					waste[i].setVisible(false);
+					end = 0;
+				}
+				if(i < sound.length){
+					sound[i].setVisible(false);
+					end = 0;
+				}
+				if(i < uv.length){
+					uv[i].setVisible(false);
+					end = 0;
+				}
+				if(i < people.length){
+					people[i].setVisible(false);
+					end = 0;
+				}
+				i++;
+			}
+
+			$('#allnone').html('<i class="fa fa-th-list" ></i> All');
+		}else{
+			peoplef = true;
+			tempf = true;
+			radiationf = true;
+			wastef = true;
+			noisef = true;
+			airf = true;
+			lighf = true;
+			
+			/*
+			document.getElementById('bt').style.opacity="1";
+			document.getElementById('bl').style.opacity="1";
+			document.getElementById('ba').style.opacity="1";
+			document.getElementById('bw').style.opacity="1";
+			document.getElementById('bn').style.opacity="1";
+			document.getElementById('br').style.opacity="1";
+			document.getElementById('bp').style.opacity="1";
+			*/
+
+			document.getElementById('bt').className += ' bg-red';
+			document.getElementById('bl').className += ' bg-yellow';
+			document.getElementById('ba').className += ' bg-blue';
+			document.getElementById('bw').className += ' bg-olive';
+			document.getElementById('bn').className += ' bg-aqua';
+			document.getElementById('br').className += ' bg-orange';
+			document.getElementById('bp').className += ' bg-purple';
+			i = 0;
+			end = 0;
+			while(end == 0){
+				end = 1;
+				if(i < temp.length){
+					temp[i].setVisible(true);
+					end = 0;
+				}
+				if(i < illum.length){
+					illum[i].setVisible(true);
+					end = 0;
+				}
+				if(i < air.length){
+					air[i].setVisible(true);
+					end = 0;
+				}
+				if(i < waste.length){
+					waste[i].setVisible(true);
+					end = 0;
+				}
+				if(i < sound.length){
+					sound[i].setVisible(true);
+					end = 0;
+				}
+				if(i < uv.length){
+					uv[i].setVisible(true);
+					end = 0;
+				}
+				if(i < people.length){
+					people[i].setVisible(true);
+					end = 0;
+				}
+				i++;
+			}
+
+			$('#allnone').html('<i class="fa fa-th-list" ></i> None');
+		}
+
+		markerCluster.setIgnoreHidden(true);
+		markerCluster.repaint();
+		var table = $('#mapTable').DataTable();
+		table.draw();
+	}
+
+
+	window.onload = initMap;
+</script>
+
+{% endblock %}

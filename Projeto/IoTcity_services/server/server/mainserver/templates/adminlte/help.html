@@ -1,0 +1,97 @@
+{% extends 'adminlte/help.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+  <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Help
+            <small></small>
+        </h1>
+        <ol class="breadcrumb">
+      <li class="active"><a href="#"><i class="fa fa-question-circle"></i> Help</a></li>
+    </ol>
+    </section>
+
+{% endblock %}
+
+{% block content %}
+	<!-- Row -->
+    <div class="row">
+
+        <div class="col-md-6">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+              <h3 class="box-title">Description & main features</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <p>&emsp;IoT City is a platform designed to provide the city manager a web application for gathering metrics from the city, and act upon them, as well as to provide the citizens a mobile application that allows them to track in real-time the state of the city, and to report possible problems to the city manager.</p>
+
+              <p>&emsp;There are seven types of sensor metrics allowed on the system: temperature, waste (waste containers), radiation, noise, air (CO2, ...), lighting and people counter. An administrator can add sensors on-the-fly to the platform, and also add streams to sensors. A stream is a flow of data from the sensor to the platform, that has a subtype (e.g. A waste sensor can have three streams: Waste Container Usage Percentage, Internal Container Internal Temperature and Waste Container Volume). It is possible to send commands to some specific streams, known as actuators (e.g. lighting sensors, change the dimmming value).</p>
+
+              <p>&emsp;The web portal has the following main features:</p>
+
+              <ul>
+                <li>- Check all the sensors' streams values in real-time;</li>
+                <li>- Check the history of sensors' streams;</li>
+                <li>- Check the location of all the sensors allowed to the user in a map;</li>
+                <li>- Send values to actuators;</li>
+                <li>- Add and check alerts with actuators to streams;</li>
+                <li>- Add and check system functional rules;</li>
+                <li>- Check the users reports;</li>
+                <li>- Add notes associated to the user.</li>
+              </ul>
+
+              <br>
+              <p><b>You can check our website for full documentation about the platform.</b></p>
+              <a href="http://xcoa.av.it.pt/~pei2016-2017_g3/">http://xcoa.av.it.pt/~pei2016-2017_g3/</a>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- ./col -->
+
+        <div class="col-md-6">
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">FAQ</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <p><b>Q1: <i>What is the difference between a sender stream and an actuator stream?</i></b></p>
+
+              <p><b>A1:</b> A sender stream sends data to the platform. The IoT Platform fetches the data from the sender streams periodically and adds it to the data persistence. An actuator stream is not used to fetch values, instead it is used to send values to the sensor, that can change his behaviour. The values shown on the actuator stream charts are the values send to him, not the values gathered.</p>
+
+              <p><b>Q2: <i>How is the data fetched and with what time period?</i></b></p>
+
+              <p><b>A2:</b> The data is fetched using asynchronous tasks send by the server to a RabbitMQ distributed task queue, then gathered by one or more Celery Workers. The time period is defined in the file "tasks.py" (in seconds), although for the system to be fully working, it MUST be longer than the sender period of the sensor (See Q3).</p>
+
+              <p><b>Q3: <i>How the platform detects that a stream is not working?</i></b></p>
+
+              <p><b>A3:</b> The platform detects that a stream is not working when it tries to fetch data from the broker and it does not have any. This has two major implications: 1) We never know when an actuator is not working, because the actuators don't send values to the platform; 2) If the sensor period of sending data is longer than the period of server fetching data, sometimes the server will find the stream without values, and will report the stream as "not working" mistakenly.</p>
+
+              <p><b>Q4: <i>What it means for the user to turn off a sensor in the web portal?</i></b></p>
+
+              <p><b>A4:</b> If the user "turns off" a sensor in the web portal, the sensor will not be physically turned off. The meaning of the action is that the server will not fetch data for that sensor (as if the sensor was turned off), which does not mean that the sensor will stop sending values to SmartIoT.</p>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- ./col -->
+
+    </div>
+    <!-- /.row -->
+{% endblock %}
+
+{% block jspage %}
+  <script>
+    $('#helplink').addClass('active');
+  </script>
+{% endblock %}

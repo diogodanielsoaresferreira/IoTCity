@@ -1,0 +1,132 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never">
+           <group android:id="@+id/main_menu_group_s">
+                <!--
+                        <item
+                            android:id="@+id/nav_language"
+                            android:title="Change language" >
+                            <menu android:id="@+id/languages_menu">
+                                <group android:id="@+id/languages_group">
+                                    <item
+                                        android:id="@+id/eng"
+                                        android:title="English"/>
+                                    <item
+                                        android:id="@+id/pt"
+                                        android:title="Portuguese" />
+                                </group>
+                            </menu>
+                        </item>
+                        -->
+               <!--
+               <item
+                    android:title="Visible metrics"
+                    android:id="@+id/filter">
+                    <menu android:id="@+id/metrics_menu">
+                        <group android:id="@+id/metrics_group">
+                            <item
+                                android:id="@+id/temperature_1"
+                                android:title="@string/temperature"
+                                android:checked="true"
+                                android:checkableBehavior="all"
+                                android:checkable="true" />
+                            <item
+                                android:id="@+id/noise_1"
+                                android:title="@string/noise"
+                                android:checkableBehavior="all"
+                                android:checked="true"
+                                android:checkable="true"/>
+                            <item
+                                android:id="@+id/lighting_1"
+                                android:title="@string/lighting"
+                                android:checkableBehavior="all"
+                                android:checked="true"
+                                android:checkable="true"
+                                />
+                            <item
+                                android:id="@+id/radiation_1"
+                                android:title="@string/UV"
+                                android:checkableBehavior="all"
+                                android:checked="true"
+                                android:checkable="true"/>
+                            <item
+                                android:id="@+id/waste_1"
+                                android:title="@string/waste"
+                                android:checkableBehavior="all"
+                                android:checked="true"
+                                android:checkable="true"/>
+                            <item
+                                android:id="@+id/people_1"
+                                android:title="@string/people"
+                                android:checkableBehavior="all"
+                                android:checked="true"
+                                android:checkable="true"/>
+                            <item
+                                android:id="@+id/air_1"
+                                android:title="@string/air_"
+                                android:checkableBehavior="all"
+                                android:checked="true"
+                                android:checkable="true"/>
+                        </group>
+                    </menu>
+                </item>-->
+               <item
+                   android:title="Visible metrics"
+                   />
+               <item
+                   android:id="@+id/temperature_1"
+                   android:title="@string/temperature"
+                   android:checked="true"
+                   android:checkableBehavior="all"
+                   android:checkable="true" />
+               <item
+                   android:id="@+id/noise_1"
+                   android:title="@string/noise"
+                   android:checkableBehavior="all"
+                   android:checked="true"
+                   android:checkable="true"/>
+               <item
+                   android:id="@+id/lighting_1"
+                   android:title="@string/lighting"
+                   android:checkableBehavior="all"
+                   android:checked="true"
+                   android:checkable="true"
+                   />
+               <item
+                   android:id="@+id/radiation_1"
+                   android:title="@string/UV"
+                   android:checkableBehavior="all"
+                   android:checked="true"
+                   android:checkable="true"/>
+               <item
+                   android:id="@+id/waste_1"
+                   android:title="@string/waste"
+                   android:checkableBehavior="all"
+                   android:checked="true"
+                   android:checkable="true"/>
+               <item
+                   android:id="@+id/people_1"
+                   android:title="@string/people"
+                   android:checkableBehavior="all"
+                   android:checked="true"
+                   android:checkable="true"/>
+               <item
+                   android:id="@+id/air_1"
+                   android:title="@string/air_"
+                   android:checkableBehavior="all"
+                   android:checked="true"
+                   android:checkable="true"/>
+               <item
+                   android:id="@+id/all"
+                   android:title="All visible"
+                   android:checkableBehavior="all"
+                   android:checked="true"
+                   android:checkable="true"/>
+           </group>
+    </item>
+</menu>

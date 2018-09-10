@@ -1,0 +1,17 @@
+{
+	"sensor_id":"waste_test2",
+	"sensor_name":"Waste Test 2",
+	"sensor_passwd":"waste_teste_secret",
+	"sensor_description":"A waste test sensor",
+	"sensor_type": "WA",
+	"sensor_lat":40,
+	"sensor_lon":-8,
+
+	"sensor_streams": [
+		{
+			"stream_name": "Waste test fullness",
+			"stream_subtype": "WP",
+			"stream_description": ""
+		}
+	]
+}

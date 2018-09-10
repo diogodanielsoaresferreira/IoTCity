@@ -1,0 +1,876 @@
+{% extends 'adminlte/reports.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+        	<h1>
+                Citizen area
+                <small>General information about mobile application users reports</small>
+            </h1>
+            <ol class="breadcrumb">
+        		<li class="active"><a href="/reports"><i class="fa fa-comments-o"></i> Citizen area</a></li>
+      		</ol>
+	</section>
+	
+{% endblock %}
+
+
+{% block content %}
+<div class="alert error">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+</div>
+<div class="alert success">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+</div>
+<div class="modal fade" id="changeReportState" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Change report state</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to change the state of the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="changeReportStateButton">Change state</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete report</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteReportButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- This forces pages to refresh when the back button is clicked-->
+<input type="hidden" id="refresh" value="no"/>
+<!-- Main content -->
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading filterheader">
+					<b>Filter by the metric associated to each report</b>
+				</div>
+				<div class="panel-body">
+				<!-- the events -->
+					<div id="dashboardFilter">
+						{% if "TE" in user_types %}
+						<button type="button" id="bt" class="btn btn-default btn-sm bg-red" onclick="changeTemp();" style="width:12%; border-width: thin; border-color: #dd4b39;" data-toggle="tooltip" title=""><i class="fa fa-thermometer-half" ></i> Temperature </button>
+						{% endif %}
+						{% if "IL" in user_types %}
+						<button type="button" id="bl" class="btn btn-default btn-sm bg-yellow" onclick="changeLight();" style="width:12%; border-width: thin; border-color: #f39c12;" data-toggle="tooltip" title=""><i class="fa fa-lightbulb-o" ></i> Lighting</button>
+						{% endif %}
+						{% if "AI" in user_types %}
+						<button type="button" id="ba" class="btn btn-default btn-sm bg-blue" onclick="changeAir();" style="width:12%; border-width: thin; border-color: #0073b7;" data-toggle="tooltip" title=""><i class="fa fa-cloud" ></i> Air</button>
+						{% endif %}
+						{% if "WA" in user_types %}
+						<button type="button" id="bw" class="btn btn-default btn-sm bg-olive" onclick="changeWaste();" style="width:12%; border-width: thin; border-color: #3d9970;" data-toggle="tooltip" title=""><i class="fa fa-trash-o" ></i> Waste</button>
+						{% endif %}
+						{% if "SO" in user_types %}
+						<button type="button" id="bn" class="btn btn-default btn-sm bg-aqua" onclick="changeNoise();" style="width:12%; border-width: thin; border-color: #00c0ef;" data-toggle="tooltip" title=""><i class="fa fa-volume-up" ></i> Noise</button>
+						{% endif %}
+						{% if "RA" in user_types %}
+						<button type="button" id="br" class="btn btn-default btn-sm bg-orange" onclick="changeRadiation();" style="width:12%; border-width: thin; border-color: #ff851b;" data-toggle="tooltip" title=""><i class="fa fa-sun-o" ></i> Radiation</button>
+						{% endif %}
+						{% if "PE" in user_types %}
+						<button type="button" id="bp" class="btn btn-default btn-sm bg-purple" onclick="changePeople();" style="width:12%; border-width: thin; border-color: #605ca8;" data-toggle="tooltip" title=""><i class="fa fa-users" id="ball" ></i> People</button>
+						{% endif %}
+						<button type="button" id="allnone" class="btn btn-default btn-sm" onclick="changeAll();" style="width:12%; border-width: thin; border-color: #f4f4f4;"><i class="fa fa-th-list" ></i> None</button>
+					</div>
+				</div>
+				<!-- /.box-body --> 
+			</div>
+      	<!-- /. box -->
+    	</div>
+	</div>
+	<!-- Mailbox -->
+	<div class="row">
+		<div class="col-md-12">	
+
+			<div class="box box-primary">
+					
+	            <div class="box-header with-border">
+	              <h3 class="box-title">Inbox</h3>
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body">
+	              <div class="mailbox-controls">
+	              	<!-- Show all -->
+	              	<button type="button" class="btn btn-default btn-sm" id="allButton" onclick="showAll()"><i class="fa fa-th-list"></i> All</button>
+
+	                <div class="btn-group">
+	                  	<button type="button" class="btn btn-default btn-sm" id="seenButton" onclick="showSeen()"><i class="fa fa-eye"></i> Seen</button>
+	                  	<button type="button" class="btn btn-default btn-sm" id="notSeenButton" onclick="showNotSeen()"><i class="fa fa-eye-slash"></i> Not seen</button>
+	                </div>
+	                <div class="btn-group">
+	                	<button type="button" class="btn btn-default btn-sm" id="waitingButton" onclick="showWaiting()"><i class="fa fa-hourglass-start"></i> Waiting</button>
+	                	<button type="button" class="btn btn-default btn-sm" id="workingButton" onclick="showWorking()"><i class="fa fa-cogs"></i> Working on</button>
+	                  	<button type="button" class="btn btn-default btn-sm" id="solvedButton" onclick="showSolved()"><i class="fa fa-check-circle"></i> Solved</button>
+	                </div>
+
+	                <!-- /.btn-group -->
+	              </div>
+	              <div class="table-responsive mailbox-messages">
+	                <table class="table table-hover table-striped results" id="citizenTable">
+	               	  <thead>
+	               	  	<tr>
+	               	  		<th>ID</th>
+	               	  		<th>Subject</th>
+	               	  		<th>Sensor name</th>
+	               	  		<th>Date</th>
+	               	  		<th>User</th>
+	               	  		<th>Working state</th>
+	               	  		<th>Actions</th>
+	               	  	</tr>
+	               	  </thead>
+	                  <tbody>
+	                  {% for report in reports %}
+	                  <tr id="report-{{ report.id }}" class="reportrow">
+	                  	<td class="mailbox-id">{{ report.id }}</td>
+	                  	<!--<td class="mailbox-state">-->
+	                  	{% if report.state == "Not Seen" %}
+	                  		<!--<i class="fa fa-eye-slash"></i>-->
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' NotSeen';
+	                  		</script>
+	                  	{% else %}
+	                  		<!--<i class="fa fa-eye"></i>-->
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' Seen';
+	                  		</script>
+	                  	{% endif %}
+	                  	<!--</td>-->
+	                  	<td class="mailbox-subject"><a href="read/id={{report.id}}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view more <br> information about the report">
+	                  	{% if report.sen_type == "WA" %}
+	                  		<i class="fa fa-trash-o"></i>
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' WA';
+	                  		</script>
+	                  	{% elif report.sen_type == "AI" %}
+	                  		<i class="fa fa-cloud" ></i>
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' AI';
+	                  		</script>
+	                  	{% elif report.sen_type == "TE" %}
+	                  		<i class="fa fa-thermometer-half"></i>
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' TE';
+	                  		</script>
+	                  	{% elif report.sen_type == "SO" %}
+	                  		<i class="fa fa-volume-up"></i>
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' NO';
+	                  		</script>
+	                  	{% elif report.sen_type == "PE" %}
+	                  		<i class="fa fa-user-o"></i>
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' PE';
+	                  		</script>
+	                  	{% elif report.sen_type == "IL" %}
+	                  		<i class="fa fa-lightbulb-o"></i>
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' LI';
+	                  		</script>
+	                  	{% elif report.sen_type == "RA" %}
+	                  		<i class="fa fa-sun-o"></i>
+	                  		<script>
+	                  			document.getElementById('report-{{ report.id }}').className += ' RA';
+	                  		</script>
+	                  	{% else %}
+	                  		{{ report.sen_type }}
+	                  	{% endif %}
+	                  	{{ report.title }}</a></td>
+	                  	<td class="mailbox-sensor"><a href="/sensors/details/{{ report.sen_id }}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view <br> sensor page">{{ report.sen_name }}</a></td>
+	                  	<td class="mailbox-date"><span style="display:none;">{{report.date|date:"YmdHi"}}</span>{{ report.date }}</td>
+	                    <td class="mailbox-name">
+	                    {% if report.name %}
+	                    	{{ report.name }}
+	                    {% else %}
+	                    	-
+	                    {% endif %}
+	                    <br>
+	                    <small>
+	                    {% if report.email %}
+	                    	{{ report.email }}
+	                    {% else %}
+	                   		-
+	                   	{% endif %}
+	                    </small>
+	                    </td>
+	                    <td class="mailbox-working_state">
+	                    	<div class="dropdown">
+								<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" title="Set the user report's working_state" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+											
+								{% if report.working_state == "Waiting" %}
+								<script>
+				                  	document.getElementById('report-{{ report.id }}').className += ' Waiting';
+				                </script>
+								<label id="dropdown2_title_{{report.id}}" class="WA">
+									<i class="fa fa-hourglass-start"></i> Waiting
+								</label>
+								{% elif report.working_state == "Working On" %}
+								<script>
+				                  	document.getElementById('report-{{ report.id }}').className += ' Working';
+				               	</script>
+								<label id="dropdown2_title_{{report.id}}" class="WI">
+									<i class="fa fa-cogs"></i> Working on
+								</label>
+								{% elif report.working_state == "Solved" %}
+								<script>
+				           			document.getElementById('report-{{ report.id }}').className += ' Solved';
+				            	</script>
+								<label id="dropdown2_title_{{report.id}}" class="SO">
+									<i class="fa fa-check-circle"></i> Solved
+								</label>
+								{% else %}
+									-
+								{% endif %}
+											
+								<span class="caret" ></span>
+							</button>
+							<ul class="dropdown-menu" id="options2" aria-labelledby="dropdownMenu2">
+							  	<li onclick="drop_report_changed({{report.id}}, this);" class="WA"><i class="fa fa-hourglass-start"></i> Waiting</li>
+							    <li onclick="drop_report_changed({{report.id}}, this);" class="WI"><i class="fa fa-cogs"></i> Working on</li>
+							    <li onclick="drop_report_changed({{report.id}}, this);" class="SO"><i class="fa fa-check-circle"></i> Solved</li>
+							</ul>
+							</div>
+		                    
+	                    </td>
+	                    <td>
+	                    	<button class="btn btn-sm btn-default" title="Delete" type="button" onclick="delete_report({{report.id}});"><i class="glyphicon glyphicon-remove"></i></a>
+						</td>
+	                  </tr>
+	                  {% endfor %}
+	                  </tbody>
+	                </table>
+	                <!-- /.table -->
+	              </div>
+	              <!-- /.mail-box-messages -->
+	            </div>
+	            <!-- /.box-body -->
+	  		</div>
+	  		<!-- /.box -->
+		</div>
+	</div>
+{% endblock %}
+
+{% block jspage %}
+<script type="text/javascript">
+	$('#citizenlink').addClass('active');
+
+	$(document).ready(function(){
+	    $('a[data-toggle="tooltip"]').tooltip();   
+	});
+
+	$('[rel=tooltip]').tooltip({container: 'body'});
+
+	$('#dashboardlink').addClass('active');
+
+	$(document).ready(function(){
+	    $('#citizenTable').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers",
+	    	order: [[ 3, "desc" ]]
+		} );
+	});
+
+	temp = true;
+	ligh = true;
+	air = true;
+	waste = true;
+	noise = true;
+	radiation = true;
+	people = true;
+
+		$.fn.dataTable.ext.search.push(
+
+			function (oSettings, aData, iDataIndex) {
+
+			    var myRowClasses = oSettings.aoData[iDataIndex].nTr.className.split(" ");
+			    
+
+			    for(var rclass in myRowClasses){
+			    	if(air==true && myRowClasses[rclass]=='AI'){
+					    return true;
+					}
+					if(ligh==true && myRowClasses[rclass]=='LI'){
+						return true;
+					}
+					if(waste==true && myRowClasses[rclass]=='WA'){
+						return true;
+					}
+					if(noise==true && myRowClasses[rclass]=='NO'){
+						return true;
+					}
+					if(radiation==true && myRowClasses[rclass]=='RA'){
+						return true;
+					}
+				    if(people==true && myRowClasses[rclass]=='PE'){
+				    	return true;
+				    }
+				    if(temp==true && myRowClasses[rclass]=='TE'){
+				    	return true;
+				    }
+			    }
+
+			    return false;
+		});
+
+
+	function changeTemp(){
+		if(temp==true){
+			document.getElementById('bt').style.backgroundColor="white";
+			document.getElementById('bt').style.color="black";
+			document.getElementById('bt').classList.remove('bg-red');
+			//document.getElementById('bt').style.opacity="0.5";
+		}
+		else
+			document.getElementById('bt').className += ' bg-red';
+			//document.getElementById('bt').style.opacity="1";
+		temp = !temp;
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeLight(){
+		if(ligh==true){
+			document.getElementById('bl').style.backgroundColor="white";
+			document.getElementById('bl').style.color="black";
+			document.getElementById('bl').classList.remove('bg-yellow');
+			//document.getElementById('bl').style.opacity="0.5";
+		}
+		else
+			document.getElementById('bl').className += ' bg-yellow';
+			//document.getElementById('bl').style.opacity="1";
+		ligh = !ligh;
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeAir(){
+		if(air==true){
+			document.getElementById('ba').style.backgroundColor="white";
+			document.getElementById('ba').style.color="black";
+			document.getElementById('ba').classList.remove('bg-blue');
+			//document.getElementById('ba').style.opacity="0.5";
+		}
+		else
+			document.getElementById('ba').className += ' bg-blue';
+			//document.getElementById('ba').style.opacity="1";
+		air = !air;
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeWaste(){
+		if(waste==true){
+			document.getElementById('bw').style.backgroundColor="white";
+			document.getElementById('bw').style.color="black";
+			document.getElementById('bw').classList.remove('bg-olive');
+			//document.getElementById('bw').style.opacity="0.5";
+		}
+		else
+			document.getElementById('bw').className += ' bg-olive';
+			//document.getElementById('bw').style.opacity="1";
+		waste = !waste;
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeNoise(){
+		if(noise==true){
+			document.getElementById('bn').style.backgroundColor="white";
+			document.getElementById('bn').style.color="black";
+			document.getElementById('bn').classList.remove('bg-aqua');
+			//document.getElementById('bn').style.opacity="0.5";
+		}
+		else
+			document.getElementById('bn').className += ' bg-aqua';
+			//document.getElementById('bn').style.opacity="1";
+		noise = !noise;
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeRadiation(){
+		if(radiation==true){
+			document.getElementById('br').style.backgroundColor="white";
+			document.getElementById('br').style.color="black";
+			document.getElementById('br').classList.remove('bg-orange');
+			//document.getElementById('br').style.opacity="0.5";
+		}
+		else
+			document.getElementById('br').className += ' bg-orange';
+			//document.getElementById('br').style.opacity="1";
+		radiation = !radiation;
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changePeople(){
+		if(people==true){
+			document.getElementById('bp').style.backgroundColor="white";
+			document.getElementById('bp').style.color="black";
+			document.getElementById('bp').classList.remove('bg-purple');
+			//document.getElementById('bp').style.opacity="0.5";
+		}
+		else
+			document.getElementById('bp').className += ' bg-purple';
+			//document.getElementById('bp').style.opacity="1";
+
+		people = !people;
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function analyseAllNone(){
+		if(people && temp && radiation && waste && noise && air && ligh)
+			$('#allnone').html('<i class="fa fa-th-list" ></i> None');
+		else
+			$('#allnone').html('<i class="fa fa-th-list" ></i> All');
+	}
+
+	function changeAll(){
+		if(people && temp && radiation && waste && noise && air && ligh){
+			people = false;
+			temp = false;
+			radiation = false;
+			waste = false;
+			noise = false;
+			air = false;
+			ligh = false;
+
+			/*
+			document.getElementById('bt').style.opacity="0.5";
+			document.getElementById('bl').style.opacity="0.5";
+			document.getElementById('ba').style.opacity="0.5";
+			document.getElementById('bw').style.opacity="0.5";
+			document.getElementById('bn').style.opacity="0.5";
+			document.getElementById('br').style.opacity="0.5";
+			document.getElementById('bp').style.opacity="0.5";
+			*/
+			document.getElementById('bt').style.backgroundColor="white";
+			document.getElementById('bt').style.color="black";
+			document.getElementById('bt').classList.remove('bg-red');
+			document.getElementById('bl').style.backgroundColor="white";
+			document.getElementById('bl').style.color="black";
+			document.getElementById('bl').classList.remove('bg-yellow');
+			document.getElementById('ba').style.backgroundColor="white";
+			document.getElementById('ba').style.color="black";
+			document.getElementById('ba').classList.remove('bg-blue');
+			document.getElementById('bw').style.backgroundColor="white";
+			document.getElementById('bw').style.color="black";
+			document.getElementById('bw').classList.remove('bg-olive');
+			document.getElementById('bn').style.backgroundColor="white";
+			document.getElementById('bn').style.color="black";
+			document.getElementById('bn').classList.remove('bg-aqua');
+			document.getElementById('br').style.backgroundColor="white";
+			document.getElementById('br').style.color="black";
+			document.getElementById('br').classList.remove('bg-orange');
+			document.getElementById('bp').style.backgroundColor="white";
+			document.getElementById('bp').style.color="black";
+			document.getElementById('bp').classList.remove('bg-purple');
+			
+
+			$('#allnone').html('<i class="fa fa-th-list" ></i> All');
+		}else{
+			people = true;
+			temp = true;
+			radiation = true;
+			waste = true;
+			noise = true;
+			air = true;
+			ligh = true;
+			
+			/*
+			document.getElementById('bt').style.opacity="1";
+			document.getElementById('bl').style.opacity="1";
+			document.getElementById('ba').style.opacity="1";
+			document.getElementById('bw').style.opacity="1";
+			document.getElementById('bn').style.opacity="1";
+			document.getElementById('br').style.opacity="1";
+			document.getElementById('bp').style.opacity="1";
+			*/
+			document.getElementById('bt').className += ' bg-red';
+			document.getElementById('bl').className += ' bg-yellow';
+			document.getElementById('ba').className += ' bg-blue';
+			document.getElementById('bw').className += ' bg-olive';
+			document.getElementById('bn').className += ' bg-aqua';
+			document.getElementById('br').className += ' bg-orange';
+			document.getElementById('bp').className += ' bg-purple';
+
+			$('#allnone').html('<i class="fa fa-th-list" ></i> None');
+		}
+
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+	}
+
+
+	// Forcing page to reload when back button is clicked
+	$(document).ready(function(e) {
+	    var $input = $('#refresh');
+
+	    $input.val() == 'yes' ? location.reload(true) : $input.val('yes');
+	});
+
+	$(".list-group-item").click(function() {
+	  $(".list-group-item").removeClass('selected');
+	  $(this).addClass('selected');
+	});
+	
+	$("#showAll").click(function() {
+	  $(".list-group-item").removeClass('selected');
+	});
+
+
+	title = ""
+	content = ""
+	report_id = -1;
+	alert_id = -1;
+	eleme = null;
+	last = ""
+	function drop_report_changed(id, elem){
+    	
+    	report_id = id;
+    	title = $('#dropdown2_title_'+id);
+
+    	content = elem.className;
+    	eleme = elem;
+    	last = title[0].className
+
+    	if (title[0].className!=content){
+    		$('#changeReportState').modal('show');
+    	}
+    }
+
+	$("#changeReportStateButton").on('click', function(){
+
+    	$('#changeReportState').modal('hide');
+
+    	state = content
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"reports/workingstate/"+report_id.toString()+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully changed working state";
+					    title.html(content);
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			
+	        			title.html(eleme.innerHTML);
+
+					    title[0].className = state;
+
+					    rep = document.getElementById("report-"+report_id);
+
+					    if (last=="WA"){
+	        				rep.classList.remove('Waiting');
+	        			}
+	        			else if(last=="WI"){
+	        				rep.classList.remove('Working');
+	        			}
+	        			else{
+	        				rep.classList.remove('Solved');
+	        			}
+
+	        			if (state=="WA"){
+	        				rep.className += " Waiting";
+	        			}
+	        			else if(state=="WI"){
+	        				rep.className += " Working";
+	        			}
+	        			else{
+	        				rep.className += " Solved";
+	        			}
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	del_report = -1;
+	function delete_report(id){
+		del_report = id;
+
+		$('#deleteReport').modal('show');
+	}
+
+
+		$("#deleteReportButton").on('click', function(){
+
+		var modal = $("#deleteReport");
+		modal.modal("hide");
+
+		/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/reports/delete/id="+del_report,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully deleted";
+
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#citizenTable').DataTable();
+
+	        			var row = table.row(document.getElementById("report-"+del_report.toString()));
+	        			row.remove().draw(false);
+
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	$.fn.dataTable.ext.search.push(
+
+		function (oSettings, aData, iDataIndex) {
+
+		    var myRowClasses = oSettings.aoData[iDataIndex].nTr.className.split(" ");
+		    
+
+		    for(var rclass in myRowClasses){
+		    	if(filter1=="SE"){
+				    if (myRowClasses[rclass] === 'Seen') {
+				        return true;
+				    }
+				}
+				else if(filter1=="NS"){
+				    if (myRowClasses[rclass] === 'NotSeen') {
+				        return true;
+				    }
+				}
+				else if(filter1=="WA"){
+				    if (myRowClasses[rclass] === 'Waiting') {
+				        return true;
+				    }
+				}
+				else if(filter1=="WO"){
+				    if (myRowClasses[rclass] === 'Working') {
+				        return true;
+				    }
+				}
+				else if(filter1=="SO"){
+				    if (myRowClasses[rclass] === 'Solved') {
+				        return true;
+				    }
+				}
+			    else if(filter1 == "AL"){
+			    	return true;
+			    }
+		    }
+
+		    return false;
+	});
+
+	var filter1 = "AL"
+
+	function showAll(){
+		filter1 = "AL"
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+	}
+
+	function showSeen(){
+		filter1 = "SE"
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+	}
+
+	function showNotSeen(){
+		filter1 = "NS"
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+	}
+
+	function showWaiting(){
+		filter1 = "WA"
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+	}
+
+	function showWorking(){
+		filter1 = "WO"
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+	}
+
+	function showSolved(){
+		filter1 = "SO"
+		var table = $('#citizenTable').DataTable();
+		table.draw();
+	}
+
+	$(document).ready(function()
+	{
+	  $(".NotSeen").css("font-weight", "bold");
+	});
+
+
+	/* CSRF Helpers */
+	function csrfSafeMethod(method) {
+	   	// these HTTP methods do not require CSRF protection
+	   	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+
+
+</script>
+
+{% endblock %}

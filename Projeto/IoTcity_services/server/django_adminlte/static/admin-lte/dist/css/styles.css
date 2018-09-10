@@ -1,0 +1,244 @@
+
+.helptext {
+  font-size: 12px;
+}
+
+
+.range-slider {
+  margin: 60px 0 0 0%;
+}
+
+.range-slider {
+  width: 100%;
+}
+
+.range-slider__range {
+  -webkit-appearance: none;
+  width: calc(100% - (#{60px + 13px}));
+  height: 10px;
+  border-radius: 5px;
+  background: #d7dcdf;
+  outline: none;
+  padding: 0;
+  margin: 0;
+
+  // Range Handle
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    transition: background .15s ease-in-out;
+
+    &:hover {
+      background: #1abc9c;
+    }
+  }
+
+  &:active::-webkit-slider-thumb {
+    background: #1abc9c;
+  }
+
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border: 0;
+    border-radius: 50%;
+    background: #2c3e50;
+    cursor: pointer;
+    transition: background .15s ease-in-out;
+
+    &:hover {
+      background: #1abc9c;
+    }
+  }
+
+  &:active::-moz-range-thumb {
+    background: #1abc9c;
+  }
+
+  background: yellow; /* For browsers that do not support gradients */
+  background: -webkit-linear-gradient(left, black , yellow); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(right, black, yellow); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(right, black, yellow); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to right, black , yellow); /* Standard syntax */
+}
+
+
+// Range Label
+.range-slider__value {
+  display: inline-block;
+  position: relative;
+  width: 60px;
+  color: #fff;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 3px;
+  background: #2c3e50;
+  padding: 5px 10px;
+  margin-left: 8px;
+
+  &:after {
+    position: absolute;
+    top: 8px;
+    left: -7px;
+    width: 0;
+    height: 0;
+    border-top: 7px solid transparent;
+    border-right: 7px solid #2c3e50;
+    border-bottom: 7px solid transparent;
+    content: '';
+  }
+}
+
+
+ul{
+  list-style-type: none;
+}
+
+.selected{
+  font-weight: bold;
+}
+
+.fa fa-thermometer-half{
+  color:black;
+}
+
+.reportactive {
+  background-color: #D0D0D0;
+}
+
+.checkboxspace {
+	margin-right: 10px;
+}
+
+ /* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(13px);
+  -ms-transform: translateX(13px);
+  transform: translateX(13px);
+}
+
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 17px;
+}
+
+.slider.round:before {
+  border-radius: 25%;
+}
+
+
+.weekDays-selector input {
+  display: none!important;
+}
+
+.weekDays-selector input[type=checkbox] + label {
+  display: inline-block;
+  border-radius: 6px;
+  background: #dddddd;
+  height: 40px;
+  width: 80px;
+  margin-right: 3px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.weekDays-selector input[type=checkbox]:checked + label {
+  background: #2AD705;
+  color: #ffffff;
+}
+
+.alert {
+    padding: 10px;
+    background-color: #f44336;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.6s;
+    margin-bottom: 15px;
+    display:none;
+    text-align:center;
+}
+
+.alert.success {background-color: #4CAF50;}
+.alert.info {background-color: #2196F3;}
+.alert.warning {background-color: #ff9800;}
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    border-radius: 20px;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 1s;
+}
+
+.closebtn:hover {
+    color: black;
+}
+
+.modal-body > .img-responsive {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mailbox-attachment-icon {
+  width: 200px;
+  height: 150px;
+}
+
+.filterheader {
+  background-color: #FFF !important;
+  font-size: 120% !important;
+}

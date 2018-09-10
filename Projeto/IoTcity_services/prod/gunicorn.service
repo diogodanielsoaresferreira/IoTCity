@@ -1,0 +1,13 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/srv/IoTCity/trunk/IoTcity_services/server
+ExecStart=/usr/local/bin/gunicorn --workers 4 --bind unix:/srv/IoTCity/trunk/IoTcity_services/server/server.sock server.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+

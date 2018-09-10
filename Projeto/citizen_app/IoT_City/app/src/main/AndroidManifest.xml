@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.iot.iot_city">
+
+    <uses-feature android:name="android.hardware.camera2"
+        android:required="true" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="IoT City"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="com.example.iot.iot_city.MainActivity"
+            android:gravity="center_horizontal"
+            android:label="IoT City Dashboard"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name="com.example.iot.iot_city.MapsActivity"
+            android:label="@string/title_activity_maps"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+
+        <activity
+            android:name="com.example.iot.iot_city.MapSensor"
+            android:label="Map"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+
+        <activity
+            android:name="com.example.iot.iot_city.Temperature"
+            android:label="@string/title_activity_temperature"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+
+        <activity
+            android:name="com.example.iot.iot_city.Help"
+            android:label="@string/title_activity_help"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.iot.iot_city.ReportActivity"
+            android:exported="true"
+            android:parentActivityName="com.example.iot.iot_city.MapsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.iot.iot_city.Noise"
+            android:label="@string/title_activity_noise"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.iot.iot_city.Lighting"
+            android:label="@string/title_activity_lighting"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.example.iot.iot_city.MainActivity" />
+
+        <activity
+            android:name="com.example.iot.iot_city.UV_Radiation"
+            android:label="@string/title_activity_uv__radiation"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.iot.iot_city.Waste"
+            android:label="@string/title_activity_waste"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.iot.iot_city.People"
+            android:label="@string/title_activity_people"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+
+        <activity
+            android:name="com.example.iot.iot_city.Air"
+            android:label="@string/title_activity_air"
+            android:parentActivityName="com.example.iot.iot_city.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.iot.iot_city.MainActivity" />
+        </activity>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+    </application>
+
+</manifest>

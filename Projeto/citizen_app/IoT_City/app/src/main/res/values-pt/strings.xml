@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">IoT_City</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Definições</string>
+    <string name="title_activity_map">Mapa</string>
+    <string name="title_activity_maps">Mapa</string>
+    <string name="title_activity_temperature">Temperatura</string>
+
+    <string name="temperature">Temperatura</string>
+    <string name="lighting">Iluminação</string>
+    <string name="UV">Radiação UV</string>
+    <string name="waste">Lixo</string>
+    <string name="people">Contador de pessoas</string>
+    <string name="noise">Ruído</string>
+    <string name="air">Ar (CO2)</string>
+    <string name="main">Principal</string>
+
+
+    <string name="Dashboard">Painel Geral</string>
+    <string name="map">Mapa</string>
+    <string name="Reports">Reportar problema</string>
+    <string name="Metrics">Métricas</string>
+    <string name="Contacts">Ajuda</string>
+
+    <string name="reset">Recentrar</string>
+
+
+    <string name="server_error">Erro ao contactar o servidor</string>
+    <string name="loading_temp">A carregar temperatura</string>
+    <string name="loading_light">A carregar luz</string>
+    <string name="loading_uv">A carregar UV</string>
+    <string name="loading_waste">A carregar precentagem de lixo</string>
+    <string name="loading_noise">A carregar ruído</string>
+    <string name="loading_people">A carregar percentagem de pessoas</string>
+    <string name="loading_air">A carregar Ar</string>
+
+    <string name="you_are_here">Você está aqui</string>
+    <string name="go">Ir</string>
+
+
+    <string-array name="names">
+        <item> </item>
+        <item>Temperatura</item>
+        <item>Ruído</item>
+        <item>Iluminação</item>
+        <item>Radiação UV</item>
+        <item>Lixo</item>
+        <item>Contador de pessoas</item>
+    </string-array>
+    <string name="title_activity_help">Ajuda</string>
+    <string name="large_text">
+        "O CONTEXTO\n\n"
+        "No mundo moderno, o conceito das cidades inteligentes está a tornar-se cada vez mais popular e as operadoras de telecomunicações têm espectativas"
+        "muito altas sobre o mercado futuro associado a este conceito."
+        "Além disso, a Internet das Coisas, um conceito estreitamente relacionado com Cidades Inteligentes, "
+        "é similarmente um paradigma com interesse crescente conforme o tempo passa.\n"
+        "A Altice Labs, o nosso colaborador industrial neste projeto, e o IT (Instituto de Telecomunicações) forneceram uma vasta gama de sensores "
+        "com que trabalhar, e propuseram que o principal objetivo deste projeto fosse recolher e analizar dados de vários sensores e construir um portal web "
+        "que dê uso a essa informação para dar feedback acerca das metricas aos gestores da cidade, bem como providenciar uma interface para "
+        "interagir com os sensores de uma forma segura. Para além do portal web, e considerando que uma parte significante da"
+        "população usa dispositivos móveis, também planeamos construir uma aplicação móvel que mostre informação da cidade para o cidadão comum.\n\n"
+    </string>
+
+    <string name="temp_dashboard">Temperature /n MaximumMinimum: /n Last Reading: </string>
+</resources>

@@ -1,0 +1,2145 @@
+{% extends 'adminlte/index.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+	
+	<title>Main dashboard</title>
+	<section class="content-header">
+        	<h1>
+                	Dashboard
+                	<small>General information</small>
+            </h1>
+            <ol class="breadcrumb">
+        		<li class="active"><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+      		</ol>
+	</section>
+{% endblock %}
+
+{% block content %}
+
+<div class="alert error">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+</div>
+<div class="alert success">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+</div>
+
+<div class="modal fade" id="deleteNote" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete note</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete this note?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="change">Delete note</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteTriggAlert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete triggered alert</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the triggered alert?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteTriggAlertButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel3">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="changeReportState" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Change report state</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to change the state of the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="changeReportStateButton">Change state</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="changeReportSeen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Change report state</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to change the state of the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="changeReportStateButton2">Change state</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel8">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="changeAlertState" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Dismiss alert</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to dismiss the alert?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="changeAlertStateButton">Dismiss alert</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete report</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteReportButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal for information about a triggered alert -->
+<div class="modal fade" id="taInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"><span id="ta_name"></span></h4>
+      </div>
+      <div class="modal-body">
+        <p>Was active from <span id="ta_start_date"></span> to <span id="ta_end_date"></span>.</p>
+        <br>
+        <p><b>Streams names</b></p>
+        <div id="ta_sub_name"></div>
+        <br>
+        <p><b>Sensors names</b></p>
+        <div id="ta_sen_name"></div>
+        <br>
+        <p><b>Sensors types</b></p>
+        <div id="ta_SenType"></div>
+        <br>
+        <div id="ta_threshold"></div>
+        <br>
+        <p><span id="ta_peak"></span>
+        <p>Alert is active from <span id="ta_hours_act"></span> to <span id="ta_hours_end"></span>, <span id="ta_daysWeek"></span></p>
+        <br>
+        <p><b>State</b></p>
+        <div id="ta_activestate"></div>
+        <br>
+        <p><b>Activity state</b></p>
+        <div id="ta_state"></div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="confirm6" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">Sensor changed state</span></button>
+					</div>
+			<div class="modal-body">
+				Are you sure you want to turn 
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="change6"></button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="Cancel6">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal for add a note -->
+<div class="modal fade" id="addNote" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+  	<form action="./note/add" method="post">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Add a note</h4>
+	      </div>
+	      <div class="modal-body">
+	      	{% load tz %}
+
+			{% localtime on %}
+	        {% if form.errors %}
+			    <p style="color: red;">
+			        Please correct the error{{ form.errors|pluralize }} below.
+			    </p>
+			{% endif %}
+
+			<div class="field">
+				{{ form.title.errors }}
+				<label for="id_title" class="tooltip-test" title="Select the name for the note">Name</label><br>
+				{{ form.title }}
+				<p class="helptext">Select the name for the note</p><br><br>
+			</div>
+
+			<div class="field">
+				{{ form.message.errors }}
+				<label for="id_info" class="tooltip-test" title="Insert the information of the note">Description</label><br>
+				{{ form.message }}
+				<p class="helptext">Insert the information of the note (maximum of 250 characters)</p><br><br>
+			</div>
+
+			<div class="field">
+				{{ form.beg_date.errors }}
+				{{ form.hours_beg.errors }}
+				{{ form.minutes_beg.errors }}
+				<label for="id_beg_date" class="tooltip-test" title="Choose the beginning date where the note is valid">Beginning date</label><br>
+				{{ form.beg_date}} <br>at {{ form.hours_beg }}:{{ form.minutes_beg }}
+				<p class="helptext">Choose the beginning date when the note is valid</p><br><br>
+			</div>
+
+			<div class="field">
+				{{ form.end_date.errors }}
+				{{ form.hours_end.errors }}
+				{{ form.minutes_end.errors }}
+				<label for="id_end_date" class="tooltip-test" title="Choose the end date where the note is valid">End date</label><br>
+				{{ form.end_date }} <br>at  {{ form.hours_end }}:{{ form.minutes_end }}
+				<p class="helptext">Choose the end date when the note is valid</p><br><br>
+			</div>
+
+			{% csrf_token %}
+			{% endlocaltime %}
+
+	      </div>
+
+	      <div class="modal-footer">
+	      	<button type="submit" value="Submit" class="btn btn-primary">Add note</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+    </form>
+  </div>
+</div>
+
+
+
+	
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading filterheader">
+					<b>Filter</b>
+				</div>
+				<div class="panel-body">
+				<!-- the events -->
+					<div id="dashboardFilter">
+						
+							{% if "TE" in user_types %}
+							<button type="button" id="bt" class="btn btn-default btn-sm bg-red" onclick="changeTemp();" style="width:12%; border-width: thin; border-color: #dd4b39;" data-toggle="tooltip" title=""><i class="fa fa-thermometer-half" ></i> Temperature </button>
+							{% endif %}
+							{% if "IL" in user_types %}
+							<button type="button" id="bl" class="btn btn-default btn-sm bg-yellow" onclick="changeLight();" style="width:12%; border-width: thin; border-color: #f39c12;" data-toggle="tooltip" title=""><i class="fa fa-lightbulb-o" style=""></i> Lighting</button>
+							{% endif %}
+							{% if "AI" in user_types %}
+							<button type="button" id="ba" class="btn btn-default btn-sm bg-blue" onclick="changeAir();" style="width:12%; border-width: thin; border-color: #0073b7;" data-toggle="tooltip" title=""><i class="fa fa-cloud" ></i> Air</button>
+							{% endif %}
+							{% if "WA" in user_types %}
+							<button type="button" id="bw" class="btn btn-default btn-sm bg-olive" onclick="changeWaste();" style="width:12%; border-width: thin; border-color: #3d9970;" data-toggle="tooltip" title=""><i class="fa fa-trash-o" ></i> Waste</button>
+							{% endif %}
+							{% if "SO" in user_types %}
+							<button type="button" id="bn" class="btn btn-default btn-sm bg-aqua" onclick="changeNoise();" style="width:12%; border-width: thin; border-color: #00c0ef;" data-toggle="tooltip" title=""><i class="fa fa-volume-up" ></i> Noise</button>
+							{% endif %}
+							{% if "RA" in user_types %}
+							<button type="button" id="br" class="btn btn-default btn-sm bg-orange" onclick="changeRadiation();" style="width:12%; border-width: thin; border-color: #ff851b;" data-toggle="tooltip" title=""><i class="fa fa-sun-o" ></i> Radiation</button>
+							{% endif %}
+							{% if "PE" in user_types %}
+							<button type="button" id="bp" class="btn btn-default btn-sm bg-purple" onclick="changePeople();" style="width:12%; border-width: thin; border-color: #605ca8;" data-toggle="tooltip" title=""><i class="fa fa-users"></i> People</button>
+							{% endif %}
+						
+						<button type="button" id="allnone" class="btn btn-default btn-sm" onclick="changeAll();" style="width:12%; border-width: thin; border-color: #f4f4f4;"><i class="fa fa-th-list" ></i> None</button>
+					</div>
+				</div>
+				<!-- /.box-body --> 
+			</div>
+      	<!-- /. box -->
+    	</div>
+	</div>
+	<!-- Row 1 -->
+  	<div class="row">
+  		{% if "TE" in user_types %}
+		 <div class="card col-lg-4 col-xs-6" id="tempcard">
+		  <!-- small box -->
+		  
+		  <div class="small-box bg-red">
+		    <div class="inner">
+		    <span style="font-size:20px;">Temperature</span>
+		    <p style="font-size: 250%"><b>Average: {{ temperature.avg }}<sup style="font-size: 20px">ºC</sup></b></p>
+		    <p>Maximum/Minimum: {{ temperature.max }} <sup style="font-size: 10px">º C</sup> / {{ temperature.min }} <sup style="font-size: 10px">º C</sup></p>
+		    <p>Streams active/all: {{ temperature.active }} / {{ temperature.all }}</p>
+		    <p style="font-size:14px;">Last reading: {{ temperature.date }}</p>
+		    </div>
+		    <div class="icon">
+		      <i class="fa fa-thermometer-half" style="color:#f6f6f6; opacity: 0.75"></i>
+		    </div>
+		    <a href="/temperature" class="small-box-footer">
+		      More info <i class="fa fa-arrow-circle-right"></i>
+		    </a>
+		  </div>
+		  
+		</div>
+		{% endif %}
+		<!-- ./col -->
+		{% if "IL" in user_types %}
+		<div class="card col-lg-4 col-xs-6" id="lightcard">
+		  <!-- small box -->
+		  
+		  <div class="small-box bg-yellow">
+		    <div class="inner">
+		      <span style="font-size:20px;">Lighting</span>
+		      <p style="font-size: 250%"><b>>75%: {{ Illumination.up75 }}</b></p>
+		      <p>50 to 75%: {{ Illumination.up50 }}</p>
+		      <p>Streams active/all: {{ Illumination.active }}/{{ Illumination.all }}</p>
+		      <p style="font-size:14px;">Last reading: {{ Illumination.date }}</p>
+		    </div>
+		    <div class="icon">
+		      <i class="fa fa-lightbulb-o" style="color:#f6f6f6; opacity: 0.75"></i>
+		    </div>
+		    <a href="/lighting" class="small-box-footer">
+		      More info <i class="fa fa-arrow-circle-right"></i>
+		    </a>
+		  </div>
+		</div>
+		{% endif %}
+		{% if "AI" in user_types %}
+		<!-- ./col -->
+		<div class="card col-lg-4 col-xs-6" id="aircard">
+		  <!-- small box -->
+		  <div class="small-box bg-blue">
+		    <div class="inner">
+
+		      <span style="font-size:20px;">Air</span>
+		      <p style="font-size: 250%"><b>Average (CO2): {{ Air.average }} <sup style="font-size: 20px">{{Air.units}}</sup></b></p>
+		      <p>Maximum/Minimum: {{ Air.max }}/{{ Air.min }}</p>
+		      <p>Streams active/all: {{ Air.active }}/{{ Air.all }}</p>
+		      <p style="font-size:14px;">Last reading: {{ Air.date }}</p>
+		    </div>
+		    <div class="icon">
+		      <i class="fa fa-cloud" style="color:#f6f6f6; opacity: 0.75"></i>
+		    </div>
+		    <a href="/air" class="small-box-footer">
+		      More info <i class="fa fa-arrow-circle-right"></i>
+		    </a>
+		  </div>
+		</div>
+		{% endif %}
+		{% if "WA" in user_types %}
+		<!-- ./col -->
+		<div class="card col-lg-3 col-xs-6" id="wastecard">
+		  <!-- small box -->
+		  <div class="small-box bg-olive">
+		    <div class="inner">
+
+		      <span style="font-size:20px;">Waste</span>
+		      <p style="font-size: 250%"><b>>75%: {{ waste.up75 }}<sup style="font-size: 20px">{{ waste.total }}</sup></b></p>
+		      <p>50 to 75%: {{ waste.up50 }} <sup style="font-size: 12px">{{ waste.total }}</sup></p>
+		      <p>Streams active/all: {{ waste.active }} / {{ waste.all }}</p>
+		      <p style="font-size:14px;">Last reading: {{ waste.date }}</p>
+		    </div>
+		    <div class="icon">
+		      <i class="fa fa-trash-o" style="color:#f6f6f6; opacity: 0.75"></i>
+		    </div>
+		    <a href="/waste" class="small-box-footer">
+		      More info <i class="fa fa-arrow-circle-right"></i>
+		    </a>
+		  </div>
+		</div>
+		{% endif %}
+		{% if "SO" in user_types %}
+		<!-- ./col -->
+		<div class="card col-lg-3 col-xs-6" id="noisecard">
+		  <!-- small box -->
+		  <div class="small-box bg-aqua">
+		    <div class="inner">
+
+		   	  <span style="font-size:20px;">Noise</span>
+		      <p style="font-size: 250%"><b>Max: {{ Sound.max }}<sup style="font-size: 20px">dB</sup></b></p>
+		      <p>Average: {{ Sound.average }}</p>
+		      <p>Streams active/all: {{ Sound.active }}/{{ Sound.all }}</p>
+		      <p style="font-size:14px;">Last reading: {{ Sound.date }}</p>
+		    </div>
+		    <div class="icon">
+		      <i class="fa fa-volume-up" style="color:#f6f6f6; opacity: 0.75"></i>
+		    </div>
+		    <a href="/noise" class="small-box-footer">
+		      More info <i class="fa fa-arrow-circle-right"></i>
+		    </a>
+		  </div>
+		</div>
+		{% endif %}
+		{% if "RA" in user_types %}
+		<!-- ./col -->
+		<div class="card col-lg-3 col-xs-6" id="radiationcard">
+		  <!-- small box -->
+		  <div class="small-box bg-orange">
+		    <div class="inner">
+
+		      <span style="font-size:20px;">Radiation</span>
+		      <p style="font-size: 250%"><b>> 7 UV: {{ Radiation.up7 }}</b></p>
+		      <p>4 to 7 UV: {{ Radiation.up4 }}</p>
+		      <p>Streams active/all: {{ Radiation.active }}/{{ Radiation.all }}</p>
+		      <p style="font-size:14px;">Last reading: {{ Radiation.date }}</p>
+		    </div>
+		    <div class="icon">
+		      <i class="fa fa-sun-o" style="color:#f6f6f6; opacity: 0.75"></i>
+		    </div>
+		    <a href="/radiation" class="small-box-footer">
+		      More info <i class="fa fa-arrow-circle-right"></i>
+		    </a>
+		  </div>
+		</div>
+		{% endif %}
+		{% if "PE" in user_types %}
+		<!-- ./col -->
+		<div class="card col-lg-3 col-xs-6" id="peoplecard">
+		  <!-- small box -->
+		  <div class="small-box bg-purple">
+		    <div class="inner">
+
+		      <span style="font-size:20px;">People counter</span>
+		      <p style="font-size: 250%"><b>>75%: {{ People.75 }}</b></p>
+		      <p>50 to 75%: {{ People.50 }}</p>
+		      <p>Streams active/all: {{ People.active }}/{{ People.all }}</p>
+		      <p style="font-size:14px;">Last reading: {{ People.date }}</p>
+		    </div>
+		    <div class="icon">
+		      <i class="fa fa-users" style="color:#f6f6f6; opacity: 0.75"></i>
+		    </div>
+		    <a href="/people" class="small-box-footer">
+		      More info <i class="fa fa-arrow-circle-right"></i>
+		    </a>
+		  </div>
+		</div>
+		{% endif %}
+		<!-- ./col -->
+	</div>
+	<!-- /.row -->
+
+	<!-- Row 2 -->
+	<div class="row">
+		<div class="col-md-12">
+		  <!-- Alerts / User reports -->
+		   <div class="box box-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">Notifications</h3>
+				<div class="box-tools pull-right">
+					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+				</div>
+			</div>
+			<div class="box-body">
+				<div class="nav-tabs-custom">
+		            <ul class="nav nav-tabs">
+		              <li class="active" title="Triggered alerts"><a href="#tab_1-1" data-toggle="tab" aria-expanded="true">Triggered alerts <span class="badge tabadge"></span></a></li>
+		              <li class="" title="User reports not solved"><a href="#tab_2-2" data-toggle="tab" aria-expanded="false">User reports <span class="badge urbadge"></span></a></li>
+		              <li class="" title="Sensors with inactive streams"><a href="#tab_3-3" data-toggle="tab" aria-expanded="false">Sensors with inactive streams <span class="badge isbadge"></span></a></li>
+		            </ul>
+		            <div class="tab-content">
+		              <div class="tab-pane fade in active" id="tab_1-1">
+		              	<div class="table-responsive">
+			                <table class="table no-margin table-hover table-striped" id="notifications1Table">
+			                  <thead>
+			                  <tr>
+			                  	<th>Name</th>
+			                  	<th>Sensor name</th>
+			                    <th>Peak value date</th>
+			                    <th>Threshold (type)</th>
+			                  	<th>Activity state</th>
+			                    <th>Actions</th>
+			                  </tr>
+			                  </thead>
+			                  <tbody>
+			                  {% for occurrence in alerts %}
+			                  <tr id="alert_{{occurrence.id}}">
+
+			                  	<td><a href="alerts/details/{{ occurrence.alert_id }}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view more <br> information about the alert" >{{ occurrence.name }}</a></td>
+
+			                  	<td>
+			                  	{% for type in occurrence.types %}
+			                    	{% if type == 'TE' %}
+			                    		<i class="fa fa-thermometer-half"></i>
+			                    		<script>document.getElementById('alert_{{occurrence.id}}').className += ' TE';</script>
+			                    	{% elif type == 'WA' %}
+			                    		<i class="fa fa-trash-o"></i>
+			                    		<script>document.getElementById('alert_{{occurrence.id}}').className += ' WA';</script>
+			                    	{% elif type == 'SO' %}
+			                    		<i class="fa fa-volume-up"></i>
+			                    		<script>document.getElementById('alert_{{occurrence.id}}').className += ' SO';</script>
+			                    	{% elif type == 'AI' %}
+			                    		<i class="fa fa-cloud"></i>
+			                    		<script>document.getElementById('alert_{{occurrence.id}}').className += ' AI';</script>
+			                    	{% elif type == 'PE' %}
+			                    		<i class="fa fa-user-o"></i>
+			                    		<script>document.getElementById('alert_{{occurrence.id}}').className += ' PE';</script>
+			                    	{% elif type == 'RA' %}
+			                    		<i class="fa fa-sun-o"></i>
+			                    		<script>document.getElementById('alert_{{occurrence.id}}').className += ' RA';</script>
+			                    	{% elif type == 'IL' %}
+			                    		<i class="fa fa-lightbulb-o"></i>
+			                    		<script>document.getElementById('alert_{{occurrence.id}}').className += ' IL';</script>
+			                    	{% else %}
+			                    		{{ type }}
+			                    	{% endif %}
+
+			                    {% endfor %}
+
+			                    {% for s in occurrence.sens %}
+			                    	<a href="/sensors/details/{{ s.device_id }}" data-toggle="tooltip" data-placement="right" data-html="true" title="Click to view <br> sensor page" >{{ s.name }}</a>
+			                    	{% if not forloop.last %}
+			                    		,
+			                    	{% endif %}
+			                    {% endfor %}
+
+			                  	</td>
+
+			                  	{% if occurrence.peak_date != None %}
+			                   		<td><span style="display:none;">{{occurrence.peak_date|date:"Ymd"}}</span>{{ occurrence.peak_date }} </td>
+			                    {% else %}
+			                    	<td>-</td>
+			                    {% endif %}
+			                  	
+			                    {% if occurrence.threshold != None %}
+			                    	{% if occurrence.maximum_minimum != None %}
+			                    		<td>{{ occurrence.threshold }} ({{ occurrence.maximum_minimum}})</td>
+			                  		{% else %}
+			                  			<td>-</td>
+			                  		{% endif %}
+			                  	{% else %}
+			                  		<td>-</td>
+			                  	{% endif %}
+
+			                  	{% if occurrence.state == "Active" %}
+			                  		<td> {{ occurrence.state }}</td>
+			                  	{% else %}
+			                  		<td> Inactive</td>
+			                  	{% endif %}
+
+			                    <td>
+			                    	<div class="btn-group">
+			                    		<div style="display: inline-block">
+				                    		<button type="button"
+					                    	{% if occurrence.state == "Active" %}
+					                    	disabled="disabled"
+					                    	{% endif %}
+					                    	 class="btn btn-sm btn-primary" title="Set seen to disappear from the dashboard" id="button_title_{{occurrence.id}}" onclick="alert_changed({{occurrence.id}});"><i class="fa fa-eye"></i> Dismisss</button>
+				                    	</div>
+			                    		<div style="display: inline-block">
+			                    			<button class="btn btn-sm btn-info" title="Delete triggered alert" type="button" onclick="show_alarm({{occurrence.id}});"><i class="glyphicon glyphicon-search"></i> Quick view</button>
+			                    		</div>
+			                    		<div style="display: inline-block">
+			                    			<button class="btn btn-sm btn-default" title="Delete triggered alert" type="button" onclick="delete_triggAlert({{occurrence.id}});"><i class="glyphicon glyphicon-remove"></i></button>
+			                    		</div>
+			                    	</div>
+			                    </td>               
+			                  </tr>
+			                  {% endfor %}
+			                  </tbody>
+			                </table>
+			              </div>
+			              <!-- /.table-responsive -->
+			              <div class="box-footer clearfix">
+              				<a href="/alerts" class="btn btn-default btn-flat pull-right">View more</a>
+            			  </div>
+		              </div>
+		              <!-- /.tab-pane -->
+		              <div class="tab-pane fade" id="tab_2-2">
+		              	<div class="table-responsive">
+			                <table class="table no-margin table-hover table-striped" id="notifications2Table">
+			                  <thead>
+			                  <tr>
+			                    <th>Subject</th>
+			                    <th>Sensor name</th>
+			                    <th>Date</th>
+			                    <th>User</th>
+			                    <th>Working state</th>
+			                    <th>Actions</th>
+			                  </tr>
+			                  </thead>
+			                  <tbody>
+			                  {% for occurrence in reports %}
+			                  <tr id="rep_{{occurrence.id}}">
+			                  	{% if occurrence.state == "Not Seen" %}
+			                  		<script>
+			                  			document.getElementById('rep_{{ occurrence.id }}').className += ' NotSeen';
+			                  		</script>
+			                  	{% else %}
+			                  		<script>
+			                  			document.getElementById('rep_{{ occurrence.id }}').className += ' Seen';
+			                  		</script>
+			                  	{% endif %}
+			                    <td><a href="/reports/read/id={{occurrence.id}}" data-toggle="tooltip" data-placement="right" data-html="true" title="Click to view more <br> information about the report">{{ occurrence.title }}</a></td>
+			                    <td>
+			                    	{% if occurrence.sen_type == 'TE' %}
+			                    		<i class="fa fa-thermometer-half"></i>
+			                    		<script>document.getElementById('rep_{{occurrence.id}}').className += ' TE';</script>
+			                    	{% elif occurrence.sen_type == 'WA' %}
+			                    		<i class="fa fa-trash-o"></i> 
+			                    		<script>document.getElementById('rep_{{occurrence.id}}').className += ' WA';</script>
+			                    	{% elif occurrence.sen_type == 'SO' %}
+			                    		<i class="fa fa-volume-up"></i> 
+			                    		<script>document.getElementById('rep_{{occurrence.id}}').className += ' SO';</script>
+			                    	{% elif occurrence.sen_type == 'AI' %}
+			                    		<i class="fa fa-cloud" ></i> 
+			                    		<script>document.getElementById('rep_{{occurrence.id}}').className += ' AI';</script>
+			                    	{% elif occurrence.sen_type == 'PE' %}
+			                    		<i class="fa fa-user-o"></i> 
+			                    		<script>document.getElementById('rep_{{occurrence.id}}').className += ' PE';</script>
+			                    	{% elif occurrence.sen_type == 'RA' %}
+			                    		<i class="fa fa-sun-o"></i> 
+			                    		<script>document.getElementById('rep_{{occurrence.id}}').className += ' RA';</script>
+			                    	{% elif occurrence.sen_type == 'IL' %}
+			                    		<i class="fa fa-lightbulb-o"></i> 
+			                    		<script>document.getElementById('rep_{{occurrence.id}}').className += ' IL';</script>
+			                    	{% else %}
+			                    		{{ occurrence.sen_type }}
+			                    	{% endif %}
+			                    	<a href="/sensors/details/{{ occurrence.sen_id }}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view <br> sensor page">{{ occurrence.sen_name }}</a>
+			                    </td>
+			                    <td style="min-width:100px"><span style="display:none;">{{occurrence.date|date:"Ymd"}}</span>{{ occurrence.date }}</td>
+			                    <td style="word-wrap: break-word; max-width: 150px;">
+			                    {% if occurrence.name != None %}
+			                    	{{ occurrence.name }}
+			                   	{% else %}
+			                   		-
+			                   	{% endif %}<br>
+			                   	{% if occurrence.email != None %}
+			                    	{{ occurrence.email }}
+			                   	{% else %}
+			                   		-
+			                   	{% endif %}
+			                    </td>
+			                    <td>
+			                    	<div class="dropdown">
+										<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" title="Set the user report's working_state" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+											
+											{% if occurrence.working_state == "Waiting" %}
+											<label id="dropdown2_title_{{occurrence.id}}" class="WA">
+												<i class="fa fa-hourglass-start"></i> Waiting
+											</label>
+											{% elif occurrence.working_state == "Working On" %}
+											<label id="dropdown2_title_{{occurrence.id}}" class="WI">
+												<i class="fa fa-cogs"></i> Working on
+											</label>
+											{% elif occurrence.working_state == "Solved" %}
+											<label id="dropdown2_title_{{occurrence.id}}" class="SO">
+												<i class="fa fa-check-circle"></i> Solved
+											</label>
+											{% else %}
+												-
+											{% endif %}
+											
+											<span class="caret" ></span>
+										</button>
+										<ul class="dropdown-menu" id="options2" aria-labelledby="dropdownMenu2">
+										  	<li onclick="drop_report_changed({{occurrence.id}}, this);" class="WA"><i class="fa fa-hourglass-start"></i> Waiting</li>
+										    <li onclick="drop_report_changed({{occurrence.id}}, this);" class="WI"><i class="fa fa-cogs"></i> Working on</li>
+										    <li onclick="drop_report_changed({{occurrence.id}}, this);" class="SO"><i class="fa fa-check-circle"></i> Solved</li>
+										</ul>
+									</div>
+			                    </td>
+
+			                    <td><button class="btn btn-sm btn-default" title="Delete user report" type="button" onclick="delete_report({{occurrence.id}});"><i class="glyphicon glyphicon-remove"></i></a></td>
+			                  </tr>
+			                  {% endfor %}
+			                  </tbody>
+			                </table>
+			              </div>
+			              <!-- /.table-responsive -->
+			              <div class="box-footer clearfix">
+				            <a href="/reports" class="btn btn-default btn-flat pull-right">View more</a>
+				          </div>
+		              </div>
+		              <!-- /.tab-pane -->
+
+		              <div class="tab-pane fade" id="tab_3-3">
+		              	<div class="table-responsive">
+			                <table class="table no-margin table-hover table-striped" id="notifications3Table">
+			                  <thead>
+			                  <tr>
+			                    <th>Name</th>
+			                    <th>Inactive streams</th>
+			                    <th>Active/all streams</th>
+			                    <th>Sensor status</th>
+			                  </tr>
+			                  </thead>
+			                  <tbody>
+			                  	{% for sen in sensors %}
+			                  		{% if sen.inactivestreams %}
+			                  		<tr id="inactive_{{sen.id}}">
+				                  		<td>
+				                  		{% if sen.type == 'TE' %}
+				                    		<i class="fa fa-thermometer-half"></i>
+				                    		<script>document.getElementById('inactive_{{sen.id}}').className += ' TE';</script>
+			                    		{% elif sen.type == 'WA' %}
+				                    		<i class="fa fa-trash-o"></i> 
+				                    		<script>document.getElementById('inactive_{{sen.id}}').className += ' WA';</script>
+			                    		{% elif sen.type == 'SO' %}
+				                    		<i class="fa fa-volume-up"></i> 
+				                    		<script>document.getElementById('inactive_{{sen.id}}').className += ' SO';</script>
+			                    		{% elif sen.type == 'AI' %}
+				                    		<i class="fa fa-cloud" ></i> 
+				                    		<script>document.getElementById('inactive_{{sen.id}}').className += ' AI';</script>
+			                    		{% elif sen.type == 'PE' %}
+				                    		<i class="fa fa-user-o"></i> 
+				                    		<script>document.getElementById('inactive_{{sen.id}}').className += ' PE';</script>
+			                    		{% elif sen.type == 'RA' %}
+				                    		<i class="fa fa-sun-o"></i> 
+				                    		<script>document.getElementById('inactive_{{sen.id}}').className += ' RA';</script>
+			                    		{% elif sen.type == 'IL' %}
+				                    		<i class="fa fa-lightbulb-o"></i> 
+				                    		<script>document.getElementById('inactive_{{sen.id}}').className += ' IL';</script>
+				                    	{% else %}
+				                    		{{ type }}
+				                    	{% endif %}
+				                  		<a href="/sensors/details/{{ sen.id }}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view <br> sensor page">{{sen.name}}</a></td>
+				                  		<td>
+				                  		{% for r in sen.inactivestreams %}
+				                  			{{ r }}
+				                  			<br>
+				                  		{% endfor %}
+				                  		</td>
+				                  		<td>{{sen.working}}/{{sen.streams}}</td>
+				                  		<td>
+				                  			<div>
+				                  				<input id="{{sen.id}}" type="checkbox" data-toggle="toggle"
+				                  					{% if sen.status %}
+													 	checked 
+													{% endif %}
+				                  				class="switch_sensor" data-onstyle="primary">
+				                  				{% csrf_token %}
+				                  			</div>
+
+				                  		</td>
+			                  		</tr>
+			                  		{% endif %}
+			                  	{% endfor %}
+			                  </tbody>
+			                </table>
+			              </div>
+
+		              </div>
+		              <!-- /.tab-pane -->
+		            </div>
+		            <!-- /.tab-content -->
+		          </div>
+			</div>
+			<!-- /.box-body -->
+		  </div>
+		</div>
+	</div>
+	<!-- /.row -->
+
+
+	<!-- Row 3 -->
+  	<div class="row">
+  		
+  		<div class="col-lg-12 col-xs-12">
+  			<!-- TABLE: Notes -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Notes</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <div class="table-responsive">
+                <table class="table no-margin table-hover table-striped" id="notesTable">
+                  <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Beginning date</th>
+                    <th>End date</th>
+                    <th>Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for note in notes %}
+                  <tr id="note_{{note.id}}" class="note">
+                    <td>{{ note.name }}</td>
+                    <td>{{ note.description }}</td>
+                    <td><span style="display:none;">{{note.beg|date:"Ymd"}}</span>{{ note.beg }}</td>
+                    <td><span style="display:none;">{{note.end|date:"Ymd"}}</span>{{ note.end }}</td>
+                    <td><button class="btn btn-sm btn-default" type="button" data-toggle="modal" onclick="delete_no({{ note.id }});"><i class="glyphicon glyphicon-remove"></i></a></td>
+                  </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.table-responsive -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+              <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#addNote"><i class="fa fa-plus"></i> Add note</button>
+            </div>
+            <!-- /.box-footer -->
+          </div>
+          <!-- /.box -->
+  		</div>
+  		
+	</div>
+	<!-- /.row -->
+
+{% endblock %}
+
+{% block jspage %}
+<script type="text/javascript">
+
+	$(document).ready(function(){
+	    $('a[data-toggle="tooltip"]').tooltip();   
+	});
+
+	$('[rel=tooltip]').tooltip({container: 'body'});
+
+	$('#dashboardlink').addClass('active');
+
+	temp = true;
+	ligh = true;
+	air = true;
+	waste = true;
+	noise = true;
+	radiation = true;
+	people = true;
+
+	$(document).ready(function(){
+	    $('#notifications1Table').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers",
+	    	order: [[ 2, "desc" ]]
+		} );
+
+		$('#notifications2Table').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers",
+	    	order: [[ 2, "desc" ]]
+		} );
+
+		$('#notifications3Table').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers"
+		} );
+
+		$('#notesTable').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers",
+	    	order: [[ 2, "desc" ]]
+		} );
+
+	});
+
+	$.fn.dataTable.ext.search.push(
+
+		function (oSettings, aData, iDataIndex) {
+
+		    var myRowClasses = oSettings.aoData[iDataIndex].nTr.className.split(" ");
+		    
+
+		    for(var rclass in myRowClasses){
+		    	if(myRowClasses[rclass]=='note')
+		    		return true
+		    	if(temp){
+				    if (myRowClasses[rclass] == 'TE') {
+				        return true;
+				    }
+				}
+				if(ligh){
+				    if (myRowClasses[rclass] == 'IL') {
+				        return true;
+				    }
+				}
+				if(waste){
+				    if (myRowClasses[rclass] == 'WA') {
+				        return true;
+				    }
+				}
+				if(air){
+				    if (myRowClasses[rclass] == 'AI') {
+				        return true;
+				    }
+				}
+				if(noise){
+				    if (myRowClasses[rclass] == 'SO') {
+				        return true;
+				    }
+				}
+			    if(radiation){
+			    	if (myRowClasses[rclass] == 'RA') {
+				        return true;
+				    }
+			    }
+			    if(people){
+				    if (myRowClasses[rclass] == 'PE') {
+				        return true;
+				    }
+				}
+		    }
+
+		    return false;
+	});
+
+
+	$('.switch_sensor').change(function(){
+
+		var toggleswitch = $(this);
+		var checked = "";
+
+		if (toggleswitch[0].checked){
+			checked = "on";
+		}
+		else{
+			checked = "off";
+		}
+		
+
+		var modal = $("#confirm6").modal({backdrop: 'static', keyboard: false});
+		modal.text = "Are you sure you want to turn " + checked + " " + toggleswitch[0].id + "?";
+		modal.find('.modal-body').text("Are you sure you want to turn " + checked + " " + toggleswitch[0].id + "?");
+		
+		var b = document.getElementById("change6")
+
+		modal.modal("show");
+		if (toggleswitch[0].checked)
+			b.innerHTML = "Turn on " + toggleswitch[0].id
+		else
+			b.innerHTML = "Turn off " + toggleswitch[0].id
+
+		last_object = toggleswitch;
+	});
+
+	// Get all elements with class="closebtn"
+	var close = document.getElementsByClassName("closebtn");
+	var i;
+
+	// Loop through all close buttons
+	for (i = 0; i < close.length; i++) {
+
+	    // When someone clicks on a close button
+	    close[i].onclick = function(){
+
+	        // Get the parent of <span class="closebtn"> (<div class="alert">)
+	        var div = this.parentElement;
+
+	        // Set the opacity of div to 0 (transparent)
+	        div.style.opacity = "0";
+
+	        // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+	        setTimeout(function(){ div.style.display = "none"; }, 600);
+	    }
+	}
+
+    last_note_id = -1;
+
+	$("#change").on('click', function(){
+
+		var modal = $("#deleteNote");
+		modal.modal("hide");
+
+		/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"note/delete/"+last_note_id.toString(),
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Note successfully deleted";
+
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			
+	        			var table = $('#notesTable').DataTable();
+	        			var row = table.row(document.getElementById("note_"+last_note_id.toString()));
+	        			row.remove().draw(false);
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+	function delete_no(note){
+		var modal = $("#deleteNote");
+		modal.modal("show");
+
+		last_note_id = note;
+	}
+
+	del_report = -1;
+	function delete_report(id){
+		del_report = id;
+
+		$('#deleteReport').modal('show');
+	}
+
+
+		$("#deleteReportButton").on('click', function(){
+
+		var modal = $("#deleteReport");
+		modal.modal("hide");
+
+		/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/reports/delete/id="+del_report,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully deleted";
+
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#notifications2Table').DataTable();
+	        			var row = table.row(document.getElementById("rep_"+del_report.toString()));
+	        			row.remove().draw(false);
+
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	del_triggAlert = -1;
+    function delete_triggAlert(id){
+    	del_triggAlert = id;
+
+    	$('#deleteTriggAlert').modal('show');
+    }
+
+    $("#deleteTriggAlertButton").on('click', function(){
+
+    	$('#deleteTriggAlert').modal('hide');
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/trigg/delete/"+del_triggAlert.toString(),
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Triggered alert successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#notifications1Table').DataTable();
+	        			var row = table.row(document.getElementById("alert_"+del_triggAlert.toString()));
+	        			row.remove().draw(false);
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+
+	function show_alarm(alarm){
+		var modal = $('#taInfo');
+
+		$.ajax({
+			type: "GET",
+			url: "/alerts/triginfo/"+alarm,
+			data: {},
+			success: function(data){
+				if(data['status']=='OK'){
+					modal.find('#ta_name').text(data['name']);
+
+					if(data['threshold'] != '-')
+						modal.find('#ta_threshold').html("<p><b>Threshold</b></p>"+data['threshold']+"("+data['types']+")");
+					else
+						modal.find('#ta_threshold').html("");
+
+					modal.find('#ta_start_date').text(new Date(data['start_date']).toString());
+					modal.find('#ta_end_date').text(new Date(data['end_date']));
+
+					if(data['peak']!='-' && data['peak_date']!='-')
+						modal.find('#ta_peak').html("<p><b>Peak value </b></p>" + data['peak'] + "at" + new Date(data['peak_date']));
+					else
+						modal.find('#ta_peak').html("");
+
+					if(data['state']=="Active"){
+						modal.find('#ta_state').text('Active');
+						modal.find('#ta_activestate').text('Not seen');
+					}
+					else{
+						modal.find('#ta_state').text('Inactive');
+						modal.find('#ta_activestate').text(data['state']);
+					}
+					
+					modal.find('#ta_dateCreated').text(data['dateCreated']);
+					modal.find('#ta_daysWeek').text(data['daysWeek']);
+					modal.find('#ta_hours_act').text(data['hours_act']);
+					modal.find('#ta_hours_end').text(data['hours_end']);
+					modal.find('#ta_sub_name').text(data['sub_name']);
+					modal.find('#ta_sen_name').text(data['sen_name']);
+					modal.find('#ta_SenType').text(data['SenType']);
+					modal.modal('show');
+				}
+				else{
+					modal.find('#ta_name').text(data['info']);
+				}
+				
+			},
+			failure: function(data){
+				modal.find('#ta_name').text(data['info']);
+			}
+		});
+	}
+
+	function show_occur(occurrence){
+		var modal = $('#reportInfo');
+		
+		/* Get all the info */
+		$.ajax({
+			type: "GET",
+			url: "/"+"reports/info/"+occurrence,
+			data: {},
+			success: function(data){
+				modal.find('.modal-title').text(data['title']);
+				modal.find('.information').text(data['info']);
+				modal.find('.date').text(new Date(data['date']).toUTCString());
+				modal.find('.email').text(data['email']);
+				modal.modal('show');
+			},
+			failure: function(data){
+				modal.find('.modal-title').text("Error");
+				modal.find('.information').text("Could not connect with server");
+				modal.modal('show');
+			},
+		});
+
+	}
+
+
+	if ('{{ success|escapejs }}' == "True"){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+
+		text = "The note was added sucessfully."
+
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if('{{ success|escapejs }}' == "False"){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			text = "The note could not be added. Check if the beginning date is before the end date."
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+
+	$('.table-responsive').on('show.bs.dropdown', function () {
+	     $('.table-responsive').css( "overflow", "inherit" );
+	});
+
+	$('.table-responsive').on('hide.bs.dropdown', function () {
+	     $('.table-responsive').css( "overflow", "auto" );
+	})
+
+	title = ""
+	content = ""
+	report_id = -1;
+	alert_id = -1;
+	eleme = null;
+
+    function drop_report_changed(id, elem){
+    	
+    	report_id = id;
+    	title = $('#dropdown2_title_'+id);
+
+    	content = elem.className;
+    	eleme = elem;
+
+    	if (title[0].className!=content){
+    		$('#changeReportState').modal('show');
+    	}
+    }
+
+    function alert_changed(id){
+
+    	alert_id = id;
+    	title = $('#button_title_'+id);
+
+    	$('#changeAlertState').modal('show');
+    }
+
+    $("#changeReportStateButton2").on('click', function(){
+
+    	$('#changeReportSeen').modal('hide');
+
+    	state = ""
+
+    	if (content == "Not Seen"){
+    		state = "NS";
+    	}
+    	else if(content == "Seen"){
+    		state = "SE";
+    	}
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"reports/state/"+report_id.toString()+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully changed state";
+					    title.html(content);
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        		
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+    $("#changeReportStateButton").on('click', function(){
+
+    	$('#changeReportState').modal('hide');
+
+    	state = content;
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"reports/workingstate/"+report_id.toString()+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully changed working state";
+
+					    title.html(eleme.innerHTML);
+
+					    title[0].className = state;
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			if(state=="SO"){
+	        				var table = $('#notifications2Table').DataTable();
+	        				var row = table.row(document.getElementById("rep_"+report_id.toString()));
+	        				row.remove().draw(false);
+	        			}
+	        		
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+    $("#changeAlertStateButton").on('click', function(){
+    	$('#changeAlertState').modal('hide');
+
+    	state = "SE"
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"alerts/state/"+alert_id.toString()+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Alert successfully changed state";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#notifications1Table').DataTable();
+	        			var row = table.row(document.getElementById("alert_"+alert_id.toString()));
+	        			row.remove().draw(false);
+
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	$('#Cancel6').on('click', function(){
+		last_object.bootstrapToggle('toggle');
+	});
+
+		$("#change6").on('click', function(){
+
+			var modal = $("#confirm6");
+			modal.modal("hide");
+
+			if (last_object[0].checked)
+				checked = "on";
+			else
+				checked = "off";
+
+			/* Get the csrf token */
+			var csrftoken = getCookie('csrftoken');
+			$.ajaxSetup({
+				beforeSend: function(xhr, settings) {
+					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+					}
+				}
+			});
+
+			/* Send an ajax request */
+			$.ajax({
+				type: "POST",
+				url: "/sensors/"+checked+"/"+last_object[0].id,
+				data: {},
+				success: function(data){
+					if(data["status"]=="Success"){
+
+						var close = document.getElementsByClassName("alert success");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+last_object[0].id+" sensor successfully turned "+checked;
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+						}
+					}
+					else{
+						var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			}
+					}
+				},
+				failure: function(data){
+					var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			}
+				},
+			});
+	});
+
+	last_object = null;
+
+	// Turn on or off sensors
+	function togglechanged(Object){
+
+		var checked = "";
+
+		if (Object.checked){
+			checked = "on";
+		}
+		else{
+			checked = "off";
+		}
+
+
+		var modal = $("#confirm6").modal({backdrop: 'static', keyboard: false});
+		modal.text = "Are you sure you want to turn " + checked + " " + Object.id + "?";
+		modal.find('.modal-body').text("Are you sure you want to turn " + checked + " " + Object.id + "?");
+		
+		var b = document.getElementById("change6")
+
+		modal.modal("show");
+		if (Object.checked)
+			b.innerHTML = "Turn on " + Object.id
+		else
+			b.innerHTML = "Turn off " + Object.id
+
+		last_object = Object;
+
+	}
+	
+    /* CSRF Helpers */
+	function csrfSafeMethod(method) {
+	   	// these HTTP methods do not require CSRF protection
+	   	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+
+
+resize_cards();
+
+function changeTemp(){
+	if(temp){
+		$('#tempcard').hide();
+		temp = false;
+		//document.getElementById('bt').style.opacity="0.5";
+		document.getElementById('bt').style.backgroundColor="white";
+		document.getElementById('bt').style.color="black";
+		document.getElementById('bt').classList.remove('bg-red');
+		document.getElementById('tempcard').classList.remove('card');
+	}
+	else{
+		$('#tempcard').show();
+		temp = true;
+		//document.getElementById('bt').style.opacity="1";
+		document.getElementById('tempcard').className += " card";
+		document.getElementById('bt').className += ' bg-red';
+	}
+	var table = $('#notifications1Table').DataTable();
+	table.draw();
+	var table = $('#notifications2Table').DataTable();
+	table.draw();
+	var table = $('#notifications3Table').DataTable();
+	table.draw();
+	analyseAllNone();
+	resize_cards();
+}
+
+function changeLight(){
+	if(ligh){
+		$('#lightcard').hide();
+		ligh = false;
+		//document.getElementById('bl').style.opacity="0.5";
+		document.getElementById('bl').style.backgroundColor="white";
+		document.getElementById('bl').style.color="black";
+		document.getElementById('bl').classList.remove('bg-yellow');
+		document.getElementById('lightcard').classList.remove('card');
+	}
+	else{
+		$('#lightcard').show();
+		ligh = true;
+		//document.getElementById('bl').style.opacity="1";
+		document.getElementById('lightcard').className += " card";
+		document.getElementById('bl').className += ' bg-yellow';
+	}
+	analyseAllNone();
+	var table = $('#notifications1Table').DataTable();
+	table.draw();
+	var table = $('#notifications2Table').DataTable();
+	table.draw();
+	var table = $('#notifications3Table').DataTable();
+	table.draw();
+	resize_cards();
+}
+
+function changeAir(){
+	if(air){
+		$('#aircard').hide();
+		air = false;
+		//document.getElementById('ba').style.opacity="0.5";
+		document.getElementById('ba').style.backgroundColor="white";
+		document.getElementById('ba').style.color="black";
+		document.getElementById('ba').classList.remove('bg-blue');
+		document.getElementById('aircard').classList.remove('card');
+	}
+	else{
+		$('#aircard').show();
+		air = true;
+		//document.getElementById('ba').style.opacity="1";
+		document.getElementById('ba').className += ' bg-blue';
+		document.getElementById('aircard').className += " card";
+	}
+	analyseAllNone();
+	var table = $('#notifications1Table').DataTable();
+	table.draw();
+	var table = $('#notifications2Table').DataTable();
+	table.draw();
+	var table = $('#notifications3Table').DataTable();
+	table.draw();
+	resize_cards();
+}
+
+function changeWaste(){
+	if(waste){
+		$('#wastecard').hide();
+		waste = false;
+		//document.getElementById('bw').style.opacity="0.5";
+
+		document.getElementById('bw').style.backgroundColor="white";
+		document.getElementById('bw').style.color="black";
+		document.getElementById('bw').classList.remove('bg-olive');
+		document.getElementById('wastecard').classList.remove('card');
+	}
+	else{
+		$('#wastecard').show();
+		waste = true;
+		//document.getElementById('bw').style.opacity="1";
+		document.getElementById('bw').className += ' bg-olive';
+		document.getElementById('wastecard').className += " card";
+	}
+	analyseAllNone();
+	var table = $('#notifications1Table').DataTable();
+	table.draw();
+	var table = $('#notifications2Table').DataTable();
+	table.draw();
+	var table = $('#notifications3Table').DataTable();
+	table.draw();
+	resize_cards();
+}
+
+function changeNoise(){
+	if(noise){
+		$('#noisecard').hide();
+		noise = false;
+		//document.getElementById('bn').style.opacity="0.5";
+		document.getElementById('bn').style.backgroundColor="white";
+		document.getElementById('bn').style.color="black";
+		document.getElementById('bn').classList.remove('bg-aqua');
+		document.getElementById('noisecard').classList.remove('card');
+	}
+	else{
+		$('#noisecard').show();
+		noise = true;
+		//document.getElementById('bn').style.opacity="1";
+		document.getElementById('bn').className += ' bg-aqua';
+		document.getElementById('noisecard').className += " card";
+	}
+	analyseAllNone();
+	var table = $('#notifications1Table').DataTable();
+	table.draw();
+	var table = $('#notifications2Table').DataTable();
+	table.draw();
+	var table = $('#notifications3Table').DataTable();
+	table.draw();
+	resize_cards();
+}
+
+function changeRadiation(){
+	if(radiation){
+		$('#radiationcard').hide();
+		radiation = false;
+		//document.getElementById('br').style.opacity="0.5";
+		document.getElementById('br').style.backgroundColor="white";
+		document.getElementById('br').style.color="black";
+		document.getElementById('br').classList.remove('bg-orange');
+		document.getElementById('radiationcard').classList.remove('card');
+	}
+	else{
+		$('#radiationcard').show();
+		radiation = true;
+		//document.getElementById('br').style.opacity="1";
+		document.getElementById('br').className += ' bg-orange';
+		document.getElementById('radiationcard').className += " card";
+	}
+	analyseAllNone();
+	var table = $('#notifications1Table').DataTable();
+	table.draw();
+	var table = $('#notifications2Table').DataTable();
+	table.draw();
+	var table = $('#notifications3Table').DataTable();
+	table.draw();
+	resize_cards();
+}
+
+function changePeople(){
+	if(people){
+		$('#peoplecard').hide();
+		people = false;
+		//document.getElementById('bp').style.opacity="0.5";
+		document.getElementById('bp').style.backgroundColor="white";
+		document.getElementById('bp').style.color="black";
+		document.getElementById('bp').classList.remove('bg-purple');
+		document.getElementById('peoplecard').classList.remove('card');
+	}
+	else{
+		$('#peoplecard').show();
+		people = true;
+		//document.getElementById('bp').style.opacity="1";
+		document.getElementById('bp').className += ' bg-purple';
+		document.getElementById('peoplecard').className += " card";
+	}
+	analyseAllNone();
+	var table = $('#notifications1Table').DataTable();
+	table.draw();
+	var table = $('#notifications2Table').DataTable();
+	table.draw();
+	var table = $('#notifications3Table').DataTable();
+	table.draw();
+	resize_cards();
+}
+
+function analyseAllNone(){
+	if(people && temp && radiation && waste && noise && air && ligh)
+		$('#allnone').html('<i class="fa fa-th-list" ></i> None');
+	else
+		$('#allnone').html('<i class="fa fa-th-list" ></i> All');
+}
+
+function changeAll(){
+
+	if(people && temp && radiation && waste && noise && air && ligh){
+		people = false;
+		temp = false;
+		radiation = false;
+		waste = false;
+		noise = false;
+		air = false;
+		ligh = false;
+
+		/*
+		document.getElementById('bt').style.opacity="0.5";
+		document.getElementById('bl').style.opacity="0.5";
+		document.getElementById('ba').style.opacity="0.5";
+		document.getElementById('bw').style.opacity="0.5";
+		document.getElementById('bn').style.opacity="0.5";
+		document.getElementById('br').style.opacity="0.5";
+		document.getElementById('bp').style.opacity="0.5";
+		*/
+		document.getElementById('bt').style.backgroundColor="white";
+		document.getElementById('bt').style.color="black";
+		document.getElementById('bt').classList.remove('bg-red');
+		document.getElementById('bl').style.backgroundColor="white";
+		document.getElementById('bl').style.color="black";
+		document.getElementById('bl').classList.remove('bg-yellow');
+		document.getElementById('ba').style.backgroundColor="white";
+		document.getElementById('ba').style.color="black";
+		document.getElementById('ba').classList.remove('bg-blue');
+		document.getElementById('bw').style.backgroundColor="white";
+		document.getElementById('bw').style.color="black";
+		document.getElementById('bw').classList.remove('bg-olive');
+		document.getElementById('bn').style.backgroundColor="white";
+		document.getElementById('bn').style.color="black";
+		document.getElementById('bn').classList.remove('bg-aqua');
+		document.getElementById('br').style.backgroundColor="white";
+		document.getElementById('br').style.color="black";
+		document.getElementById('br').classList.remove('bg-orange');
+		document.getElementById('bp').style.backgroundColor="white";
+		document.getElementById('bp').style.color="black";
+		document.getElementById('bp').classList.remove('bg-purple');
+
+		$('#allnone').html('<i class="fa fa-th-list" ></i> All');
+
+		$('#tempcard').hide();
+		$('#aircard').hide();
+		$('#wastecard').hide();
+		$('#radiationcard').hide();
+		$('#noisecard').hide();
+		$('#lightcard').hide();
+		$('#peoplecard').hide();
+
+	}else{
+		people = true;
+		temp = true;
+		radiation = true;
+		waste = true;
+		noise = true;
+		air = true;
+		ligh = true;
+		
+		/*
+		document.getElementById('bt').style.opacity="1";
+		document.getElementById('bl').style.opacity="1";
+		document.getElementById('ba').style.opacity="1";
+		document.getElementById('bw').style.opacity="1";
+		document.getElementById('bn').style.opacity="1";
+		document.getElementById('br').style.opacity="1";
+		document.getElementById('bp').style.opacity="1";
+		*/
+		document.getElementById('bt').className += ' bg-red';
+		document.getElementById('bl').className += ' bg-yellow';
+		document.getElementById('ba').className += ' bg-blue';
+		document.getElementById('bw').className += ' bg-olive';
+		document.getElementById('bn').className += ' bg-aqua';
+		document.getElementById('br').className += ' bg-orange';
+		document.getElementById('bp').className += ' bg-purple';
+
+		$('#allnone').html('<i class="fa fa-th-list" ></i> None');
+
+		if(!document.getElementById('peoplecard').classList.contains("card"))
+			document.getElementById('peoplecard').className += " card";
+		if(!document.getElementById('radiationcard').classList.contains("card"))
+			document.getElementById('radiationcard').className += " card";
+		if(!document.getElementById('lightcard').classList.contains("card"))
+			document.getElementById('lightcard').className += " card";
+		if(!document.getElementById('tempcard').classList.contains("card"))
+			document.getElementById('tempcard').className += " card";
+		if(!document.getElementById('aircard').classList.contains("card"))
+			document.getElementById('aircard').className += " card";
+		if(!document.getElementById('noisecard').classList.contains("card"))
+			document.getElementById('noisecard').className += " card";
+		if(!document.getElementById('wastecard').classList.contains("card"))
+			document.getElementById('wastecard').className += " card";
+
+		$('#tempcard').show();
+		$('#aircard').show();
+		$('#wastecard').show();
+		$('#radiationcard').show();
+		$('#noisecard').show();
+		$('#lightcard').show();
+		$('#peoplecard').show();
+
+		resize_cards();
+	}
+	var table = $('#notifications1Table').DataTable();
+	table.draw();
+	var table = $('#notifications2Table').DataTable();
+	table.draw();
+	var table = $('#notifications3Table').DataTable();
+	table.draw();
+
+}
+
+function resize_cards(){
+	var cards = document.getElementsByClassName("card");
+
+	for(var i=0; i<cards.length; i++){
+
+		elem = document.getElementsByClassName("card").item(i);
+
+		remove_all_classes(elem);
+
+		if(cards.length==7){
+			if(i<=2){
+				elem.className += " col-lg-4";
+			}
+			else{
+				elem.className += " col-lg-3";
+			}
+		}
+		else if(cards.length==6){
+			elem.className += " col-lg-4";
+		}
+		else if(cards.length==5){
+			if(i<=1){
+				elem.className += " col-lg-6";
+			}
+			else{
+				elem.className += " col-lg-4";
+			}
+		}
+		else if(cards.length==4){
+			elem.className += " col-lg-6";
+		}
+		else if(cards.length==3){
+			elem.className += " col-lg-4";
+		}
+		else if(cards.length<=2){
+			elem.className += " col-lg-6";
+		}
+		
+	}
+}
+
+function remove_all_classes(element){
+	document.getElementById(element.id).classList.remove("col-lg-12");
+	document.getElementById(element.id).classList.remove("col-lg-6");
+	document.getElementById(element.id).classList.remove("col-lg-4");
+	document.getElementById(element.id).classList.remove("col-lg-3");
+}
+
+	$(document).ready(function()
+	{
+	  $(".NotSeen").css("font-weight", "bold");
+	});
+
+</script>
+
+{% endblock %}

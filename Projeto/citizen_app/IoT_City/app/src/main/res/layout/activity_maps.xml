@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+
+
+    <EditText
+        android:id="@+id/editText3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Where do you want to go"
+        android:ellipsize="start"
+        android:inputType="textPersonName" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dp">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_gravity="left"
+            android:onClick="geoLocate"
+            android:text="@string/go" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:onClick="resetLocation"
+            android:text="@string/reset"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/checkboxes"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <CheckBox
+            android:id="@+id/checkBoxTemp"
+            android:layout_width="90dp"
+            android:layout_height="25dp"
+            android:checked="true"
+            android:onClick="onCheckboxClicked"
+            android:text="Temperature"
+            android:textSize="10dp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxLight"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="85dp"
+            android:checked="true"
+            android:onClick="onCheckboxClicked"
+            android:text="Lighting"
+            android:textSize="10dp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxNoise"
+            android:layout_width="60dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="150dp"
+            android:checked="true"
+            android:onClick="onCheckboxClicked"
+            android:text="Noise"
+            android:textSize="10dp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxUV"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="205dp"
+            android:checked="true"
+            android:onClick="onCheckboxClicked"
+            android:text="UV"
+            android:textSize="10dp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxAir"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="250dp"
+            android:checked="true"
+            android:onClick="onCheckboxClicked"
+            android:text="Air"
+            android:textSize="10dp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxPeople"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/checkBoxTemp"
+            android:checked="true"
+            android:onClick="onCheckboxClicked"
+            android:text="People"
+            android:textSize="10dp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxWaste"
+            android:layout_width="100dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/checkBoxLight"
+            android:layout_marginLeft="85dp"
+            android:checked="true"
+            android:onClick="onCheckboxClicked"
+            android:text="Waste"
+            android:textSize="10dp" />
+
+    </RelativeLayout>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.iot.iot_city.MapsActivity" />
+</LinearLayout>

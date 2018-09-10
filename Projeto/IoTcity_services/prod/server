@@ -1,0 +1,14 @@
+server{
+	listen 80;
+	server_name 192.168.81.65;
+
+	location = /favicon.ico { access_log off; log_not_found off; }
+	location /static/ {
+		root /srv/IoTCity/trunk/IoTcity_services/server/;
+	}
+	
+	location / {
+		include proxy_params;
+		proxy_pass http://unix:/srv/IoTCity/trunk/IoTcity_services/server/server.sock;
+	}
+}

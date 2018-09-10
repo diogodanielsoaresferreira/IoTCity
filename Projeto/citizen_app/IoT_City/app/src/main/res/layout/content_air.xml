@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_waste"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="0dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.iot.iot_city.Waste"
+    tools:showIn="@layout/activity_waste">
+    <!--"@dimen/activity_vertical_margin"-->
+    <TabHost
+        android:id="@+id/tabHost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <RelativeLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/graph_co2"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dip"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="25dp" />
+
+                    <LinearLayout
+                        android:id="@+id/buttons_co2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/graph_co2"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/begin_date_co2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:onClick="showDatePickerDialog"
+                            android:text="Start Date"
+                            android:textAlignment="center" />
+
+                        <Button
+                            android:id="@+id/end_date_co2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:onClick="showDatePickerDialog"
+                            android:text="End Date"
+                            android:textAlignment="center" />
+
+                    </LinearLayout>
+
+                    <TableLayout
+                        android:id="@+id/air_header_co2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/buttons_co2"
+                        android:layout_marginTop="10dp"
+                        android:background="#CCC"
+                        android:paddingTop="1dp"
+                        android:stretchColumns="*">
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#CDCDCD"
+                            android:paddingBottom="2px">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="ID"
+                                android:textAlignment="center"/>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="Graph"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="Location"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="Last Reading"
+                                android:textAlignment="center"/>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="Value"
+                                android:textAlignment="center" />
+
+                        </TableRow>
+
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/tabHost">
+
+                            <TableLayout
+                                android:id="@+id/air_table_co2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_below="@+id/textView"
+                                android:background="#CCC"
+                                android:paddingTop="1dp"
+                                android:stretchColumns="*">
+
+                            </TableLayout>
+                        </ScrollView>
+                    </TableLayout>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/graph_pressure"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dip"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="25dp" />
+
+                    <LinearLayout
+                        android:id="@+id/buttons_pressure"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/graph_pressure"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/begin_date_pressure"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:onClick="showDatePickerDialog"
+                            android:text="Start Date"
+                            android:textAlignment="center" />
+
+                        <Button
+                            android:id="@+id/end_date_pressure"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:gravity="left"
+                            android:onClick="showDatePickerDialog"
+                            android:text="End Date"
+                            android:textAlignment="center" />
+
+                    </LinearLayout>
+
+                    <TableLayout
+                        android:id="@+id/air_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/buttons_pressure"
+                        android:layout_marginTop="10dp"
+                        android:background="#CCC"
+                        android:paddingTop="1dp"
+                        android:stretchColumns="*">
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#CDCDCD"
+                            android:paddingBottom="2px">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="ID"
+                                android:textAlignment="center"/>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="Graph"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="Location"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="Last Reading"
+                                android:textAlignment="center"/>
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="#A4A4A4"
+                                android:layout_marginRight="2px"
+                                android:text="Value"
+                                android:textAlignment="center" />
+
+                        </TableRow>
+
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/tabHost">
+
+                            <TableLayout
+                                android:id="@+id/air_table_pressure"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_below="@+id/textView"
+                                android:background="#CCC"
+                                android:paddingTop="1dp"
+                                android:stretchColumns="*">
+
+                            </TableLayout>
+                        </ScrollView>
+                    </TableLayout>
+
+                </RelativeLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </TabHost>
+
+
+</RelativeLayout>

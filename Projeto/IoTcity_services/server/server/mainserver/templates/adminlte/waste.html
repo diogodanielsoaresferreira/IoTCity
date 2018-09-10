@@ -1,0 +1,607 @@
+{% extends 'adminlte/waste.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+	<!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Waste
+            <small>Sensors' information</small>
+        </h1>
+        <ol class="breadcrumb">
+			<li class="active"><a href="#"><i class="fa fa-trash-o"></i> Waste</a></li>
+		</ol>
+    </section>
+
+{% endblock %}
+
+
+
+{% block content_outer %}
+<div class="alert error">
+	<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+</div>
+<div class="alert success">
+<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+
+</div>
+
+<!-- Main content -->
+	<section class="content">
+		<!-- Graphics -->
+		<div class="row">
+			<!-- Graphic 1 -->
+			<div class="col-md-12">
+			  <!-- COMPARATION CHART -->
+			   <div class="box box-primary">
+				<div class="box-header with-border">
+					<h3 class="box-title">Comparation between streams</h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse" disabled ><i class="fa fa-minus"></i></button>
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="nav-tabs-custom">
+			            <ul class="nav nav-tabs">
+			              <li class="active"><a href="#tab_1-1" data-toggle="tab" aria-expanded="true">Usage</a></li>
+			              <li class=""><a href="#tab_2-2" data-toggle="tab" aria-expanded="false">Internal temperature</a></li>
+			              <li class=""><a href="#tab_3-2" data-toggle="tab" aria-expanded="false">Volume</a></li>
+			            </ul>
+			            <div class="tab-content">
+			              <div class="tab-pane fade in active" id="tab_1-1">
+			              	<div class="chart">
+			                	<div id="containerw" class="contains-chart"></div>
+			                </div>
+			              </div>
+			              <!-- /.tab-pane -->
+			              <div class="tab-pane fade" id="tab_2-2">
+			              	<div class="chart">
+			                	<div id="containert" class="contains-chart"></div>
+			                </div>
+			              </div>
+			              <!-- /.tab-pane -->
+			              <div class="tab-pane fade" id="tab_3-2">
+			                <div id="containerv" class="contains-chart"></div>
+			              </div>
+			              <!-- /.tab-pane -->
+			            </div>
+			            <!-- /.tab-content -->
+			          </div>
+				</div>
+				<!-- /.box-body -->
+			  </div>
+			</div>
+		</div>
+		<!-- Table -->
+		<div class="row">
+			<div class="col-xs-12">
+			  <div class="box">
+				<div class="box-header">
+				  	<h3 class="box-title">Sensors</h3>
+				  	<!-- Search
+				  	<div class="form-group pull-right">
+						<input type="text" class="search form-control" placeholder="search">
+					</div>-->
+				</div>
+				<div class="box-body">
+				<!-- /.box-header -->
+				  <table class="table table-bordered table-striped results" id="wasteTable">
+					<thead>
+					<tr>
+					  <th>ID</th>
+					  <th>Name</th>
+					  <th>Location</th>
+					  <th>Streams</th>
+					  <th>Active/All streams</th>
+					  <th>Sensor status</th>
+					</tr>
+					</thead>
+					<tbody>
+					{% for sensor in sensors %}
+					
+
+						<tr>
+						  <td><a href="/sensors/details/{{ sensor.id }}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view <br> sensor page">{{ sensor.id }}</a></td>
+						  <td>{{ sensor.name }}</td>
+						  <td>
+								{% if sensor.address != "" %}
+								{% if sensor.address != None %}
+								{{ sensor.address }}<br>
+								{% endif %}
+								{% endif %}
+								<small>{{ sensor.lat }}; {{ sensor.lon }}</small>
+								</td>
+						  <td>
+						  	{% for stream in sensor.streams %}
+						  		{{ stream }}{% if not forloop.last %},<br>{% endif %}
+
+						  		{% empty %}
+						  		-
+						  	{% endfor %}
+						  	</td>
+						  <td>{{ sensor.active }}/{{ sensor.all }}</td>
+						  <td>
+							<div>
+				                <input id="{{sensor.id}}" type="checkbox" data-toggle="toggle"
+				                	{% if sensor.turned_on %}
+									 	checked 
+									{% endif %}
+				                	class="switch_sensor" data-onstyle="primary">
+				                	{% csrf_token %}
+				            </div>
+						</td>
+						</tr>
+						
+
+					{% endfor %}
+					</tbody>
+				  </table>
+				</div>
+				<!-- /.box-body -->
+			  </div>
+			  <!-- /.box -->
+			</div>
+		</div>
+
+			<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">Sensor changed state</span></button>
+						</div>
+						<div class="modal-body">
+							Are you sure you want to turn 
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" id="change"></button>
+							<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</section>
+	<!-- /.content -->
+{% endblock %}
+
+{% block jspage %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+<script type="text/javascript">
+	$('#wastelink').addClass('active');
+
+	$(document).ready(function(){
+	    $('a[data-toggle="tooltip"]').tooltip();   
+	});
+
+	$('[rel=tooltip]').tooltip({container: 'body'});
+
+	$(document).ready(function(){
+	    $('#wasteTable').DataTable( {
+	    	responsive: true,
+	    	lengthMenu: [ 10, 25, 50 ],
+	    	pagingType: "full_numbers"
+		} );
+	});
+
+	
+
+	// Get all elements with class="closebtn"
+	var close = document.getElementsByClassName("closebtn");
+	var i;
+
+
+	// Loop through all close buttons
+	for (i = 0; i < close.length; i++) {
+
+	    // When someone clicks on a close button
+	    close[i].onclick = function(){
+
+	        // Get the parent of <span class="closebtn"> (<div class="alert">)
+	        var div = this.parentElement;
+
+	        // Set the opacity of div to 0 (transparent)
+	        div.style.opacity = "0";
+
+	        // Hide the div after 600ms (the same amount of milliseconds it takes to fade out)
+	        setTimeout(function(){ div.style.display = "none"; }, 600);
+	    }
+	}
+
+		$('.switch_sensor').change(function(){
+
+		var toggleswitch = $(this);
+		var checked = "";
+
+		if (toggleswitch[0].checked){
+			checked = "on";
+		}
+		else{
+			checked = "off";
+		}
+		
+
+		var modal = $("#confirm").modal({backdrop: 'static', keyboard: false});
+		modal.text = "Are you sure you want to turn " + checked + " " + toggleswitch[0].id + "?";
+		modal.find('.modal-body').text("Are you sure you want to turn " + checked + " " + toggleswitch[0].id + "?");
+		
+		var b = document.getElementById("change")
+
+		modal.modal("show");
+		if (toggleswitch[0].checked)
+			b.innerHTML = "Turn on " + toggleswitch[0].id
+		else
+			b.innerHTML = "Turn off " + toggleswitch[0].id
+
+		last_object = toggleswitch;
+	});
+
+		last_object = null;
+
+		$('#cancel').on('click', function(){
+			last_object.bootstrapToggle('toggle');
+
+		});
+
+		$("#change").on('click', function(){
+
+
+			var modal = $("#confirm");
+			modal.modal("hide");
+
+			if (last_object[0].checked)
+				checked = "on";
+			else
+				checked = "off";
+
+			/* Get the csrf token */
+			var csrftoken = getCookie('csrftoken');
+			$.ajaxSetup({
+				beforeSend: function(xhr, settings) {
+					if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+						xhr.setRequestHeader("X-CSRFToken", csrftoken);
+					}
+				}
+			});
+
+			/* Send an ajax request */
+			$.ajax({
+				type: "POST",
+				url: "/sensors/"+checked+"/"+last_object[0].id,
+				data: {},
+				success: function(data){
+					if(data["status"]=="Success"){
+
+						var close = document.getElementsByClassName("alert success");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+last_object[0].id+" sensor successfully turned "+checked;
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+						}
+					}
+					else{
+						var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			}
+					}
+				},
+				failure: function(data){
+					var close = document.getElementsByClassName("alert error");
+						var i;
+						for (i = 0; i < close.length; i++) {
+
+							var div = close[i];
+
+						    // When someone clicks on a close button
+						    div.style.display = "block";
+						    div.style.opacity = 1;
+						    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+						    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        				setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			}
+				},
+			});
+
+			/* CSRF Helpers */
+			function csrfSafeMethod(method) {
+	    // these HTTP methods do not require CSRF protection
+	    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+});
+
+	var vis = true;
+
+	sensors = JSON.parse('{{values|escapejs}}');
+
+	sen_series = []
+
+	for (i=0; i<sensors.length; i++){
+
+		for (var sensor in sensors[i]){
+
+			s_data = []
+			
+			for (j=0; j<sensors[i][sensor].length; j++){
+				entry = sensors[i][sensor];
+				s_data.push([Date.UTC(entry[j][0][0], entry[j][0][1]-1, entry[j][0][2], entry[j][0][3], entry[j][0][4]), entry[j][1]]);
+			}
+			
+			
+			
+			// Add the data to the series
+			if (s_data.length > 0){
+				sen_series.push({name:sensor, data:s_data, visible:vis});
+				vis = false;
+			}
+		}
+	}
+
+
+	Highcharts.chart('containerw', {
+	    chart: {
+	        zoomType: 'x'
+	    },
+	    title: {
+	        text: 'Waste streams'
+	    },
+	    subtitle: {
+	        text: ''
+	    },
+	    xAxis: {
+	        type: 'datetime',
+	        title: {
+	            text: 'Date'
+	        }
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'Usage (%)',
+	            textAlign: 'left'
+	        },
+	        min: 0
+	    },
+	    tooltip: {
+	        headerFormat: '{point.x:%e. %b}',
+	        pointFormat: '<span style="color:{series.color}"><b>{series.name}</b></span>: {point.y:.2f} %',
+	        split: true
+	    },
+
+	    plotOptions: {
+	        spline: {
+	            marker: {
+	                enabled: true
+	            }
+	        }
+	    },
+
+	    rangeSelector: {
+            selected: 1
+        },
+
+	    series: sen_series
+	});
+
+	vis = true;
+
+	sensors = JSON.parse('{{temp|escapejs}}');
+
+	temp_series = []
+
+	for (i=0; i<sensors.length; i++){
+
+		for (var sensor in sensors[i]){
+
+			s_data = []
+			
+			for (j=0; j<sensors[i][sensor].length; j++){
+				entry = sensors[i][sensor];
+				s_data.push([Date.UTC(entry[j][0][0], entry[j][0][1]-1, entry[j][0][2], entry[j][0][3], entry[j][0][4]), entry[j][1]]);
+			}
+			
+			
+			
+			// Add the data to the series
+			if (s_data.length > 0){
+				temp_series.push({name:sensor, data:s_data, visible:vis});
+				vis = false;
+			}
+		}
+	}
+
+
+	Highcharts.chart('containert', {
+	    chart: {
+	        zoomType: 'x'
+	    },
+	    title: {
+	        text: 'Waste internal temperature'
+	    },
+	    subtitle: {
+	        text: ''
+	    },
+	    xAxis: {
+	        type: 'datetime',
+	        title: {
+	            text: 'Date'
+	        }
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'Temperature (º Celsius)',
+	            textAlign: 'left'
+	        }
+	    },
+	    tooltip: {
+	        headerFormat: '{point.x:%e. %b}',
+	        pointFormat: '<span style="color:{series.color}"><b>{series.name}</b></span>: {point.y:.2f} ºC',
+	        split: true
+	    },
+
+	    plotOptions: {
+	        spline: {
+	            marker: {
+	                enabled: true
+	            }
+	        }
+	    },
+
+	    rangeSelector: {
+            selected: 1
+        },
+
+	    series: temp_series
+	});
+
+	vis = true;
+
+	sensors = JSON.parse('{{vol|escapejs}}');
+
+	temp_series = []
+
+	for (i=0; i<sensors.length; i++){
+
+		for (var sensor in sensors[i]){
+
+			s_data = []
+			
+			for (j=0; j<sensors[i][sensor].length; j++){
+				entry = sensors[i][sensor];
+				s_data.push([Date.UTC(entry[j][0][0], entry[j][0][1]-1, entry[j][0][2], entry[j][0][3], entry[j][0][4]), entry[j][1]]);
+			}
+			
+			
+			
+			// Add the data to the series
+			if (s_data.length > 0){
+				temp_series.push({name:sensor, data:s_data, visible:vis});
+				vis = false;
+			}
+		}
+	}
+
+
+	Highcharts.chart('containerv', {
+	    chart: {
+	        zoomType: 'x'
+	    },
+	    title: {
+	        text: 'Waste volume'
+	    },
+	    subtitle: {
+	        text: ''
+	    },
+	    xAxis: {
+	        type: 'datetime',
+	        title: {
+	            text: 'Date'
+	        }
+	    },
+	    yAxis: {
+	        title: {
+	            text: 'Volume (L)',
+	            textAlign: 'left'
+	        },
+	        min: 0
+	    },
+	    tooltip: {
+	        headerFormat: '{point.x:%e. %b}',
+	        pointFormat: '<span style="color:{series.color}"><b>{series.name}</b></span>: {point.y:.2f} L',
+	        split: true
+	    },
+
+	    plotOptions: {
+	        spline: {
+	            marker: {
+	                enabled: true
+	            }
+	        }
+	    },
+
+	    rangeSelector: {
+            selected: 1
+        },
+
+	    series: temp_series
+	});
+
+	// Turn on or off sensors
+	function togglechanged(Object){
+
+		var checked = "";
+
+		if (Object.checked){
+			checked = "on";
+		}
+		else{
+			checked = "off";
+		}
+
+		var modal = $("#confirm").modal({backdrop: 'static', keyboard: false});
+		modal.text = "Are you sure you want to turn " + checked + " " + Object.id + "?";
+		modal.find('.modal-body').text("Are you sure you want to turn " + checked + " " + Object.id + "?");
+		
+		var b = document.getElementById("change")
+
+		modal.modal("show");
+		if (Object.checked)
+			b.innerHTML = "Turn on " + Object.id
+		else
+			b.innerHTML = "Turn off " + Object.id
+
+		last_object = Object;
+
+	}
+
+	// fix dimensions of chart that was in a hidden element
+	jQuery(document).on( 'shown.bs.tab', 'a[data-toggle="tab"]', function (e) { // on tab selection event
+	    jQuery( ".contains-chart" ).each(function() { // target each element with the .contains-chart class
+	        var chart = jQuery(this).highcharts(); // target the chart itself
+	        chart.reflow() // reflow that chart
+	    });
+	})
+</script>
+
+{% endblock %}

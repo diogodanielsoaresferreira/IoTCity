@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/root_group">
+        <item
+              android:title="@string/main"
+              android:id="@+id/main">
+              <menu android:id="@+id/main_menu">
+                  <group android:id="@+id/main_menu_group">
+                    <item
+                        android:id="@+id/nav_dashboard"
+                        android:title="@string/Dashboard" />
+                    <item
+                        android:id="@+id/nav_map"
+                        android:title="@string/map" />
+                  </group>
+              </menu>
+        </item>
+
+        <item
+            android:title="@string/Metrics"
+            android:id="@+id/metrics">
+            <menu android:id="@+id/metrics_menu">
+                <group android:id="@+id/metrics_group">
+                    <item
+                        android:id="@+id/temperature"
+                        android:title="@string/temperature"
+                        android:icon="@mipmap/cold"
+                        />
+                    <item
+                        android:id="@+id/noise"
+                        android:title="@string/noise"
+                        android:icon="@mipmap/multimedia2"/>
+                    <item
+                        android:id="@+id/lighting"
+                        android:title="@string/lighting"
+                        android:icon="@mipmap/technology" />
+                    <item
+                        android:id="@+id/radiation"
+                        android:title="@string/UV"
+                        android:icon="@mipmap/summer" />
+                    <item
+                        android:id="@+id/waste"
+                        android:title="@string/waste"
+                        android:icon="@mipmap/bin3" />
+                    <item
+                        android:id="@+id/people"
+                        android:title="@string/people"
+                        android:icon="@mipmap/people2"/>
+                    <item
+                        android:id="@+id/air"
+                        android:title="@string/air_"
+                        android:icon="@mipmap/air"/>
+                </group>
+            </menu >
+        </item>
+
+        <item
+            android:id="@+id/help"
+            android:title="@string/Contacts" />
+    </group>
+</menu>

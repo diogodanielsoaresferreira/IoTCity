@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="IoT City">
+	<meta name="author"      content="Sergey Pozhilov, Luís Leira, Diogo Ferreira">
+	
+	<title>IoT City > Developer area</title>
+
+	<link rel="shortcut icon" href="assets/images/icon.png">
+	
+	<link rel="stylesheet" media="screen" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets/css/main.css">
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="index.html"><img src="assets/images/logo1.png" alt="IoT City logo"></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+					<li><a href="index.html">Home</a></li> <!-- Client area -->
+					<li><a href="about.html">How to use it</a></li> <!-- User area -->
+					<li class="dropdown"> <!-- Specification area -->
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Specifications<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="specifications-1.html">Features, system scenarios and use cases</a></li>
+							<li><a href="specifications-2.html">Requirements and tests</a></li>
+							<li><a href="specifications-3.html">Architecture</a></li>
+							<li><a href="specifications-4.html">Data model</a></li>
+							<li><a href="deliverables.html">Deliverables</a></li>
+						</ul>
+					</li>
+					<li class="active"><a href="developer.html">Developer area</a></li> <!-- Developer area -->
+					<li><a href="reports.html">Weekly reports</a></li> <!-- Team area -->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->
+
+	<header id="head" class="secondary"></header>
+
+	<!-- container -->
+	<div class="container">
+
+		<ol class="breadcrumb">
+			<li><a href="index.html">Home</a></li>
+			<li class="active">Developer area</li>
+		</ol>
+
+		<div class="row">
+			
+			<!-- Article main content -->
+			<article class="col-sm-8 maincontent">
+				<header class="page-header">
+					<h1 class="page-title">Developer area</h1>
+				</header>
+				
+				<div class="header-inside" id="dev-1">
+					<h3>How to deploy the developer infrastructure</h3>
+					<hr class="half-rule"/>
+					<p>&emsp;On this section, we explain how to deploy the IoT City infrastructure locally (mainly for developers). This guide is described for a Linux Debian Operative System.</p>
+					<p>&emsp;0) After having the IoT City platform, execute the "requirements.txt" file to install the minimum requirements.</p>
+					<p>&emsp;1) After having the dependencies installed, you need to activate a python virtual environment to successfully run the server. For that, run <b>"$ source bin/activate"</b>, and enter in the folder <b>"server"</b>.</p>
+					<p>&emsp;2) Then, you ou must enter on the folder <b>"IoTcity_services"</b>, and execute the commands in the file <b>"requirements.txt"</b>.</p>
+					<p>&emsp;3) <b>The next two steps are only needed if you want to fetch data from the SmartIoT</b>. If not, you can go to the step 5. You need to turn on the distributed task queue, and activate the workers to do the tasks received. To turn on the distributed task queue, run <b>"$ sudo service rabbitmq-server restart"</b>.</p>
+					<p>&emsp;4) To activate the workers, run <b>"$ celery -A server worker --beat -l info"</b>. The server is currently fetching data from the broker. To continue this guide, open another terminal and activate again the python virtual enviroment (step 2).</p>
+					<p>&emsp;5) To finally run the local server, execute <b>"$ python manage.py runserver"</b>. You can access it on the url "http://127.0.0.1:8000".</p>
+
+				</div>
+				
+				<div class="header-inside" id="dev-2">
+					<h3>How is the system deployed</h3>
+					<hr class="half-rule"/>
+					<p>&emsp;On this section, we are going to explain how to do the deployment for production on a Linux Debian Operative System. This section is also described on the file "prod/README", on the IoTCity repository.</p><br>
+					<p>A brief description of the deployment steps:
+					<ul>
+						<li>1 - Install an Http server for dynamic content (Gunicorn), configure it and run it as daemon (or service).</li>
+						<li>2 - Install a load balancer, proxy and Http server for static content (Nginx), configure it and run it as daemon.</li>
+						<li>3 - Run a message broker (Rabbitmq) as a daemon.</li>
+						<li>4 - Run the workers (Celery) as a daemon.</li>
+						<li>5 - Change some setting in django files.</li>
+						<li>6 - Migrate local database to production database.</li>
+					</ul></p>
+					<p>&emsp;If the platform does not run locally, you may want first to assure that the requirements are met ("../README_SERVER").</p>
+					<p>&emsp;0 - <b>Download</b> all the IoTCity folders to the directory /srv.</p>
+					<p>&emsp;1 - To deploy <b>gunicorn</b>, first you must install it ("$ sudo pip install gunicorn"). Then, copy the "gunicorn.service" file (on "/prod") to the directory "/etc/systemd/system/". To start the daemon, run "$ sudo systemctl start gunicorn" and "$ sudo systemctl enable gunicorn". To check if the service is working, you can verify the status with the command "$ sudo systemctl status gunicorn".</p>
+					<p>&emsp;2 - Now let's install <b>Nginx</b>. Run the command "$ sudo apt-get install nginx". To allow Nginx to communicate with HTTP, run the command "$ sudo ufw allow 'Nginx Full' ". With the Nginx installed, copy the file "prod/server", that has the Nginx configurations, to "/etc/nginx/sites-available". With the configuration file on the folder, we now need to link the configuration file to the enabled websites. For that, run the command "$ sudo ln -s /etc/nginx/sites-available/server /etc/nginx/sites-enabled". To verify if the configuration is done correctly, you can run "$ sudo nginx -t". Finally, let's run the daemon with the command "$ sudo service nginx start". To verify if the service is working correctly, you can run "$ sudo systemctl status nginx".</p>
+					<p>&emsp;3 - At this point, we need to start the <b>message broker service</b>. Let's run "$ sudo service rabbitmq-server start".</p>
+					<p>&emsp;4 - We now have the website deployed, and also the message broker. We now need to run the <b>Celery workers</b> for them to perform the tasks sent to the message broker. For that, download the global configuration file 'celeryd', by running the command "wget https://raw.githubusercontent.com/celery/celery/3.1/extra/generic-init.d/celeryd" and change the location of the file to "/etc/init.d". After that, let's copy the local configuration file, "prod/celeryd", to "/etc/default". To run the workers as a daemon, execute the command "$ /etc/init.d/celeryd start".</p>
+					<p>&emsp;5 - With everything set up, we need to <b>change some configuration settings</b> in Django files. First, copy the "SECRET_KEY" in "server/settings.py" and paste it on new file in "/etc/iotcity/django_secret.txt". That will keep the secret key of the platform safe. Then, copy the file "prod/settings.py" to "server/settings.py" and override the existent one. This file has the deployment settings, instead of the debugging settings. Finally, on the folder "server", run "$ python manage.py collectstatic", to gather all static files in one folder, for Nginx to server.</p>
+					<p>&emsp;6 - Let's <b>migrate the database of the platform</b> to production environment. For that, do the following commands:<br>
+					&emsp;"$ sudo su - postgres"<br>
+					&emsp;"$ psql"<br>
+					&emsp;"> CREATE DATABASE db"<br>
+					&emsp;"> CREATE USER admin WITH PASSWORD 'rootroot';"<br>
+
+					&emsp;"> ALTER ROLE myprojectuser SET client_encoding TO 'utf8';"<br>
+					&emsp;"> ALTER ROLE myprojectuser SET default_transaction_isolation TO 'read committed';"<br>
+					&emsp;"> ALTER ROLE myprojectuser SET timezone TO 'UTC';"<br>
+
+					&emsp;"> GRANT ALL PRIVILEGES ON DATABASE myproject TO myprojectuser;"<br>
+
+					&emsp;After the user and the database are created, execute "$ python manage.py makemigrations".Then, run "$ python manage.py migrate" to apply the changes on the new database. Create a new super user in django, and go to the admin page. From there, you can add as sensors and subscriptions as you want.<br>
+
+					&emsp;And that's it! The IoTCity is now fully deployed!</p>
+					
+					<div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/request_nginx.jpg" alt="Image explaining the Nginx and Gunicorn integration"><br><h6>When a request comes to the server, it goes to the Nginx socket. The Nginx checks if the url is allowed, and gathers the static content. For dynamic content, sends a request to Gunicorn, that will connect to Django and answer the request.</h6></div></div><br>
+				</div>
+
+				<div class="header-inside" id="dev-3">
+					<h3>Major issues</h3>
+					<hr class="half-rule"/>
+					<p>&emsp;On this section we explain the major issues developing and deploying the platform, and what is the solution found.</p><br>
+					<h5><b>User interface problems (usability)</b></h5>
+					<p>&emsp;The task we spent the most time on this project was improving the user interface (on the Web Portal and mobile applications). The <a href="./specifications-1.html#spec-1-2">experience maps</a> have helped us to understand what the user expects to see in the applications, and what are the most important features on the views.</p><br>
+					<h5><b>Migrating the Celery workers to production</b></h5>
+					<p>&emsp;When the daemon for the Celery workers is configured on production, the processes are killed by the operative system. This happens because Celery has a known <a href="https://github.com/celery/celery/issues/3712">bug</a> that causes the cpu usage to increase to 100% when the daemons are launched. If the Celery workers are launched manually, they work with no issues. The issue was solved by doubling the RAM memory (from 1 to 2) and the number of CPU's (from 1 to 2) on our virtual machine.</p><br>
+					<h5><b>Migrating from local database to Production Database</b></h5>
+					<p>&emsp;When migrating from the SQLite3 database to the PostgreSQL Production database, with django automated migration, the "DateTimeFields" cannot be migrated, since that type is not supported by PostgreSQL database engine. To solve this issue, the database was manually copied from the local database.</p><br>
+					<h5><b>Markers on Web Portal maps</b></h5>
+					<p>&emsp;Our initial plan for the markers on the Web Portal was to add, with color (red/green), an indicator to the state of the sensor. If any stream didn't work, the color of the marker changed from green to red. Unfortunately, the markers available from Google Maps do not allow easily the change of color with an icon on top. We could not fulfill this feature at the moment, so we opted by maintain the icon on top of the markers. In future works, changing the map platform, from Google Maps to OpenStreetMap or Leaflet could be an option.</p><br>
+					<h5><b>Sending media files to the server</b></h5>
+					<p>&emsp;When sending a user report, the application can send images or videos to the web portal for more detailed information. The server has to save the image or video in the database. Due to Django constraints when working with mobile applications, it was not easy to send images or videos to the server. We managed to solve the issue.</p>
+					
+				</div>
+					
+				<div class="header-inside" id="dev-5">
+					<h3>Implementation options</h3>
+					<hr class="half-rule"/>
+					<p>&emsp;On this section, we describe the languages and frameworks used and explain our choices.</p>
+					<p>&emsp;Following the top-down view of our architecture, we are going to start by explaining the IoT City Mobile Application. The mobile application was designed with the native android API, because it includes a large user community and takes full advantage of the smartphone functionalities as well, improves the performance of the app and allows the user to have a better user experience, with “Material Design” paradigm.</p>
+					<p>&emsp;The IoT City Web Portal and IoT City Administrator Portal is done using HTML, CSS and JavaScript integrated in Django framework (running on python 2.7). We choose Django because it is a framework heavily tested in production environment with great results. The scalability was also a major role in the decision, as well as the integrated administration panel, which allows the administrator to easily add sensors, subscribers, groups and users to the IoT City Data Persistence.</p>
+					<p>&emsp;The AAA (authentication, authorization, accounting) is done using Django ‘contrib.auth’ module, which comes integrated in the Django framework.</p>
+					<p>&emsp;The IoT City Data Persistence is ready to work with SQLite3 and PostgreSQL databases. For debugging purposes, we will use SQLite3 due to its simple configuration with Django and small database size. When in production, the database engine will be migrated to PostgreSQL.</p>
+					<p>&emsp;Periodically, the Django server will send an asynchronous task to the broker to fetch data from SmartIoT. The server is currently done in RabbitMQ, because of its versatile design, its speed and straightforward configuration. The tasks are then received by a distributed task queue and executed. For this action we are using Celery Framework. This tasks could also be done by asynchronous threads, but with a messaging framework have the advantage that can be easily scaled through different machines.</p>
+					<p>&emsp;The communication between the aggregators and SmartIoT broker is done using python 2.7, as well as the device drivers for the sensors in python. Each device driver is specific for the sensor used.</p>
+					<p>&emsp;For testing purposes, for each one of the verticals defined (waste/air/radiation/temperature/people/noise/lighting) was created a simulator that can be easily replicated to test the scalability of the solution. It was also created a broker using Django Framework and RabbitMQ.</p>
+					<p>&emsp;On production environment, we also have Gunicorn as Http Server for dynamic content, and Nginx to serve static content, do to load balancing to the requests received and to work as a reverse proxy (a longer explanation on why using Gunicorn and Nginx together can be found <a target="_blank" href="https://serverfault.com/questions/220046/why-is-setting-nginx-as-a-reverse-proxy-a-good-idea">here</a>).</p>
+
+					<div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/logosv3.png" alt="Frameworks and languages used"><br><h6>Some of the frameworks and languages used (On top, Nginx; On the second row, from left to right: SQLite, RabbitMQ, Python, Celery; On the third row, from left to right: Django, Android SDK, PostgreSQL, JavaScript; Down, Gunicorn).</h6></div></div><br>
+
+				</div>
+
+				<div class="header-inside" id="dev-6">
+					<h3>FAQ</h3>
+					<hr class="half-rule"/>
+					<p><b>Frequently Asked Questions about IoT City Platform</b></p><br>
+					<p><b>Q1: What types and subtypes of sensors does the platform currently supports?</b></p>
+					<p><b>A:</b> The types and subtypes of sensors that the platform currently supports are: temperature, lighting (illumination values and dimming percentage), air (pressure and CO2), waste containers (fullness percentage, internal temperature and volume), noise, radiation (UV Radiation, Visible Radiation and Infrared Radiation) and people counter.</p>
+					<p><b>Q2: What is the difference between a sender stream and an actuator stream?</b></p>
+					<p><b>A:</b> A sender stream sends data to the platform. The IoT Platform fetches the data from the sender streams periodically and adds it to the data persistence. An actuator stream is not used to fetch values, instead it is used to send values to the sensor, that can change his behaviour. The values shown on the actuator stream charts are the values send to him, not the values gathered.</p>
+					<p><b>Q3: How is the data fetched and with what time period?</b></p>
+					<p><b>A:</b> The data is fetched using asynchronous tasks send by the server to a RabbitMQ distributed task queue, then gathered by one or more Celery Workers. The time period is defined in the file "tasks.py" (in seconds), although for the system to be fully working, it MUST be longer than the sender period of the sensor (See Q4).</p>
+					<p><b>Q4: How the platform detects that a stream is not working?</b></p>
+					<p><b>A:</b> The platform detects that a stream is not working when it tries to fetch data from the broker and it does not have any. This has two major implications: 1) We never know when an actuator is not working, because the actuators don't send values to the platform; 2) If the sensor period of sending data is longer than the period of server fetching data, sometimes the server will find the stream without values, and will report the stream as "not working" mistakenly.</p>
+					<p><b>Q5: What it means for the user to turn off a sensor in the web portal?</b></p>
+					<p><b>A:</b> If the user "turns off" a sensor in the web portal, the sensor will not be physically turned off. The meaning of the action is that the server will not fetch data for that sensor (as if the sensor was turned off), which does not mean that the sensor will stop sending values to SmartIoT.</p>
+				</div>
+
+				<div class="header-inside" id="dev-7">
+					<h3>Future work</h3>
+					<hr class="half-rule"/>
+					
+					<p>&emsp;On this section we aim the future work that can be done in the platform, providing more features and making it easier to use.</p><br>
+					<h5><b>Add an Analytics module to the platform</b></h5>
+					<p>&emsp;It would be very interesting to have a module only dedicated to analyze all the data from the database and do some processing, to check possible correlations and predict the future data. It can be done with a machine learning algorithm, but it can be hard to gather enough values to design a valid model.</p><br>
+					<h5><b>Add authentication in mobile applications</b></h5>
+					<p>&emsp;Currently, the mobile applications do not require authentication, to be easy to use. This has some limitations, mainly the inabiliy to diferentiate mobile users and send notifications and messages to target users. An improvement could be made by allowing the app to authenticate users, and grant them personal privileges, like add a sensor remotely without software (also addressed on the first subsection of this section).</p><br>
+					<h5><b>Receive notifications in the citizen mobile app about the reports and define alerts in the city manager mobile app</b></h5>
+					<p>&emsp;It would be important for citizen mobile users to receive feedback about the reports sent and define personal alerts for the streams configured for city manager mobile users. If authentication on the mobile applications are implemented (see subsection above), this features can be added to the platform. Currently, however, it is not possible to address mobile users independently.</p><br>
+					<h5><b>Markers on maps changing color according to state of sensor</b></h5>
+					<p>&emsp;As explained in the "Major Issues" section, the initial plan for the markers on the Web Portal was to display, with color (red/green), an indicator to the state of the sensor. Google Maps has some limitations in terms of marker personalization, but other alternatives, such as Leaflet or Open Street Maps, can be studied to provide the user the most important information on the map.</p><br>
+					<h5><b>Provide the instalator of sensors an interface where he can check if the sensor is working</b></h5>
+					<p>&emsp;A major improvement for the instalator of sensors would be to provide an interface where, when adding sensors, he received the information if the sensor was correctly installed and sending values, instead of installing it, adding it on the web portal and only then check if the sensor was correctly added.</p><br>
+
+					<br>
+					<h3>Future scenarios</h3>
+					<p>&emsp;This section will exemplify future possible scenarios of different type of users taking advantage of the IoT City solution for differentiated goals.</p><br>
+
+					<h4>Register sensors</h4><br>
+					 <p>&emsp;Mr. Peter, a city manager, wants to gather more metrics from its city. For that, he call to a technician to mounts a sensor in a location in the city where there are no sensors nearby. When the sensor is already mounted, he turns on, pre register the sensor, check the connectivity and data generated to the IoT Platform.
+					 <br>&emsp;On the IoT City Web Portal, the Administrator of the platform complete the register of the sensor to the data persistence. Finally, he also adds to the sensor information the streams currently sending values to the IoT Platform, and the subscriptions to the group of users allowed to see its values.</p><br>
+					 <div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/experience_map/E1_future.png" alt="Experience Map of Mr. Peter to Register Sensors."><br><h6>Experience Map of Mr. Peter to Register Sensors.</h6></div></div><br>
+					 <br>
+
+					 <h4>Daily monitoring of the city</h4><br>
+					 <p>&emsp;Mr. Peter, the city manager, has arrived to work. He wants to check what happened in the city overnight. For that, he authenticates himself into IoT City Web Portal and checks if there are any abnormal values gathered from the sensors or don't have connectivity, new alarms, new sensors or new situations reported by citizens in the city. Then, he checks if all the situations of the sensors are currently working.</p>
+					 <p>&emsp;After confirming that everything looks fine, Mr. Peter wants to see the triggered alarms of the subscriptions in his absence, as well as the reports sent by the users. As there are many reports by the users about public illumination failing during night, he talks to the city workers to solve the occurrence.</p>
+					 <p>&emsp;If he needs more information about his report he ask to the citizen and when the situation was solved he gives the feedback to the citizen.</p>
+					 <div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/experience_map/E2_future.png" alt="Experience Map of Mr. Peter doing the daily monitoring of the city"><br><h6>Experience Map of Mr. Peter doing the daily monitoring of the city</h6></div></div><br><br>
+
+					 <h4>Report problem</h4><br>
+					 <p>&emsp;Mr. John was having troubles sleeping because of the noise in his street. He decides to open the IoT City Mobile App to check if there are any noise sensors nearby. He notices that there are two noise sensors on his street, and he goes to see his noise level history.</p>
+					 <p>&emsp;As the noise level has been high for too long, he decides to report the problem to the city manager, hoping that it will be fixed soon. He writes in the IoT City Mobile App his concerns, also adding an audio file for a more complete description.</p>
+					 <p>&emsp;If the city manager needs more information about his report he ask to the citizen and when the situation was solved he gives the feedback to the citizen.</p>
+					 <div class="datamodel-div"><div class="h-caption" style="border-style: solid; border-color: grey;"><img src="./assets/images/experience_map/E3_future.png" alt="Experience Map of Mr. John reporting a problem."><br><h6>Experience Map of Mr. John reporting a problem.</h6></div></div><br><br>
+				</div>
+			
+			</article>
+			<!-- /Article -->
+			
+			<!-- Sidebar -->
+			<aside class="col-sm-4 sidebar sidebar-right">
+
+				<div id="sidebar" class="row widget affix">
+					<div class="col-xs-12">
+						<h4>Choose the topic you want to see</h4>
+						<ul class="list-unstyled list-spaces">
+							<li><a href="#dev-1">How to deploy the developer infrastructure</a><br><span class="small text-muted">On this section, we explain how to deploy the<br>IoT City infrastructure locally.</span></li>
+							<li><a href="#dev-2">How is the system deployed</a><br><span class="small text-muted">On this section, we explain how to do the<br>deployment for production on a Linux Debian Operative System.</span></li>
+							<li><a href="#dev-3">Major issues</a><br><span class="small text-muted">On this section, we explain the major issues developing<br>and deploying the platform, and what is the solution found.</span></li>
+							<li><a href="#dev-5">Implementation options</a><br><span class="small text-muted">On this section, we describe the languages and<br>frameworks used and explain our choices.</span></li>
+							<li><a href="#dev-6">FAQ</a><br><span class="small text-muted">Frequently Asked Questions about IoT City Platform</span></li>
+							<li><a href="#dev-7">Future work</a><br><span class="small text-muted">On this section, we aim the future work that can be done in<br>the platform, providing more features and making it easier to use.</span></li>
+						</ul>
+					</div>
+				</div>
+
+			</aside>
+			<!-- /Sidebar -->
+
+		</div>
+	</div>	<!-- /container -->
+	
+
+	<footer id="footer" class="top-space">
+
+		<div class="footer1">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">Associated with</h3>
+						<div class="widget-body">
+							<!-- UA/DETI Logo -->
+							<a href="https://www.ua.pt/deti/" target="_blank"><img src="assets/images/deti-ua.png" alt="UA/DETI Logo"></a>
+						</div>
+					</div>
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">In collaboration with</h3>
+						<div class="widget-body">
+							<!-- IT Logo -->
+							<a href="https://www.it.pt/" target="_blank"><img src="assets/images/it-logo.png" alt="IT Logo"></a>
+							<!-- Altice Labs Logo -->
+							<a href="http://www.alticelabs.com/pt/" target="_blank"><img src="assets/images/AlticeLabs-logo-cinza.png" alt="Altice Labs Logo"></a>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav">Project in Informatics Engineering - Computer and Telematics Engineering</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Copyright &copy; 2017, IoT City. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+	</footer>
+
+
+
+
+	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/headroom.min.js"></script>
+	<script src="assets/js/jQuery.headroom.min.js"></script>
+	<script src="assets/js/template.js"></script>
+</body>
+</html>

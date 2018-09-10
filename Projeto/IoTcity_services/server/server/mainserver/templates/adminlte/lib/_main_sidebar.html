@@ -1,0 +1,96 @@
+{% extends 'adminlte/lib/_main_sidebar.html' %}
+
+{% block nav_links %}
+    <li class="linksidebar" id="dashboardlink">
+        <a href="/">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+        </a>
+    </li>
+    <li class="linksidebar" id="maplink">
+        <a href="/map">
+            <i class="fa fa-map-marker"></i> <span>Map</span>
+        </a>
+    </li>
+    <li class="treeview linksidebar" id="metricslink">
+        <a href="#">
+        <i class="fa fa-info-circle"></i> <span>Metrics</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+        </a>
+        <ul class="treeview-menu">
+            {% if "TE" in user_types %}
+            <li class="linksidebar" id="temperaturelink">
+                <a href="/temperature">
+                    <i class="fa fa-thermometer-half"></i> Temperature
+                </a>
+            </li>
+            {% endif %}
+            {% if "IL" in user_types %}
+            <li class="linksidebar" id="lightinglink">
+                <a href="/lighting">
+                    <i class="fa fa-lightbulb-o"></i> Lighting
+                </a>
+            </li>
+            {% endif %}
+            {% if "AI" in user_types %}
+            <li class="linksidebar" id="airlink">
+                <a href="/air">
+                    <i class="fa fa-cloud"></i> Air
+                </a>
+            </li>
+            {% endif %}
+            {% if "WA" in user_types %}
+            <li class="linksidebar" id="wastelink">
+                <a href="/waste">
+                    <i class="fa fa-trash-o"></i> Waste
+                </a>
+            </li>
+            {% endif %}
+            {% if "SO" in user_types %}
+            <li class="linksidebar" id="noiselink">
+                <a href="/noise">
+                    <i class="fa fa-volume-up"></i> Noise
+                </a>
+            </li>
+            {% endif %}
+            {% if "RA" in user_types %}
+            <li class="linksidebar" id="radiationlink">
+                <a href="/radiation">
+                    <i class="fa fa-sun-o"></i> Radiation
+                </a>
+            </li>
+            {% endif %}
+            {% if "PE" in user_types %}
+            <li class="linksidebar" id="peoplelink">
+                <a href="/people">
+                    <i class="fa fa-users"></i> People
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </li>
+    <li class="linksidebar" id="alertslink">
+        <a href="/alerts">
+            <i class="fa fa-exclamation-circle"></i> <span>Alerts</span>
+        </a>
+    </li>
+    <li class="linksidebar" id="ruleslink">
+        <a href="/rules">
+            <i class="fa fa-pencil"></i> <span>Rules</span>
+        </a>
+    </li>
+    <li class="linksidebar" id="citizenlink">
+        <a href="/reports">
+            <i class="fa fa-comments-o"></i> <span>Citizen area</span>
+        </a>
+    </li>
+{% endblock nav_links %}
+
+{% block nav_other %}
+    <li class="linksidebar" id="helplink">
+        <a href="/help">
+            <i class="fa fa-question-circle"></i> <span>Help</span>
+        </a>
+    </li>
+{% endblock nav_other %}

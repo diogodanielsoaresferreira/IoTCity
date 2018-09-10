@@ -1,0 +1,30 @@
+### Requirements ###
+
+# Python 2.x
+
+# Version 3.5.7
+sudo apt-get install rabbitmq-server
+sudo apt-get install libpq-dev postgresql postgresql-contrib
+# Version 1.10
+pip install django
+# Version 2.11.1
+pip install requests
+# Version 4.0.2
+pip install celery
+# Version 1.0.1
+pip install django_celery_results
+# Version 1.0.1
+pip install django_celery_beat
+# Version 1.7
+pip install django-debug-toolbar
+# Version 2.7
+pip install django psycopg2
+# Version 2.6
+pip install python-dateutil
+pip install python-magic
+# Version 0.2.7
+pip install fcm-django
+# Version 3.6.2
+pip install djangorestframework
+# Version 2.0.2
+pip install django-cors-headers

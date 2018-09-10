@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.iot.iot_city_manager.Help"
+    tools:showIn="@layout/activity_help">
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+        <TextView
+            android:id="@+id/first_paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="20dp"
+            android:text="@string/first_paragraph" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/first_image"
+            android:layout_below="@+id/first_paragraph"
+            android:src="@drawable/tutorial_1"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/first_second_paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:layout_below="@+id/first_image"
+            android:textSize="20dp"
+            android:text="@string/first_second_paragraph" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/first_second_image"
+            android:layout_below="@+id/first_second_paragraph"
+            android:src="@drawable/turorial_5"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/second_paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="20dp"
+            android:layout_below="@+id/first_second_image"
+            android:text="@string/second_paragraph"
+            android:layout_marginBottom="10dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/second_image"
+            android:layout_below="@+id/second_paragraph"
+            android:src="@drawable/tutorial_2"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/third_paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="20dp"
+            android:layout_below="@+id/fourth_image"
+            android:text="@string/third_paragraph"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/fourth_paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="20dp"
+            android:layout_below="@+id/second_image"
+            android:text="@string/fourth_paragraph"
+            android:layout_marginBottom="10dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fourth_image"
+            android:layout_below="@+id/fourth_paragraph"
+            android:src="@drawable/tutorial_4"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/sixth_paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="20dp"
+            android:layout_below="@+id/fourth_image"
+            android:text="@string/sixth_paragraph"
+            android:layout_marginBottom="10dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/seventh_image"
+            android:layout_below="@+id/sixth_paragraph"
+            android:src="@drawable/tutorial_7"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/seventh_paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="20dp"
+            android:layout_below="@+id/seventh_image"
+            android:text="@string/seventh_paragraph"
+            android:layout_marginBottom="10dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/eigth_image"
+            android:layout_below="@+id/seventh_paragraph"
+            android:src="@drawable/tutorial_8"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/eigth_paragraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="20dp"
+            android:layout_below="@+id/eigth_image"
+            android:text="@string/eigth_paragraph"
+            android:layout_marginBottom="10dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/nineth_image"
+            android:layout_below="@+id/eigth_paragraph"
+            android:src="@drawable/tutorial_10"
+            android:layout_marginBottom="10dp"/>
+
+    </RelativeLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

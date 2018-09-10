@@ -1,0 +1,349 @@
+{% extends 'adminlte/rule_details.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+        	<h1>
+                Rule
+                <small><b>{{ name }}</b> details</small>
+            </h1>
+            <ol class="breadcrumb">
+        		<li class="active" ><a href="/rules"><i class="fa fa-pencil"></i> Rules</a> </li>
+      		</ol>
+	</section>
+	
+{% endblock %}
+
+
+{% block content %}
+
+<div class="modal fade" id="deleteAct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete Actuator</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the actuator?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteActButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="alert error">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+</div>
+<div class="alert success">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+		
+		<div class="modal-content">
+			<form id="actform" action="" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add actuator to rule</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if actform.errors %}
+					<p style="color: red;">
+						Please correct the error{{ actform.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					<div class="field">
+						{{ actform.streams.errors }}
+						<label for="id_max" class="tooltip-test" title="Select streams to actuate over." style="font-size:16px;">* Select stream</label> 
+						{{ actform.streams }}
+						<p style="font-size: 10px;">Select streams to actuate over.</p><br><br>
+					</div>
+
+					<div class="field">
+						{{ actform.value.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the value to be sent to the streams.">* Value </label> 
+						{{ actform.value }}
+						<p style="font-size: 10px;">Select the value to be sent to the streams.</p><br><br>
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="submit" value="Submit" class="btn btn-primary">Add actuator</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<div class="box-title">
+						General information
+					</div>
+					<hr style="margin-bottom: -1px">
+				</div>
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<p style="font-size: 110%; display: inline-block;"><b>Name</b></p> <p style="font-size: 105%; display: inline-block;">{{ name }}</p> 
+						</div>
+						<div class="col-md-6">
+							<p style="font-size: 110%; display: inline-block;"><b>Sensor types</b></p> 
+							<p style="font-size: 105%; display: inline-block;">
+								{% for t in sen_type %}
+									{{ t }} 
+									{% if not forloop.last %}
+										,
+									{% endif %}
+								{% endfor %}
+							</p>
+						</div>
+						<div class="col-md-6">
+							<h5><b>Beggining date</b> {{ beg_date }}</h5> 
+							<h5><b>End date</b> {{ end_date }}</h5> 
+						</div>
+						<div class="col-md-6">
+							<h5><b>Days of week active</b> {{ daysOfWeek }}</h5> 
+							<h5><b>Hour to trigger rule</b> {{ hours_act }}</h5> 
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<div class="box-title">
+						Configurations
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="table-responsive">
+						<table class="table no-margin table-hover table-striped" id="notifications2Table">
+							<thead>
+								<tr>
+									<th>Stream</th>
+									<th>Sensor</th>
+									<th>Value</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for occurrence in actuators %}
+								<tr id="actuator_{{occurrence.id}}_{{occurrence.sub_id}}">
+									<td>{{ occurrence.sub }}</td>
+									<td>{{ occurrence.sen_name }}</td>
+									<td>{{ occurrence.value }}</td>
+									<td><button class="btn btn-sm btn-default" title="Delete actuator" type="button" onclick="delete_act('{{occurrence.id}}',' {{occurrence.sub_id}}');"><i class="glyphicon glyphicon-remove"></i></button></td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block jspage %}
+
+<script>
+	$('#ruleslink').addClass('active');
+
+	loaded1 = false;
+	$('#notifications2Table').DataTable( {
+		'fnDrawCallback': function (oSettings) {
+			if(!loaded1){
+				$('#notifications2Table_filter').append(' <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add actuator</button>');
+				loaded1 = !loaded1;
+			}
+		},
+	    responsive: true,
+	    lengthMenu: [ 10, 25, 50 ],
+	    pagingType: "full_numbers",
+	});
+
+	if ('{{ success|escapejs }}' == "Trueactuator"){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+
+		text = "The actuator was sucessfully added."
+
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+
+	if('{{ success|escapejs }}' == "Falseactuator"){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			text = "The actuator could not be added. You must select a stream from the provided."
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+
+	act_id = -1;
+	sub_id = -1;
+	function delete_act(act_ids, sub_ids){
+		act_id = act_ids;
+		sub_id = sub_ids.trim();
+    	$('#deleteAct').modal('show');
+	}
+
+	$("#deleteActButton").on('click', function(){
+
+    	$('#deleteAct').modal('hide');
+
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/actuator/delete/"+act_id+"/sub="+sub_id,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Actuator successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			var table = $('#notifications2Table').DataTable();
+	        			var row = table.row(document.getElementById("actuator_"+act_id+"_"+sub_id));
+	        			row.remove().draw(false);
+
+	        			var table = $('#notifications2Table').DataTable();
+	        			
+	        			if(table.rows().count()==0)
+	        				window.location.replace("/rules");
+	        		
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	/* CSRF Helpers */
+	function csrfSafeMethod(method) {
+	   	// these HTTP methods do not require CSRF protection
+	   	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+
+</script>
+
+{% endblock %}

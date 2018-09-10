@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport"    content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="IoT City">
+	<meta name="author"      content="Sergey Pozhilov, Luís Leira, Diogo Ferreira">
+	
+	<title>IoT City</title>
+
+	<link rel="shortcut icon" href="assets/images/icon.png">
+	
+	<link rel="stylesheet" media="screen" href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+	<!-- Custom styles for our template -->
+	<link rel="stylesheet" href="assets/css/bootstrap-theme.css" media="screen" >
+	<link rel="stylesheet" href="assets/css/main.css">
+	
+	<!-- Icons for features -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<!-- Icons for timeline -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body class="home">
+	<!-- Fixed navbar -->
+	<div class="navbar navbar-inverse navbar-fixed-top headroom" >
+		<div class="container">
+			<div class="navbar-header">
+				<!-- Button for smallest screens -->
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"><span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+				<a class="navbar-brand" href="index.html"><img src="assets/images/logo1.png" alt="IoT City logo"></a>
+			</div>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right">
+					<li class="active"><a href="#">Home</a></li> <!-- Client area -->
+					<li><a href="about.html">How to use it</a></li> <!-- User area -->
+					<li class="dropdown"> <!-- Specification area -->
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Specifications<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a href="specifications-1.html">Features, system scenarios and use cases</a></li>
+							<li><a href="specifications-2.html">Requirements and tests</a></li>
+							<li><a href="specifications-3.html">Architecture</a></li>
+							<li><a href="specifications-4.html">Data model</a></li>
+							<li><a href="deliverables.html">Deliverables</a></li>
+						</ul>
+					</li>
+					<li><a href="developer.html">Developer area</a></li> <!-- Developer area -->
+					<li><a href="reports.html">Weekly reports</a></li> <!-- Team area -->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</div> 
+	<!-- /.navbar -->
+
+	<!-- Header -->
+	<header id="head">
+		<div class="container">
+			<div class="row">
+				<h1 class="lead">IoT City</h1>
+				<h3>The city in your hands</h3>
+				<h5 class="tagline">IoT City is a platform designed for city managers and general users who live in a smart environment.<br>Its' main focus is to gather, analyze and show various types of data from a specific city and give the managers<br> the ability to act upon it through a web portal, besides general information for everyone through a mobile app<br>and another mobile app exclusively for the city manager.</h5>
+				<!-- <p><a class="btn btn-action btn-lg" role="button" href="#" target="_blank">Watch the demo</a></p> -->
+			</div>
+		</div>
+	</header>
+	<!-- /Header -->
+
+	<!-- Intro -->
+	<div class="container">
+		<br> <br>
+		<h2 class="thin", align="center">What is IoTCity?</h2>
+		<br>
+		<p class="text-muted">
+		<p class="context">
+		&emsp;IoT City project main focus is to <b>allow city managers to monitor and analyse data from a city</b> and <b>act</b> upon it through a <b>web portal</b>.​ The data is gathered from sensors of several types (<b>temperature, radiation, noise, lighting, people counter, air quality and waste containers</b>) distributed by the city, being stored, analysed and displayed to the city manager, who can <b>monitor, set alarms, rules or act</b> on the sensors if possible.​<br>
+		&emsp;The <b>management</b> of all users, sensors and data associated to them is done on a <b>admin portal</b>.​<br>
+		&emsp;The <b>citizen mobile application</b> for the regular citizen shows <b>relevant city sensors’ data</b> and allows to <b>report occurrences</b> on the city directly to the city manager along with photos or videos (e.g. waste container that could be damaged).<br>
+		&emsp;The <b>city manager mobile application</b> is very similar to the citizen mobile app. The difference is that it does not allow to do reports and <b>notifies</b> the city manager when there are <b>triggered alerts</b> such as on the web portal. 
+		&emsp;This project works in collaboration with Altice Labs, our industrial collaborator, and IT (Instituto de Telecomunicações), providing us a wide range of sensors to work with.
+		</p>
+		<br>
+		<div class="vdcontainer">
+			<iframe src="https://www.youtube.com/embed/iBHBVL_5e4g?rel=0" frameborder="0" allowfullscreen class="video"></iframe>
+		</div>
+	</div>
+	<!-- /Intro-->
+
+
+	<!-- container -->
+	<div class="container">
+	
+		<!-- Features -->
+		<div class="jumbotron top-space">
+			<div class="container">
+				<div class="page-header">
+					<h2 class="text-center">Why IoT City?</h2>
+				</div>
+				<h3 align="center">For everyone</h3>
+				<br>
+				<div class="row">
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">phone_android</i>
+						<h4><b>Mobile app</b></h4>
+						<h5>Portable, simple and intuitive application for regular usage</h5>
+					</div>
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">access_time</i>
+						<h4><b>Real-time and archived data</b></h4>
+						<h5>Display information about sensors on public spaces both in real-time and the past history</h5>
+					</div>
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">feedback</i>
+						<h4><b>User reporting</b></h4>
+						<h5>Report a problem in your city, helping in its management</h5>
+					</div>
+				</div>
+				<br>
+				<h3 align="center">For city managers</h3>
+				<br>
+				<div class="row">
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">web</i>
+						<h4><b>Web portal and mobile app</b></h4>
+						<h5>Provides a complete access to the management platform by any device</h5>
+					</div>
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">priority_high</i>
+						<h4><b>Real-time alerting and monitoring</b></h4>
+						<h5>Establish alerts for metrics available and guarantee knowledge of the state of the city</h5>
+					</div>
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">touch_app</i>
+						<h4><b>Manage and act</b></h4>
+						<h5>Make decisions and perform actions in the management of the city</h5>
+					</div>
+				</div>
+				<br>
+				<h3 align="center">For platform administrators</h3>
+				<br>
+				<div class="row">
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">developer_board</i>
+						<h4><b>Admin portal</b></h4>
+						<h5>Provides the control of the entire platform</h5>
+					</div>
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">settings_remote</i>
+						<h4><b>Sensors and subscriptions control</b></h4>
+						<h5>Manage the city sensors and associated subscriptions</h5>
+					</div>
+					<div class="col-sm-4 text-center">
+						<!-- Feature img -->
+						<i class="material-icons md-82">supervisor_account</i>
+						<h4><b>Users management</b></h4>
+						<h5>Manage the web portal users and their permissions</h5>
+					</div>
+				</div>
+				<br><br>
+			</div>
+		</div>
+		
+
+		<div class="page-header">
+			<h2 class="text-center top-space">Platform views</h2>
+		</div>
+		<div class="row">
+			<h3 align="left">Mobile applications</h3>
+			<div class="row">
+				<div class="col-6 col-sm-3 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Main dashboard view" data-desc="On the main dashboard view, we can see the values for each sensor type. Each card will contain values of the nearest sensor of that type."><img class="mockups-app-img" id="IoT Main_mobile" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/Main_Dashboard.png" alt="Main dashboard view"></a><br><h5>Main dashboard view </h5><h6>On the main dashboard view, we can see the values for each sensor type. Each card will contain values of the nearest sensor of that type.</h6></div>
+				</div>
+				<div class="col-6 col-sm-3 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Menu view" data-desc="The menu allows the user to access the dashboard, map or different metrics of sensors in just one click!"><img class="mockups-app-img" id="IoT Menu_mobile" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/Menu.png" alt="Menu view"></a><br><h5>Menu view </h5><h6>The menu allows the user to access the dashboard, map or different metrics of sensors in just one click!</h6></div>
+				</div>
+				<div class="col-6 col-sm-3 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Map view" data-desc="The user can easily see the location of the sensors in his city, and tap on one to see its metrics."><img class="mockups-app-img" id="IoT Waste_mobile" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/map.jpg" alt="Map view"></a><br><h5>Map view </h5><h6>The user can easily see the location of the sensors in his city, and tap on one to see its metrics.</h6></div>
+				</div>
+				<div class="col-6 col-sm-3 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Temperature sensors view" data-desc="When a metric is choosed, it is displayed a chart with the values from the sonsors of that metric."><img class="mockups-app-img" id="IoT Waste_detail_mobile" data-toggle="modal" data-target="#myModal2" src="./assets/images/android_app/Temperature.png" alt="Temperature sensors view"></a><br><h5>Temperature sensors view </h5><h6>When a metric is choosed, it is displayed a chart with the values from the sonsors of that metric.</h6></div>
+				</div>
+			</div>
+			<h4 align="left">Exclusive to the city manager mobile application</h4>
+			<div class="row">
+				<div class="col-6 col-sm-3 mockups-div"></div>
+				<div class="col-6 col-sm-6 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Alerts view" data-desc="On the alerts view, there is a list with the triggered alerts displaying the most relevant information about it."><img class="mockups-app-img" id="IoT Main_mobile" data-toggle="modal" data-target="#myModal3" src="./assets/images/android_app/Alerts.png" alt="Main dashboard view"></a><br><h5>Alerts view </h5><h6>In the city manager app, the user can see all the triggered alerts in the above screen. He can also dismiss them.</h6></div>
+				</div>
+			</div>
+			<br>
+			<h3 align="left">Web portal</h3>
+			<div class="row">
+				<div class="col-sm-4 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Main dashboard page" data-desc="On the main dashboard page, the user has access to the latest values received from the sensors of each type. He also has information about the alarms triggered, the user reports not seen and the created notes."><img id="Main_Dashboard_Page" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/main_Dash.png" alt="Main dashboard page"></a><br><h5>Main dashboard page </h5><h6>On the main dashboard page, the user has access to the latest values received from the sensors of each type. He also has information about the triggered alarms, the user reports not seen and the created notes.</h6></div>
+				</div>
+				<div class="col-sm-4 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Map page" data-desc="Map with markers that shows the location of the sensors."><img id="Map" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Map.png" alt="Map with markers that shows the location of the sensors."></a><br><h5>Map page </h5><h6>Map with markers that shows the location of the sensors.</h6></div><br>
+				</div>
+				<div class="col-sm-4 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Temperature page" data-desc="Each metric page has information about the sensors of that type and a chart with the received values"><img id="Temperature" data-toggle="modal" data-target="#myModal" src="./assets/images/web_portal/Metrics.png" alt="Each metric page has information about the sensors of that type and a chart with the received values."></a><br><h5>Temperature page </h5><h6>Each metric page has information about the sensors of that type and a chart with the received values.</h6></div>
+				</div>
+			</div>
+			<br>
+			<h3 align="left">Admin portal</h3>
+			<div class="row">
+				<div class="col-sm-4 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Main admin view" data-desc="On this view the user has information about all the information gathered by the platform, and can choose which one he wants to change (users, sensors, subscriptions, ...)"><img id="" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/index.png" alt="On this view the user has information about all the information gathered by the platform, and can choose which one he wants to change (users, sensors, subscriptions, ...)"></a><br><h5>Main admin view </h5><h6>On this view the user has information about all the information gathered by the platform, and can choose which one he wants to change (users, sensors, subscriptions, ...).</h6></div>
+				</div>
+				<div class="col-sm-4 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Add sensors' page" data-desc="If the user decides to add a sensor, he can fill in this form and click on "Add""><img id="" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/add_sensor.png" alt="If the user decides to add a sensor, he can fill in this form and click on Add"></a><br><h5>Add sensors' page</h5><h6>If the user decides to add a sensor, he can fill in this form and click on "Add".</h6></div>
+				</div>
+				<div class="col-sm-4 mockups-div">
+					<div class="h-caption"><a href="#" class="pop" data-title="Sensors list page" data-desc="On this view the user can list all sensors available in the platform."><img id="" data-toggle="modal" data-target="#myModal" src="./assets/images/admin/sensors.png" alt=""></a><br><h5>Sensors list page</h5><h6>On this view the user can list all sensors available in the platform.</h6></div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Modal for images -->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<img class="img-responsive" src="" />
+					</div>
+					<div class="modal-footer">
+						<h4 class="text-center title"></h4>
+						<h5 class="text-center desc"></h5>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="myModal2" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<img class="img-responsiveapp" src="" />
+					</div>
+					<div class="modal-footer">
+						<h4 class="text-center title"></h4>
+						<h5 class="text-center desc"></h5>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="myModal3" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<img class="img-responsiveapp2" src="" />
+					</div>
+					<div class="modal-footer">
+						<h4 class="text-center title"></h4>
+						<h5 class="text-center desc"></h5>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Download app -->
+		<div class="jumbotron top-space">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-6 text-center">
+						<img width="100%" src="assets/images/iotcity_app.png">
+					</div>
+					<div class="col-sm-6 text-center">
+						<!-- Feature img -->
+						<h3 align="center">Citizen mobile application</h3>
+						<h4><b><a href="assets/downloads/app-release.apk" download>Download it now!</a></b></h4>
+						<br>
+						<h4>Installing our mobile app on your smartphone is a simple and brief process.</h4><br><br></h5>First thing you have to do is, in your smartphone, go to Settings, then Security, and then enable installation of apps of unknown sources.<br><br>After this, download the apk file through your smartphone. The file will be stored in your "Downloads" folder. Go there and click on the file. You will be prompted, asking if you want to install this app. Accept the instalation and wait until the mobile app is fully installed.</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+			
+		<!-- Timeline -->
+		<div class="page-header">
+			<h2 class="text-center top-space">Timeline</h2>
+		</div>
+	    <ul class="timeline">
+	    	<li>
+	          <div class="timeline-badge"><i class="fa fa-calendar-check-o"></i></div>
+	          <div class="timeline-panel">
+				<div class="timeline-heading">
+					<h4 class="timeline-title">Milestone 1</h4>
+					<p><small class="text-muted">01/03/2017</small></p>
+	            </div>
+	            <div class="timeline-body">
+					<p>Definition of the scope and requirements.</p>
+	            </div>
+	          </div>
+	        </li>
+
+	       <li class="timeline-inverted">
+	          <div class="timeline-badge warning"><i class="fa fa-calendar-check-o"></i></div>
+	          <div class="timeline-panel">
+	            <div class="timeline-heading">
+					<h4 class="timeline-title">Milestone 2</h4>
+					<p><small class="text-muted">22/03/2017</small></p>
+	            </div>
+	            <div class="timeline-body">
+					<p>Web portal showing the metrics of one type of sensor at least. The sensor used should send his data to SmartIoT, being retrieved by the server. All data should be saved in data persistence. A local broker should be ready for usage.</p>
+	            </div>
+	          </div>
+	        </li>
+			
+			<li>
+	          <div class="timeline-badge danger"><i class="fa fa-calendar-check-o"></i></div>
+	          <div class="timeline-panel">
+				<div class="timeline-heading">
+					<h4 class="timeline-title">Milestone 3</h4>
+					<p><small class="text-muted">19/04/2017</small></p>
+	            </div>
+	            <div class="timeline-body">
+					<p>Web portal with map, showing the locations of the sensors. At least three sensors should be connected to the platform. Mobile application should have all the views prepared but still not connected with the server.</p>
+	            </div>
+	          </div>
+	        </li>
+
+	       <li class="timeline-inverted">
+	          <div class="timeline-badge info"><i class="fa fa-calendar-check-o"></i></div>
+	          <div class="timeline-panel">
+	            <div class="timeline-heading">
+					<h4 class="timeline-title">Milestone 4</h4>
+					<p><small class="text-muted">03/05/2017</small></p>
+	            </div>
+	            <div class="timeline-body">
+					<p>All sensors should be connected to the platform. Web portal should be functional with all these sensors. The actuators should also be functional. Mobile application should connect to the server and display the information. The monitor and alarms module should be ready, as well as the data persistence. AAA done and working with the platform.</p>
+	            </div>
+	          </div>
+	        </li>
+			
+			<li>
+	          <div class="timeline-badge success"><i class="fa fa-calendar-o"></i></div>
+	          <div class="timeline-panel">
+				<div class="timeline-heading">
+					<h4 class="timeline-title">Milestone 5</h4>
+					<p><small class="text-muted">31/05/2017</small></p>
+	            </div>
+	            <div class="timeline-body">
+					<p>User reports should be working. Final work on mobile and web portal interfaces. API to register sensors and streams directly to the platform. Dynamic localization of sensors. Deployed to a production environment.</p>
+	            </div>
+	          </div>
+	        </li>
+
+	       <li class="timeline-inverted">
+	          <div class="timeline-badge"><i class="fa fa-calendar-o"></i></div>
+	          <div class="timeline-panel">
+	            <div class="timeline-heading">
+					<h4 class="timeline-title">Milestone 6</h4>
+					<p><small class="text-muted">14/06/2017</small></p>
+	            </div>
+	            <div class="timeline-body">
+					<p>Final submission.</p>
+	            </div>
+	          </div>
+	        </li>
+			
+	    </ul>
+
+	</div>
+	
+
+	<footer id="footer" class="top-space">
+	
+		<!-- Highlights - jumbotron -->
+		<div class="jumbotron top-space">
+			<div class="container">
+				
+				<h3 class="text-center thin">The team</h3>
+				
+				<div class="row">
+					<div class="col-md-3 col-sm-6 highlight">
+						<div class="h-caption"><img class="team-image" src="./assets/images/ac.jpg"><br><h4>Ana Cruz</h4></div>
+						<div class="h-body text-center">
+							<p><i>76351</i></p>
+							<p>anapatriciacruz@ua.pt</p>
+							<h6>Documentation Manager</h6>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-6 highlight">
+						<div class="h-caption"><img class="team-image" src="./assets/images/df.jpg"><br><h4>Diogo Ferreira</h4></div>
+						<div class="h-body text-center">
+							<p><i>76514</i></p>
+							<p>diogodanielsoaresferreira@ua.pt</p>
+							<h6>Infrastructure Manager</h6>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-6 highlight">
+						<div class="h-caption"><img class="team-image" src="./assets/images/ic.jpg"><br><h4>Inês Cruz</h4></div>
+						<div class="h-body text-center">
+							<p><i>72725</i></p>
+							<p>icruz@ua.pt</p>
+							<h6>Frontend Developer</h6>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-6 highlight">
+						<div class="h-caption"><img class="team-image" src="./assets/images/jc.jpg"><br><h4>José Castanheira</h4></div>
+						<div class="h-body text-center">
+							<p><i>76545</i></p>
+							<p>jp.castanheira@ua.pt</p>
+							<h6>Quality Assurance</h6>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-6 highlight">
+						<div class="h-caption"><img class="team-image" src="./assets/images/dl.jpg"><br><h4>Luís Leira</h4></div>
+						<div class="h-body text-center">
+							<p><i>76514</i></p>
+							<p>luisleira@ua.pt</p>
+							<h6>Team Manager</h6>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-6 highlight">
+						<div class="h-caption"><img class="team-image" src="./assets/images/ms.jpg"><br><h4>Miguel Silva</h4></div>
+						<div class="h-body text-center">
+							<p><i>76450</i></p>
+							<p>maps@ua.pt</p>
+							<h6>Backend Developer</h6>
+						</div>
+					</div>
+				</div> <!-- /row  -->
+				
+				<br>
+				
+				<h3 class="text-center thin">Mentor and collaborators</h3>
+				
+				<div class="row">
+					<div class="col-md-3 col-sm-6 highlight">
+						<div class="h-caption"><!--<img class="team-image" src="./assets/images/?"><br>--><h4>Prof. Ilídio Oliveira</h4></div>
+						<div class="h-body text-center">
+							<p>ico@ua.pt</p>
+							<h6>Mentor</h6>
+						</div>
+					</div>
+					<div class="col-md-6 col-sm-6 highlight">
+						<div class="h-caption"><!--<img class="team-image" src="./assets/images/?"><br>--><h4>Prof. Susana Sargento</h4></div>
+						<div class="h-body text-center">
+							<p>susana@ua.pt</p>
+							<h6>Collaborator</h6>
+						</div>
+					</div>
+					<div class="col-md-3 col-sm-6 highlight">
+						<div class="h-caption"><!--<img class="team-image" src="./assets/images/?"><br>--><h4>Filipe Cabral Pinto</h4></div>
+						<div class="h-body text-center">
+							<p>filipe-c-pinto@alticelabs.com</p>
+							<h6>Collaborator (ALB)</h6>
+						</div>
+					</div>
+				</div> <!-- /row  -->
+			
+			</div>
+		</div>
+		<!-- /Highlights -->
+
+		<div class="footer1">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">Associated with</h3>
+						<div class="widget-body">
+							<!-- UA/DETI Logo -->
+							<a href="https://www.ua.pt/deti/" target="_blank"><img src="assets/images/deti-ua.png" alt="UA/DETI Logo"></a>
+						</div>
+					</div>
+					
+					<div class="col-md-6 widget">
+						<h3 class="widget-title">In collaboration with</h3>
+						<div class="widget-body">
+							<!-- IT Logo -->
+							<a href="https://www.it.pt/" target="_blank"><img src="assets/images/it-logo.png" alt="IT Logo"></a>
+							<!-- Altice Labs Logo -->
+							<a href="http://www.alticelabs.com/pt/" target="_blank"><img src="assets/images/AlticeLabs-logo-cinza.png" alt="Altice Labs Logo"></a>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="simplenav">Project in Informatics Engineering - Computer and Telematics Engineering</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 widget">
+						<div class="widget-body">
+							<p class="text-right">
+								Copyright &copy; 2017, IoT City. Designed by <a href="http://gettemplate.com/" rel="designer">gettemplate</a> 
+							</p>
+						</div>
+					</div>
+
+				</div> <!-- /row of widgets -->
+			</div>
+		</div>
+	</footer>	
+		
+
+
+
+
+	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
+	<script src="assets/js/headroom.min.js"></script>
+	<script src="assets/js/jQuery.headroom.min.js"></script>
+	<script src="assets/js/template.js"></script>
+</body>
+</html>

@@ -1,0 +1,899 @@
+{% extends 'adminlte/rules.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+			<h1>
+				Rules
+				<small> General information about system functional rules</small>
+			</h1>
+			<ol class="breadcrumb">
+				<li class="active" ><a href="/rules"><i class="fa fa-pencil"></i> Rules</a> </li>
+			</ol>
+	</section>
+	
+{% endblock %}
+
+{% block content %}
+<div class="alert error">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+</div>
+<div class="alert success">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+		
+		<!-- Modal content-->
+		<div class="modal-content">
+			<form action="" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add rule</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if form.errors %}
+					<p style="color: red;">
+						Please correct the error{{ form.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					<div class="field">
+						{{ form.name.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the name for the rule">* Name</label> 
+						{{ form.name }}
+						<p style="font-size: 10px;">Select the name for the rule</p><br><br>
+					</div>
+					
+					<div class="field">
+						<label for="id_max" class="tooltip-test" title="Unselect the days of week when the rule is turned off">Days of week</label>
+						<div class="weekDays-selector">
+							{{ form.mo }}
+							<label for="weekday-mon2">Monday</label>
+							{{ form.tu }}
+							<label for="weekday-tue2">Tuesday</label>
+							{{ form.we }}
+							<label for="weekday-wed2">Wednesday</label>
+							{{ form.th }}
+							<label for="weekday-thu2">Thursday</label>
+							{{ form.fr }}
+							<label for="weekday-fri2">Friday</label>
+							{{ form.sa }}
+							<label for="weekday-sat2">Saturday</label>
+							{{ form.su }}
+							<label for="weekday-sun2">Sunday</label>
+						</div>
+						<p style="font-size: 10px;">Select the days of week when the rule is turned on. If no day is selected, the rule will be applied to all of them.</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.beg_date.errors }}
+						{{ form.beg_hour.errors }}
+						{{ form.beg_min.errors }}
+						<label for="id_max" class="tooltip-test" title="Select day to turn on rule (ex: November/12/2019 20:00)">* Turn on rule date </label> 
+						{{ form.beg_date}} <br>at {{ form.beg_hour }}:{{ form.beg_min }}
+						<p style="font-size: 10px;">Select date to turn on rule (ex: November/12/2019 20:00)</p><br><br>
+					</div>
+					<div class="field">
+						{{ form.end_date.errors }}
+						{{ form.beg_min.errors }}
+						{{ form.beg_hour.errors }}
+						<label for="id_max" class="tooltip-test" title="Select day to turn off rule (ex: November/12/2019 20:00)">* Turn off rule date </label>  {{ form.end_date }} <br>at  {{ form.end_hour }}:{{ form.end_min }}
+
+						<p style="font-size: 10px;">Select date to turn off rule (ex: November/12/2019 20:00)</p><br><br>
+					</div>
+					<div class="field">
+
+						{{ form.hours_active_beg.errors }}
+						{{ form.minutes_active_beg.errors }}
+						<label for="id_max" class="tooltip-test" title="Hour to trigger the rule (ex: 20:03).">* Trigger everyday at </label> 
+						{{ form.hours_active_beg }} : {{form.minutes_active_beg}}
+						<p style="font-size: 10px;">Hour to turn on the rule (ex: 20:03).</p><br><br>
+					</div>
+					
+
+					<div class="field">
+						{{ form.streams.errors }}
+						<label for="id_max" class="tooltip-test" title="Select streams to actuate over.">* Select actuator</label> 
+						{{ form.streams }}
+						<p style="font-size: 10px;">Select streams to actuate over.</p><br><br>
+					</div>
+
+					<div class="field">
+						{{ form.value.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the value to be sent to the streams.">* Value </label> 
+						{{ form.value }}
+						<p style="font-size: 10px;">Select the value to be sent to the streams.</p><br><br>
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="submit" value="Submit" class="btn btn-primary">Add rule</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+</div>
+
+
+<div class="modal fade" id="deleteRule" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete rule</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the rule?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteAlertButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel3">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="addActuatorModal" role="dialog">
+	<div class="modal-dialog">
+		
+		<div class="modal-content">
+			<form id="actform" action="/addActuator/" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add actuator to rule</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if actform.errors %}
+					<p style="color: red;">
+						Please correct the error{{ actform.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					<div class="field">
+						{{ actform.streams.errors }}
+						<label for="id_max" class="tooltip-test" title="Select streams to actuate over." style="font-size:16px;">* Select stream</label> 
+						{{ actform.streams }}
+						<p style="font-size: 10px;">Select streams to actuate over.</p><br><br>
+					</div>
+
+					<div class="field">
+						{{ actform.value.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the value to be sent to the streams.">* Value </label> 
+						{{ actform.value }}
+						<p style="font-size: 10px;">Select the value to be sent to the streams.</p><br><br>
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="submit" value="Submit" class="btn btn-primary">Add actuator</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+</div>
+<!-- Main content -->
+	<!-- Filter -->
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading filterheader">
+					<b>Filter by the metrics associated to each rule</b>
+				</div>
+				<div class="panel-body">
+				<!-- the events -->
+					<div id="rulesFilter">
+						{% if "TE" in user_types %}
+						<button type="button" id="bt" class="btn btn-default btn-sm bg-red" onclick="changeTemp();" style="width:12%; border-width: thin; border-color: #dd4b39;" data-toggle="tooltip" title=""><i class="fa fa-thermometer-half" ></i> Temperature </button>
+						{% endif %}
+						{% if "IL" in user_types %}
+						<button type="button" id="bl" class="btn btn-default btn-sm bg-yellow" onclick="changeLight();" style="width:12%; border-width: thin; border-color: #f39c12;" data-toggle="tooltip" title=""><i class="fa fa-lightbulb-o" style=""></i> Lighting</button>
+						{% endif %}
+						{% if "AI" in user_types %}
+						<button type="button" id="ba" class="btn btn-default btn-sm bg-blue" onclick="changeAir();" style="width:12%; border-width: thin; border-color: #0073b7;" data-toggle="tooltip" title=""><i class="fa fa-cloud" ></i> Air</button>
+						{% endif %}
+						{% if "WA" in user_types %}
+						<button type="button" id="bw" class="btn btn-default btn-sm bg-olive" onclick="changeWaste();" style="width:12%; border-width: thin; border-color: #3d9970;" data-toggle="tooltip" title=""><i class="fa fa-trash-o" ></i> Waste</button>
+						{% endif %}
+						{% if "SO" in user_types %}
+						<button type="button" id="bn" class="btn btn-default btn-sm bg-aqua" onclick="changeNoise();" style="width:12%; border-width: thin; border-color: #00c0ef;" data-toggle="tooltip" title=""><i class="fa fa-volume-up" ></i> Noise</button>
+						{% endif %}
+						{% if "RA" in user_types %}
+						<button type="button" id="br" class="btn btn-default btn-sm bg-orange" onclick="changeRadiation();" style="width:12%; border-width: thin; border-color: #ff851b;" data-toggle="tooltip" title=""><i class="fa fa-sun-o" ></i> Radiation</button>
+						{% endif %}
+						{% if "PE" in user_types %}
+						<button type="button" id="bp" class="btn btn-default btn-sm bg-purple" onclick="changePeople();" style="width:12%; border-width: thin; border-color: #605ca8;" data-toggle="tooltip" title=""><i class="fa fa-users"></i> People</button>
+						{% endif %}
+						<button type="button" id="allnone" class="btn btn-default btn-sm" onclick="changeAll();" style="width:12%; border-width: thin; border-color: #f4f4f4;"><i class="fa fa-th-list" ></i> None</button>
+					</div>
+				</div>
+				<!-- /.panel-body --> 
+			</div>
+          	<!-- /. panel -->
+        </div>
+    </div>
+
+    <div class="row">
+    	<div class="col-md-12" id="rulesTable">
+          	<div class="box box-primary">
+				<div class="box-header">
+				  	<h3 class="box-title">Rules</h3>
+				  	
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body">
+					<div class="table-responsive">
+						<table class="table no-margin table-hover table-striped" id="notifications1Table">
+							<thead>
+							<tr>
+								<th>Name</th>
+								<th>Sensor name</th>
+			                    <th>Rule lifetime</th>
+			                    <th>Actions</th>
+							</tr>
+							</thead>
+							<tbody>
+							{% for rule in rules %}
+								<tr id="rule_{{rule.id}}" class="{% for type in rule.types %}{{type}} {% endfor %}">
+									<td> 
+						            	<a href="details/{{rule.id}}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view more <br> information about the rule">{{rule.name }}</a>
+						            </td>
+						            <td>
+						            {% for type in rule.types %}
+						               	{% if type == 'TE' %}
+						               		<i class="fa fa-thermometer-half"></i>
+						               	{% elif type == 'WA' %}
+						               		<i class="fa fa-trash-o"></i>
+						               	{% elif type == 'SO' %}
+						               		<i class="fa fa-volume-up"></i>
+						               	{% elif type == 'AI' %}
+						               		<i class="fa fa-cloud"></i>
+						               	{% elif type == 'PE' %}
+						               		<i class="fa fa-user-o"></i>
+						               	{% elif type == 'RA' %}
+						               		<i class="fa fa-sun-o"></i>
+						               	{% elif type == 'IL' %} 
+						               		<i class="fa fa-lightbulb-o"></i>
+						               	{% else %}
+						               		{{ type }}
+						               	{% endif %}
+
+						            {% endfor %}
+						            {% for s in rule.sens %}
+								        <a href="/sensors/details/{{ s.device_id }}" data-toggle="tooltip" data-html="true" data-placement="right" title="Click to view <br> sensor page">{{ s.name }}</a>
+								        {% if not forloop.last %}
+								         	,
+								        {% endif %}
+								    {% endfor %}
+						            </td>
+									<td><span style="display:none;">{{rule.beg_date|date:"YmdHi"}}</span>{{rule.beg_date}} to {{rule.end_date}} </td>
+									<td>
+										<div class="btn-group">
+											<div style="display: inline-block;">
+												<button class="btn btn-sm btn-primary" onclick="add_actuator({{rule.id}});""><span class="glyphicon glyphicon-cloud-upload"></span> Add actuator</button>
+											</div>
+											<div style="display: inline-block;">
+												<button class="btn btn-sm btn-info" onclick="show_rule( {{rule.id}} );"><i class="glyphicon glyphicon-search"></i> Quick view</button>
+											</div>
+											<div style="display: inline-block;">
+												<button class="btn btn-sm btn-default" type="button" onclick="delete_rule({{rule.id}});"><i class="glyphicon glyphicon-remove"></i></a></a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								
+							{% endfor %}
+							</tbody>
+						</table>
+					</div>
+  				</div>
+  			</div>
+  		</div>
+
+  		<div class="col-md-4">
+          	<div id="ruleInfo" class="box box-primary" style="display: none;">
+
+          		<div class="box-header with-border">
+					<h4 class="box-title"> <span id="title"></span></h4>
+					<button class="close" onclick="ruleclose();">&times;</button>
+				</div>
+				<div class="box-body">
+				   
+					<div id="information"></div>
+					
+					<span id="actVis"><b>Actuators associated </b></span><div class="actuators"></div>
+					<br>					
+					<p><b>Beggining date </b></p>
+					<div id="startDate"></div>
+					<br>
+					<p><b>End date </b></p>
+					<div id="endDate"></div>
+					<br>
+					<br>
+					<p><b>Days of week active </b></p>
+					<div id="daysOfWeek"></div>
+					<br>
+					<p><b>Hour to trigger rule </b></p>
+					<div id="hours_beg"></div>
+					<br>
+
+					<a class="viewmoreRule pull-right" href=""><button class="btn btn-sm btn-default" type="button">View more</button></a>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block jspage %}
+
+<script type="text/javascript">
+	$('#ruleslink').addClass('active');
+
+	$(document).ready(function(){
+	    $('a[data-toggle="tooltip"]').tooltip();   
+	});
+
+	$('[rel=tooltip]').tooltip({container: 'body'});
+
+
+	loaded = false;
+
+	$('#notifications1Table').DataTable( {
+		'fnDrawCallback': function (oSettings) {
+			if(!loaded){
+				$('.dataTables_filter').append(' <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add rule</button>');
+				loaded = !loaded;
+			}
+		},
+	    responsive: true,
+	    lengthMenu: [ 10, 25, 50 ],
+	    pagingType: "full_numbers",
+	    order: [[ 2, "desc" ]]
+	});
+
+	temp = true;
+	ligh = true;
+	air = true;
+	waste = true;
+	noise = true;
+	radiation = true;
+	people = true;
+
+	$.fn.dataTable.ext.search.push(
+
+		function (oSettings, aData, iDataIndex) {
+
+		    var myRowClasses = oSettings.aoData[iDataIndex].nTr.className.split(" ");
+		    
+
+		    for(var rclass in myRowClasses){
+		    	if(air==true && myRowClasses[rclass]=='AI'){
+				    return true;
+				}
+				if(ligh==true && myRowClasses[rclass]=='IL'){
+					return true;
+				}
+				if(waste==true && myRowClasses[rclass]=='WA'){
+					return true;
+				}
+				if(noise==true && myRowClasses[rclass]=='SO'){
+					return true;
+				}
+				if(radiation==true && myRowClasses[rclass]=='RA'){
+					return true;
+				}
+			    if(people==true && myRowClasses[rclass]=='PE'){
+			    	return true;
+			    }
+			    if(temp==true && myRowClasses[rclass]=='TE'){
+			    	return true;
+			    }
+		    }
+
+		    return false;
+	});
+
+
+	function changeTemp(){
+		if(temp){
+			temp=false;
+			document.getElementById('bt').style.backgroundColor="white";
+			document.getElementById('bt').style.color="black";
+			document.getElementById('bt').classList.remove('bg-red');
+		}
+		else{
+			temp=true;
+			document.getElementById('bt').className += ' bg-red';
+		}
+		var table = $('#notifications1Table').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeLight(){
+		if(ligh){
+			ligh=false;
+			document.getElementById('bl').style.backgroundColor="white";
+			document.getElementById('bl').style.color="black";
+			document.getElementById('bl').classList.remove('bg-yellow');
+		}
+		else{
+			ligh=true;
+			document.getElementById('bl').className += ' bg-yellow';
+		}
+		var table = $('#notifications1Table').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeAir(){
+		if(air){
+			air=false;
+			document.getElementById('ba').style.backgroundColor="white";
+			document.getElementById('ba').style.color="black";
+			document.getElementById('ba').classList.remove('bg-blue');
+		}
+		else{
+			air=true;
+			document.getElementById('ba').className += ' bg-blue';
+		}
+		var table = $('#notifications1Table').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeWaste(){
+		if(waste){
+			waste=false;
+			document.getElementById('bw').style.backgroundColor="white";
+			document.getElementById('bw').style.color="black";
+			document.getElementById('bw').classList.remove('bg-olive');
+		}
+		else{
+			waste=true;
+			document.getElementById('bw').className += ' bg-olive';
+		}
+		var table = $('#notifications1Table').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeNoise(){
+		if(noise){
+			noise=false;
+			document.getElementById('bn').style.backgroundColor="white";
+			document.getElementById('bn').style.color="black";
+			document.getElementById('bn').classList.remove('bg-aqua');
+		}
+		else{
+			noise=true;
+			document.getElementById('bn').className += ' bg-aqua';
+		}
+		var table = $('#notifications1Table').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changeRadiation(){
+		if(radiation){
+			radiation=false;
+			document.getElementById('br').style.backgroundColor="white";
+			document.getElementById('br').style.color="black";
+			document.getElementById('br').classList.remove('bg-orange');
+		}
+		else{
+			radiation=true;
+			document.getElementById('br').className += ' bg-orange';
+		}
+		var table = $('#notifications1Table').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function changePeople(){
+		if(people){
+			people=false;
+			document.getElementById('bp').style.backgroundColor="white";
+			document.getElementById('bp').style.color="black";
+			document.getElementById('bp').classList.remove('bg-purple');
+		}
+		else{
+			people=true;
+			document.getElementById('bp').className += ' bg-purple';
+		}
+		var table = $('#notifications1Table').DataTable();
+		table.draw();
+		analyseAllNone();
+	}
+
+	function analyseAllNone(){
+		if(people && temp && radiation && waste && noise && air && ligh)
+			$('#allnone').html('<i class="fa fa-th-list" ></i> None');
+		else
+			$('#allnone').html('<i class="fa fa-th-list" ></i> All');
+	}
+
+	function changeAll(){
+		if(people && temp && radiation && waste && noise && air && ligh){
+			people = false;
+			temp = false;
+			radiation = false;
+			waste = false;
+			noise = false;
+			air = false;
+			ligh = false;
+
+			document.getElementById('bt').style.backgroundColor="white";
+			document.getElementById('bt').style.color="black";
+			document.getElementById('bt').classList.remove('bg-red');
+			document.getElementById('bl').style.backgroundColor="white";
+			document.getElementById('bl').style.color="black";
+			document.getElementById('bl').classList.remove('bg-yellow');
+			document.getElementById('ba').style.backgroundColor="white";
+			document.getElementById('ba').style.color="black";
+			document.getElementById('ba').classList.remove('bg-blue');
+			document.getElementById('bw').style.backgroundColor="white";
+			document.getElementById('bw').style.color="black";
+			document.getElementById('bw').classList.remove('bg-olive');
+			document.getElementById('bn').style.backgroundColor="white";
+			document.getElementById('bn').style.color="black";
+			document.getElementById('bn').classList.remove('bg-aqua');
+			document.getElementById('br').style.backgroundColor="white";
+			document.getElementById('br').style.color="black";
+			document.getElementById('br').classList.remove('bg-orange');
+			document.getElementById('bp').style.backgroundColor="white";
+			document.getElementById('bp').style.color="black";
+			document.getElementById('bp').classList.remove('bg-purple');
+
+			$('#allnone').html('<i class="fa fa-th-list" ></i> All');
+		}else{
+			people = true;
+			temp = true;
+			radiation = true;
+			waste = true;
+			noise = true;
+			air = true;
+			ligh = true;
+			
+			document.getElementById('bt').className += ' bg-red';
+			document.getElementById('bl').className += ' bg-yellow';
+			document.getElementById('ba').className += ' bg-blue';
+			document.getElementById('bw').className += ' bg-olive';
+			document.getElementById('bn').className += ' bg-aqua';
+			document.getElementById('br').className += ' bg-orange';
+			document.getElementById('bp').className += ' bg-purple';
+
+			$('#allnone').html('<i class="fa fa-th-list" ></i> None');
+		}
+
+		var table = $('#notifications1Table').DataTable();
+		table.draw();
+	}
+
+	function show_rule(alarm){
+		$('#rulesTable').addClass('col-md-8').removeClass('col-md-12');
+
+		$('#ruleInfo').css('display', 'block');
+
+		/* Get all the info */
+		$.ajax({
+			type: "GET",
+			url: "/"+"alerts/info/"+alarm,
+			data: {},
+			success: function(data){
+
+				$("#information").html(data['info']);
+				$('#state').html(data['state']);
+				$('#title').html(data['name']);
+				$('#subscription_name').html(data['subscription_name']);
+				$('#sen_name').html(data['sen_name']);
+				$('#sen_type').html(data['sen_type'].join(", "));
+
+				$('#startDate').html(new Date(data['beg_date']).toUTCString());
+				$('#endDate').html(new Date(data['end_date']).toUTCString());
+				
+				$('#daysOfWeek').html(data['daysOfWeek']);
+				$('#hours_beg').html(data['hours_act']);
+
+				$('.actuators').html(data['actuators']);
+
+				$('.viewmoreRule').attr("href", "details/"+data['id']);
+				return false;
+			},
+			failure: function(data){
+
+			},
+		});
+	}
+
+	function add_actuator(id){
+
+		document.getElementById("actform").action = "/rules/addActuator/"+id.toString();
+		$('#addActuatorModal').modal('show');
+
+	}
+
+	if ('{{ success|escapejs }}' == "True"){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+
+		text = "The rule was sucessfully added."
+
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if ('{{ success|escapejs }}' == "Trueactuator"){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+
+		text = "The actuator was sucessfully added."
+
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if('{{ success|escapejs }}' == "False"){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			text = "The rule could not be added. Check if the dates are correct and that you selected a stream."
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+	else if('{{ success|escapejs }}' == "Falseactuator"){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			text = "The actuator could not be added. You must select a stream from the provided."
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+
+	function ruleclose(){
+		$('#rulesTable').addClass('col-md-12').removeClass('col-md-8');
+
+		$('#ruleInfo').css('display', 'none');
+	}
+
+	del_alert = -1;
+	function delete_rule(id){
+		del_alert = id;
+
+		$('#deleteRule').modal('show');
+	}
+
+	$("#deleteAlertButton").on('click', function(){
+
+		$('#deleteRule').modal('hide');
+
+		/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/alerts/delete/"+del_alert.toString(),
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Rule successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        			var table = $('#notifications1Table').DataTable();
+	        			var row = table.row(document.getElementById("rule_"+del_alert.toString()));
+	        			row.remove().draw(false);
+					}
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+
+	var waitingDialog = waitingDialog || (function ($) {
+	    'use strict';
+		// Creating modal dialog's DOM
+		var $dialog = $(
+			'<div class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" style="padding-top:15%; overflow-y:visible;">' +
+			'<div class="modal-dialog modal-m">' +
+			'<div class="modal-content">' +
+				'<div class="modal-header"><h3 style="margin:0;"></h3></div>' +
+				'<div class="modal-body">' +
+					'<div class="progress progress-striped active" style="margin-bottom:0;"><div class="progress-bar" style="width: 100%"></div></div>' +
+				'</div>' +
+			'</div></div></div>');
+		return {
+			/**
+			 * Opens our dialog
+			 * @param message Custom message
+			 * @param options Custom options:
+			 * 				  options.dialogSize - bootstrap postfix for dialog size, e.g. "sm", "m";
+			 * 				  options.progressType - bootstrap postfix for progress bar type, e.g. "success", "warning".
+			 */
+			show: function (message, options) {
+				// Assigning defaults
+				if (typeof options === 'undefined') {
+					options = {};
+				}
+				if (typeof message === 'undefined') {
+					message = 'Loading';
+				}
+				var settings = $.extend({
+					dialogSize: 'm',
+					progressType: '',
+					onHide: null // This callback runs after the dialog was hidden
+				}, options);
+
+				// Configuring dialog
+				$dialog.find('.modal-dialog').attr('class', 'modal-dialog').addClass('modal-' + settings.dialogSize);
+				$dialog.find('.progress-bar').attr('class', 'progress-bar');
+				if (settings.progressType) {
+					$dialog.find('.progress-bar').addClass('progress-bar-' + settings.progressType);
+				}
+				$dialog.find('h3').text(message);
+				// Adding callbacks
+				if (typeof settings.onHide === 'function') {
+					$dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (e) {
+						settings.onHide.call($dialog);
+					});
+				}
+				// Opening dialog
+				$dialog.modal();
+			},
+			/**
+			 * Closes dialog
+			 */
+			hide: function () {
+				$dialog.modal('hide');
+			}
+		};
+	})(jQuery);
+
+	/* CSRF Helpers */
+	function csrfSafeMethod(method) {
+	   	// these HTTP methods do not require CSRF protection
+	   	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+
+	$('#withT').change(function() { 
+	        $('#threshold').slideToggle('slow');
+	        $('#maxminthreshold').slideToggle('slow');
+	        
+	    }); 
+</script>
+
+{% endblock %}

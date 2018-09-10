@@ -1,0 +1,542 @@
+{% extends 'adminlte/reports.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+			<h1>
+				User report
+				<small>General information about mobile application users reports</small>
+			</h1>
+			<ol class="breadcrumb">
+				<a href="/reports"><i class="fa fa-comments-o"></i> Citizen area</a> > <li class="active"><a href="#"><i class="fa fa-comment"></i> Report #{{report.id}}</a></li>
+			</ol>
+	</section>
+	
+{% endblock %}
+
+
+{% block content %}
+
+<div class="alert error">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+</div>
+<div class="alert success">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+</div>
+
+<div class="modal fade" id="deleteReport" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete report</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the report?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteReportButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Main content -->
+	<div class="modal fade" id="imageModal" role="dialog" aria-labelledby="imageModal">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Image</span></button>
+				</div>
+				<div class="modal-body text-center">
+					<img class="img-responsive" src="" alt="Image">
+				</div>
+				<div class="modal-footer">
+					<h4 class="text-center title"></h4>
+					<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% for attach in report.attach.all %}
+		{% if attach.extension == "audio" %}
+		<div class="modal fade audiomodal" id="audioModal{{attach.id}}" role="dialog" aria-labelledby="audioModal{{attach.id}}">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Audio</span></button>
+					</div>
+					<div class="modal-body text-center">
+						<audio id="audioModal{{attach.id}}audio" controls>
+							<source id="audio{{attach.id}}" src="/reports/getAttach/id={{attach.id}}" type="audio/mpeg">
+							Your browser does not support the audio element.
+						</audio>
+					</div>
+					<div class="modal-footer">
+						<h4 class="text-center title"></h4>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% elif attach.extension == "video" %}
+		<div class="modal fade videomodal" id="videoModal{{attach.id}}" role="dialog" aria-labelledby="videoModal{{attach.id}}">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Video</span></button>
+					</div>
+					<div class="modal-body text-center">
+						<video id="videoModal{{attach.id}}video" width="320" height="240" controls>
+						  <source id="video{{attach.id}}" src="/reports/getAttach/id={{attach.id}}" type="video/mp4">
+						  Your browser does not support the video tag.
+						</video>
+					</div>
+					<div class="modal-footer">
+						<h4 class="text-center title"></h4>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endif %}
+	{% endfor %}
+
+	<div class="row">
+		
+	<div class="col-md-12">
+	  <div class="box box-primary">
+		  <div class="box-header with-border">
+			<h3 class="box-title">#{{ report.id }} {{report.title}} - 
+		  		<i><span id="status" class="{{report.working_state}}">{% if report.working_state == 'WA' %}
+					Waiting
+				{% elif report.working_state == 'WI' %}
+					Working on
+				{% elif report.working_state == 'SO' %}
+					Solved
+				{% endif %}</span></i>
+			</h3>
+		  </div>
+		  <!-- /.box-header -->
+		  <div class="box-body no-padding">
+			<div class="mailbox-read-info">
+			  	<h5>
+			  		From: {{report.user_name}} < {{ report.email }} >
+
+				<span class="mailbox-read-time pull-right">{{report.date}}</span></h5>
+				<br>
+				<h5><b>Sensor</b> 
+				{% if report.subscription.sensor.sensor_type == 'TE' %} <i class="fa fa-thermometer-half"></i> {% endif %}
+				{% if report.subscription.sensor.sensor_type == 'AI' %} <i class="fa fa-lightbulb-o"></i> {% endif %}
+				{% if report.subscription.sensor.sensor_type == 'IL' %} <i class="fa fa-cloud"></i> {% endif %}
+				{% if report.subscription.sensor.sensor_type == 'WA' %} <i class="fa fa-trash-o"></i> {% endif %}
+				{% if report.subscription.sensor.sensor_type == 'RA' %} <i class="fa fa-volume-up"></i> {% endif %}
+				{% if report.subscription.sensor.sensor_type == 'SO' %} <i class="fa fa-sun-o"></i> {% endif %}
+				{% if report.subscription.sensor.sensor_type == 'PE' %} <i class="fa fa-users"></i> {% endif %}
+				<a href="/sensors/details/{{ sen_id }}">{{ sen_name }}</a></h5>
+				<h5><b>Stream</b> {{ stream }}</h5>
+			</div>
+			<!-- /.mailbox-read-info -->
+			<div class="mailbox-controls with-border">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="" data-original-title="Set waiting" onclick="change_report_waiting();">
+					  <i class="fa fa-hourglass-start"></i></button>
+					<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="" data-original-title="Set working on" onclick="change_report_working_on();">
+					  <i class="fa fa-cogs"></i></button>
+					<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="" data-original-title="Set done" onclick="change_report_solved();">
+					  <i class="fa fa-check-circle"></i></button>
+				 </div>
+				<!-- /.btn-group -->
+				
+				<button type="button" id="NSButton" class="btn btn-default btn-sm" onclick="change_report_not_seen();"><i class="fa fa-eye-slash" ></i> Set not seen</button>
+				<button type="button" id="SButton" class="btn btn-default btn-sm" style="display:none;" onclick="change_report_seen();"><i class="fa fa-eye" ></i> Set seen</button>
+				<button type="button" class="btn btn-default btn-sm" onclick="window.print();"><i class="fa fa-print"></i> Print</button>
+				<button type="button" class="btn btn-default btn-sm" onclick="delete_report({{ report.id }});"><i class="fa fa-times"></i> Delete</button>
+			</div>
+			<!-- /.mailbox-controls -->
+			<div class="mailbox-read-message">
+			  {{ report.information }}
+			</div>
+			<!-- /.mailbox-read-message -->
+		  </div>
+		  <!-- /.box-body -->
+		  <div class="box-footer">
+			<ul class="mailbox-attachments clearfix">
+			{% for attach in report.attach.all %}
+			
+			  {% if attach.extension == "image" %}
+
+			  <li>
+				<span class="mailbox-attachment-icon has-img"><img data-toggle="modal" data-target="#imageModal" style="max-height:150px;" src="/reports/getAttach/id={{attach.id}}"></span>
+
+				<div class="mailbox-attachment-info" style="overflow:auto;">
+
+				  <a href="#" class="pop" data-title="{{attach.filename}}" data-toggle="modal" data-target="#imageModal" class="mailbox-attachment-name" src="/reports/getAttach/id={{attach.id}}"><i class="fa fa-camera"></i> {{attach.filename}}</a>
+
+					  <span class="mailbox-attachment-size">
+						{{attach.document.size|filesizeformat}}
+					  </span>
+				</div>
+			  </li>
+
+			  {% elif attach.extension == "audio" %}
+			  	<li>
+			  	<span class="mailbox-attachment-icon"><i data-toggle="modal" data-target="#audioModal{{attach.id}}" class="fa fa-file-audio-o"></i></span>
+
+				<div class="mailbox-attachment-info" style="overflow:auto;">
+				  <a href="#" class="pop" data-title="{{attach.filename}}" data-toggle="modal" data-target="#audioModal{{attach.id}}" class="mailbox-attachment-name" src="/reports/getAttach/id={{attach.id}}"><i class="fa fa-volume-up"></i> {{attach.filename}}</a>
+					  <span class="mailbox-attachment-size">
+						{{attach.document.size|filesizeformat}}
+					  </span>
+				</div>
+			  </li>
+
+			  {% elif attach.extension == "video" %}
+			  	<li>
+			  	<span class="mailbox-attachment-icon"><i data-toggle="modal" data-target="#videoModal{{attach.id}}" class="fa fa-file-video-o"></i></span>
+
+				<div class="mailbox-attachment-info" style="overflow:auto;">
+				  <a href="#" class="pop" data-title="{{attach.filename}}" data-toggle="modal" data-target="#videoModal{{attach.id}}" class="mailbox-attachment-name" src="/reports/getAttach/id={{attach.id}}"><i class="fa fa-video-camera"></i> {{attach.filename}}</a>
+					  <span class="mailbox-attachment-size">
+						{{attach.document.size|filesizeformat}}
+					  </span>
+				</div>
+			  </li>
+			  {% else %}
+			  	<li>
+			  	<span class="mailbox-attachment-icon"><i class="fa fa-file"></i></span>
+
+				<div class="mailbox-attachment-info" style="overflow:auto;">
+				  <a  href="/reports/getAttach/id={{attach.id}}" class="mailbox-attachment-name"><i class="fa fa-paperclip"></i> {{attach.filename}}</a>
+					  <span class="mailbox-attachment-size">
+						{{attach.document.size|filesizeformat}}
+					  </span>
+				</div>
+			  </li>
+			  {% endif %}
+
+			{% endfor %}
+
+			</ul>
+		  </div>
+		  <!-- /.box-footer -->
+		  <div class="box-footer">
+			<div class="pull-left">
+			  	<a href="/reports"><button type="button" class="btn btn-default"><i class="fa fa-arrow-left"></i> Back</button></a>
+			</div>
+		  </div>
+		  <!-- /.box-footer -->
+		</div>
+		<!-- /. box -->
+	</div>
+		
+	</div>
+{% endblock %}
+
+{% block jspage %}
+
+<script type="text/javascript">
+	$('#citizenlink').addClass('active');
+
+	$('.imageModal').on('hidden.bs.modal', function (e) {
+	    });
+
+	$('.audiomodal').on('hidden.bs.modal', function (e) {
+	   	document.getElementById(this.id+"audio").pause();
+	   	document.getElementById(this.id+"audio").currentTime = 0;
+	});
+
+	$('.videomodal').on('hidden.bs.modal', function (e) {
+	   	document.getElementById(this.id+"video").pause();
+	   	document.getElementById(this.id+"video").currentTime = 0;
+	});
+
+
+	$('#imageModal').on('show.bs.modal', function (e) {
+            var image = $(e.relatedTarget).attr('src');
+            $(".img-responsive").attr("src", image);
+        });
+	/* Get title for image in modal */
+	$(function () {
+	    $('.pop').on('click', function () {
+			var title = $(this).data('title');
+			$('.title').text(title);
+	    });
+	});
+
+	del_report = -1;
+	function delete_report(id){
+		del_report = id;
+
+		$('#deleteReport').modal('show');
+	}
+
+	$("#deleteReportButton").on('click', function(){
+
+		var modal = $("#deleteReport");
+		modal.modal("hide");
+
+		/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/reports/delete/id="+del_report,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+					window.location.replace("/reports");
+				}
+				else{
+					
+				}
+			},
+			failure: function(data){
+				
+			},
+		});
+	});
+
+	function change_report_waiting(){
+		
+		if(document.getElementById("status").className!="WA")
+    		change_report("WA");
+    }
+
+    function change_report_working_on(){
+    	
+    	if(document.getElementById("status").className!="WI")
+    		change_report("WI");
+    }
+
+    function change_report_solved(){
+    	
+    	if(document.getElementById("status").className!="SO")
+    		change_report("SO");
+    }
+
+	function change_report(state){
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"reports/workingstate/"+{{report.id}}+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully changed working state";
+					    
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+
+	        		
+					}
+
+					longstate = "";
+					if(state=="WA"){
+					   	longstate = "Waiting";
+					}
+					else if(state=="WI"){
+					  	longstate = "Working on";
+					}
+					else{
+					   	longstate = "Solved";
+					}
+
+					document.getElementById("status").innerText = longstate;
+					document.getElementById("status").className=state;
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	}
+
+	function change_report_not_seen(){
+
+		change_report_seen_state("NS");
+	}
+
+	function change_report_seen(){
+		change_report_seen_state("SE");
+	}
+
+	function change_report_seen_state(state){
+
+
+		longstate = "";
+		if(state=="NS"){
+		   	longstate = "Not seen";
+		}
+		else if(state=="SE"){
+		  	longstate = "Seen";
+		}
+
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/"+"reports/state/"+{{report.id}}+"/"+state,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Report successfully changed state to "+longstate;
+					    
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			
+					}
+
+					if(state=="NS"){
+						document.getElementById("NSButton").style.display = 'None';
+		        		document.getElementById("SButton").style.display = 'Initial';
+					}
+					else{
+						document.getElementById("SButton").style.display = 'None';
+		        		document.getElementById("NSButton").style.display = 'Initial';
+					}
+
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	}
+
+	/* CSRF Helpers */
+	function csrfSafeMethod(method) {
+	   	// these HTTP methods do not require CSRF protection
+	   	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+</script>
+
+{% endblock %}

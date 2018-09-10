@@ -1,0 +1,782 @@
+{% extends 'adminlte/alert_details.html' %}
+
+{% block title %}
+IoT City
+{% endblock %}
+
+{% block content_header %}
+
+	<!-- Content Header (Page header) -->
+	<section class="content-header">
+        	<h1>
+                Alert
+                <small><b>{{ name }}</b> details</small>
+            </h1>
+            <ol class="breadcrumb">
+        		<li class="active"><a href="/alerts"><i class="fa fa-exclamation-circle"></i> Alerts</a></li>
+      		</ol>
+	</section>
+	
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="alert error">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+</div>
+<div class="alert success">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  
+</div>
+
+
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+		
+		<div class="modal-content">
+			<form id="actform" action="" method="post">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Add actuator to rule</h4>
+				</div>
+
+				<div class="modal-body">
+					{% load tz %}
+
+					{% localtime on %}
+					{% if actform.errors %}
+					<p style="color: red;">
+						Please correct the error{{ actform.errors|pluralize }} below.
+					</p>
+					{% endif %}
+
+					<div class="field">
+						{{ actform.streams.errors }}
+						<label for="id_max" class="tooltip-test" title="Select streams to actuate over." style="font-size:16px;">* Select stream</label> 
+						{{ actform.streams }}
+						<p class="helptext">Select streams to actuate over.</p><br><br>
+					</div>
+
+					<div class="field">
+						{{ actform.value.errors }}
+						<label for="id_max" class="tooltip-test" title="Select the value to be sent to the streams.">* Value </label> 
+						{{ actform.value }}
+						<p class="helptext">Select the value to be sent to the streams.</p><br><br>
+					</div>
+
+					{% csrf_token %}
+
+					{% endlocaltime %}
+				</div>
+				<div class="modal-footer">
+					<button type="submit" value="Submit" class="btn btn-primary">Add actuator</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+</div>
+
+<div class="modal fade" id="deleteTrigger" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete stream</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the triggered alert?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteTrigButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteStream" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete stream</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the stream associated with the alert?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteStreamButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteAct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" disabled><span aria-hidden="true">Delete Actuator</span></button>
+			</div>
+			<div class="modal-body">
+				Are you sure you want to delete the actuator?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" id="deleteActButton">Delete</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="cancel">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<div class="box-title">
+						General information
+					</div>
+					<hr style="margin-bottom: -1px">
+				</div>
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<p style="font-size: 110%; display: inline-block;"><b>Name</b></p> <p style="font-size: 105%; display: inline-block;">{{ name }}</p> 
+						</div>
+						<div class="col-md-6">
+							<p style="font-size: 110%; display: inline-block;"><b>Sensor types</b></p> 
+							<p style="font-size: 105%; display: inline-block;">
+								{% for t in sen_type %}
+									{{ t }}
+									{% if not forloop.last %}
+										,
+									{% endif %}
+								{% endfor %}
+							</p>
+						</div>
+						<div class="col-md-6">
+							<h5><b>Threshold</b> {{ threshold }} ({{type}})</h5> 
+							<h5><b>Beggining date</b> {{ beg_date }}</h5> 
+							<h5><b>End date</b> {{ end_date }}</h5> 
+						</div>
+						<div class="col-md-6">
+							<h5><b>Days of week active</b> {{ daysOfWeek }}</h5> 
+							<h5><b>Hour to begin alert</b> {{ hours_act }}</h5> 
+							<h5><b>Hour to end alert</b> {{ hours_end }}</h5> 
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+
+		<div class="col-md-12">
+			<div class="box box-default">
+				<div class="box-header">
+					<div class="box-title">
+						Occurrences by day
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="chart">
+						<div id="containertt"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<div class="box-title">
+						Occurrences
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="table-responsive">
+						<table class="table no-margin table-hover table-striped" id="notifications3Table">
+							<thead>
+								<tr>
+									<th>Stream</th>
+									<th>Sensor</th>
+									<th>Peak value date</th>
+									<th>Peak value</th>
+									<th>Activity state</th>
+				                    <th>Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for occurrence in triggered_alerts %}
+								<tr id="triggered_{{occurrence.id}}_sensor_{{occurrence.stream.sensor.device_id}}">
+									<td>{{ occurrence.stream }}</td>
+									<td>{{ occurrence.stream.sensor }}</td>
+									{% if occurrence.peak_date != None %}	
+			                   			<td><span style="display:none;">{{occurrence.peak_date|date:"YmdHi"}}</span>{{ occurrence.peak_date }} </td>
+				                    {% else %}
+				                    	<td>-</td>
+				                    {% endif %}
+				                  	
+				                    {% if occurrence.peak != None %}
+			                    		<td>{{ occurrence.peak }}</td>
+			                  		{% else %}
+			                  			<td>-</td>
+			                  		{% endif %}
+
+				                  	{% if occurrence.state == "Active" %}
+				                  		<td> {{ occurrence.state }}</td>
+				                  	{% else %}
+				                  		<td> Inactive</td>
+				                  	{% endif %}
+				                  	<td><button class="btn btn-sm btn-default" title="Delete actuator" type="button" onclick="delete_triggAlert('{{occurrence.id}}','{{occurrence.stream.sensor.device_id}}');"><i class="glyphicon glyphicon-remove"></i></button></td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="box box-primary">
+				<div class="box-header">
+					<div class="box-title">
+						Configurations
+					</div>
+				</div>
+				<div class="box-body">
+					<div class="nav-tabs-custom">
+						<ul class="nav nav-tabs">
+			              <li class="active"><a href="#tab_1-1" data-toggle="tab" aria-expanded="true">Streams</a></li>
+			              <li><a href="#tab_2-2" data-toggle="tab" aria-expanded="false">Actuators</a></li>
+			            </ul>
+						<div class="tab-content">
+
+							<div class="tab-pane fade in active" id="tab_1-1">
+								<div class="table-responsive">
+									<table class="table no-margin table-hover table-striped" id="notifications1Table">
+										<thead>
+											<tr>
+												<th>Stream</th>
+												<th>Sensor</th>
+							                    <th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for occurrence in subscription_sensor %}
+											<tr id="alert_{{id}}_occurrence_{{occurrence.id}}">
+												<td>{{occurrence.sub}}</td>
+												<td>{{occurrence.sensor}}</td>
+												<td><button class="btn btn-sm btn-default" title="Delete stream from alert." type="button" onclick="delete_stream('{{id}}', '{{occurrence.id}}');"><i class="glyphicon glyphicon-remove"></i></button></td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="tab_2-2">
+								<div class="table-responsive">
+									<table class="table no-margin table-hover table-striped" id="notifications2Table">
+										<thead>
+											<tr>
+												<th>Stream</th>
+												<th>Sensor</th>
+												<th>Value</th>
+							                    <th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for occurrence in actuators %}
+											<tr id="actuator_{{occurrence.id}}_{{occurrence.sub_id}}">
+												<td>{{ occurrence.sub }}</td>
+												<td>{{ occurrence.sen_name }}</td>
+												<td>{{ occurrence.value }}</td>
+												<td><button class="btn btn-sm btn-default" title="Delete actuator" type="button" onclick="delete_act('{{occurrence.id}}',' {{occurrence.sub_id}}');"><i class="glyphicon glyphicon-remove"></i></button></td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		
+	</div>
+
+{% endblock %}
+
+
+{% block jspage %}
+
+	<script src="https://cdn.datatables.net/plug-ins/1.10.15/pagination/input.js"></script>
+	<!-- Maps -->
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqpWDakNAEswg5ZOBHnS4jGBu5lgj8WD0"></script>
+
+	{% load static %}
+	<script defer src="{% static "admin-lte/dist/js/oms.min.js" %}"></script>
+	<script defer src="{% static "info_bubble/infobubble.js" %}"></script>
+
+	<script src="https://code.highcharts.com/stock/highstock.js"></script>
+	<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
+<script>
+	$('#alertslink').addClass('active');
+
+	loaded = false;
+	loaded1 = false;
+	loaded2 = false;
+	$('#notifications1Table').DataTable( {
+		'fnDrawCallback': function (oSettings) {
+			if(!loaded){
+				loaded = !loaded;
+			}
+		},
+	    responsive: true,
+	    lengthMenu: [ 10, 25, 50 ],
+	    pagingType: "full_numbers"
+	});
+
+	$('#notifications2Table').DataTable( {
+		'fnDrawCallback': function (oSettings) {
+			if(!loaded1){
+				$('#notifications2Table_filter').append(' <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add actuator</button>');
+				loaded1 = !loaded1;
+			}
+		},
+	    responsive: true,
+	    lengthMenu: [ 10, 25, 50 ],
+	    pagingType: "full_numbers"
+	});
+
+	$('#notifications3Table').DataTable( {
+	    responsive: true,
+	    lengthMenu: [ 10, 25, 50 ],
+	    pagingType: "full_numbers",
+	    order: [[ 2, "desc" ]]
+	});
+
+	al_id = -1;
+	stream_id = -1;
+	function delete_stream(al_ida, stream_ida){
+		al_id = al_ida.trim();
+		stream_id = stream_ida.trim();
+		$('#deleteStream').modal('show');
+	}
+
+	$("#deleteStreamButton").on('click', function(){
+
+    	$('#deleteStream').modal('hide');
+
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/alerts/delete/"+al_id+"/sub="+stream_id,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Stream successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			
+	        		
+					}
+					var table = $('#notifications1Table').DataTable();
+	        		var row = table.row(document.getElementById("alert_"+al_id+"_occurrence_"+stream_id));
+	        		row.remove().draw(false);
+
+	        		var table = $('#notifications1Table').DataTable();
+	        		
+	        		if(table.rows().count()==0)
+	        			window.location.replace("/alerts");
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	if ('{{ success|escapejs }}' == "Trueactuator"){
+		var close = document.getElementsByClassName("alert success");
+		var i;
+
+		text = "The actuator was sucessfully added."
+
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+
+	if('{{ success|escapejs }}' == "Falseactuator"){
+		var close = document.getElementsByClassName("alert error");
+		var i;
+		for (i = 0; i < close.length; i++) {
+
+			var div = close[i];
+
+			text = "The actuator could not be added. You must select a stream from the provided."
+
+			// When someone clicks on a close button
+			div.style.display = "block";
+			div.style.opacity = 1;
+			div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+text;
+
+			// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+			setTimeout(function(){ div.style.display = "none"; }, 5000);
+		}
+	}
+
+	act_id = -1;
+	sub_id = -1;
+	function delete_act(act_ids, sub_ids){
+		act_id = act_ids;
+		sub_id = sub_ids.trim();
+    	$('#deleteAct').modal('show');
+	}
+
+	$("#deleteActButton").on('click', function(){
+
+    	$('#deleteAct').modal('hide');
+
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/actuator/delete/"+act_id+"/sub="+sub_id,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Actuator successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			
+	        			
+	        		
+					}
+					var table = $('#notifications2Table').DataTable();
+	        		var row = table.row(document.getElementById("actuator_"+act_id+"_"+sub_id));
+	        		row.remove().draw(false);
+
+	        		var table = $('#notifications2Table').DataTable();
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+
+
+	/* CSRF Helpers */
+	function csrfSafeMethod(method) {
+	   	// these HTTP methods do not require CSRF protection
+	   	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+	}
+
+	function getCookie(name) {
+		var cookieValue = null;
+		if (document.cookie && document.cookie !== '') {
+			var cookies = document.cookie.split(';');
+			for (var i = 0; i < cookies.length; i++) {
+				var cookie = jQuery.trim(cookies[i]);
+	            // Does this cookie string begin with the name we want?
+	            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+	            	cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	            	break;
+	            }
+	        }
+	    }
+	    return cookieValue;
+	}
+
+	alert_id = -1;
+	sensor_id = -1;
+	function delete_triggAlert(alert_id, sensor_id){
+		this.alert_id = alert_id;
+		this.sensor_id = sensor_id;
+
+		$('#deleteTrigger').modal('show');
+	}
+
+	$("#deleteTrigButton").on('click', function(){
+
+    	$('#deleteTrigger').modal('hide');
+
+    
+    	/* Get the csrf token */
+		var csrftoken = getCookie('csrftoken');
+		
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+
+		/* Send an ajax request */
+		$.ajax({
+			type: "POST",
+			url: "/alerts/deleteTrig/"+alert_id+"/sen="+sensor_id,
+			data: {},
+			success: function(data){
+				if(data["status"]=="Success"){
+
+					var close = document.getElementsByClassName("alert success");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>Triggered alert successfully deleted";
+
+						// Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        			
+	        		
+					}
+					
+					var table = $('#notifications3Table').DataTable();
+	        		var row = table.row(document.getElementById("triggered_"+alert_id+"_sensor_"+sensor_id));
+	        		row.remove().draw(false);
+
+	        		var table = $('#notifications3Table').DataTable();
+	        		
+	        		
+				}
+				else{
+					var close = document.getElementsByClassName("alert error");
+					var i;
+					for (i = 0; i < close.length; i++) {
+
+						var div = close[i];
+
+					    // When someone clicks on a close button
+					    div.style.display = "block";
+					    div.style.opacity = 1;
+					    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>"+data["info"];
+
+					    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        			setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        		}
+				}
+			},
+			failure: function(data){
+				var close = document.getElementsByClassName("alert error");
+				var i;
+				for (i = 0; i < close.length; i++) {
+
+					var div = close[i];
+
+				    // When someone clicks on a close button
+				    div.style.display = "block";
+				    div.style.opacity = 1;
+				    div.innerHTML = "<span class=\"closebtn\" onclick=\"this.parentElement.style.display='none';\">&times;</span>\""+data["info"];
+
+				    // Hide the div after 6000ms (the same amount of milliseconds it takes to fade out)
+	        		setTimeout(function(){ div.style.display = "none"; }, 5000);
+	        	}
+			},
+		});
+	});
+
+	// Add the data to the series
+	
+	triggered = JSON.parse('{{trig_days|escapejs}}')
+
+	sen_series = []
+			
+	s_data = []
+	for (var key in triggered){
+
+
+		array = key.split("/");
+
+		s_data.push([Date.UTC(array[0], array[1]-1, array[2]), triggered[key]]);
+	}
+	
+	// Add the data to the series
+	if (s_data.length > 0){
+		sen_series.push({name:'Number of occurrences', data:s_data, visible:true, type: 'column'}, {name:'Number of occurrences', data:s_data, visible:true, type: 'line', color:'#ff8000'});
+
+		Highcharts.stockChart('containertt', {
+			chart: {
+				alignTicks: false,
+				zoomType: 'x'
+			},
+			title: {
+				text: 'Number of occurrences by day'
+			},
+			subtitle: {
+				text: ''
+			},
+			xAxis: {
+				type: 'datetime',
+			},
+			yAxis: {
+				title: {
+					text: 'Occurrences',
+					textAlign: 'left'
+				},
+			},
+			tooltip: {
+				formatter: function () {
+					var date = new Date(this.x)
+	                return date.getDate()+"/"+(date.getMonth()+1)+"/"+date.getFullYear()+': <span style="color:{series.color}"><b></b></span>Occurrences: '+this.y;
+	            }
+			},
+
+			plotOptions: {
+				spline: {
+					marker: {
+						enabled: true
+					}
+				},
+				 series: {
+			        pointRange: 24 * 3600 * 1000 // one day
+			    }
+			},
+
+			rangeSelector: {
+				selected: 0
+			},
+
+			series: sen_series,
+
+			colors: ['#058DC7']
+		});
+	}
+</script>
+
+{% endblock %}

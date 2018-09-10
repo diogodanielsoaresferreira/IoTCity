@@ -1,0 +1,117 @@
+<resources>
+    <string name="app_name">IoT_City</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_map">Map</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_temperature">Temperature</string>
+
+    <string name="temperature">Temperature</string>
+    <string name="lighting">Lighting</string>
+    <string name="UV">UV Radiation</string>
+    <string name="waste">Waste</string>
+    <string name="people">People</string>
+    <string name="noise">Noise</string>
+    <string name="air">Air (CO2)</string>
+    <string name="air_">Air</string>
+    <string name="go">Go</string>
+
+    <string name="Dashboard">Dashboard</string>
+    <string name="map">Map</string>
+    <string name="Reports">Reports</string>
+    <string name="Metrics">Metrics</string>
+    <string name="Contacts">Help</string>
+    <string name="main">Main</string>
+
+    <string-array name="names">
+        <item> </item>
+        <item>Temperature</item>
+        <item>Noise</item>
+        <item>Lighting</item>
+        <item>UV Radiation</item>
+        <item>Waste</item>
+        <item>People</item>
+    </string-array>
+
+    <string name="title_activity_help">Help</string>
+    <string name="first_paragraph">
+        "IoT City app allows you to get information from sensors from several different types, spread all over the cities."
+        "You can see the values from the sensors closer to you displayed on the dashboard, which is the home page."
+    </string>
+
+
+    <string name="first_second_paragraph">
+        "You have a side menu bar that you can open by clicking the top left corner button."
+    </string>
+
+    <string name="second_paragraph">
+        "The map is where you can see the sensors represented in the map. The red balloon marker will represent your current location."
+        "Each type of sensor is represented by an icon. If you have doubts regarding which icon represents which sensor, check the dashboard;"
+        "there, in each square of each metric you will find the respective icon."
+    </string>    
+	<string name="third_paragraph">
+        "Clicking in a sensor icon you can see the data being gathered by it."
+    </string>
+
+    <string name="reset">
+        "Reset Location"
+    </string>
+
+    <string name="fourth_paragraph">
+        "You can also filter which sensors appear on the map. For that, simply check/uncheck the checkbox of the type of sensors you do/don't want to appear in the map.\n"
+    </string>
+
+    <string name="fifth_paragraph">
+        "Clicking in the window that appears over the sensor, you are redirected to report screen, where you can report a problem regarding that sensor.\n"
+        "In this screen you must indicate the subject of the report, the problem in plain text, your name and your e-mail address. All this in the respective fields."
+        "You can also attach photos or videos by clicking on the camera or video icon, respectively.\n"
+        "After providing all necessary information, click in the button "Send" to send the report."
+    </string>
+
+    <string name="sixth_paragraph">
+        "You can also filter which metrics appear in the dashboard. For that, just click in the "pen" button in the top right corner on the home screen."
+        "Then check/uncheck the metrics you do/don't want to appear in the dashboard. To make all of the metrics visible again, check the checkbox - Al visible."
+    </string>
+
+
+
+    <string name="seventh_paragraph">
+        "As an example, if you uncheck the temperature and lighting metrics, your dashboard will look like the following image."
+    </string>
+
+    <string name="eigth_paragraph">
+        "To show details of any metric you have two options: open the side menu and click in the respective metric, or, while being in the dashbaord, click in the respective box of the metric.\n"
+        "You will be redirected to the screen represented in the next image. You will have a graph showing the past data retrieved by all the temperature sensors, and bellow a graph "
+        "with three columns: the identification code of the sensor; a checkbox to hide/show the data of the sensor represented in the graph (if uncheck/checked, respectively), the colour of the checkbox is the colour in which the sensor data is represented on the graphic; a button that will redirect you to the map and show you the location of the sensor;"
+        " the last time the sensor retrieved a value; and the last value retrieved."
+    </string>
+
+
+
+
+    <string name="title_activity_report">Report</string>
+
+    <string name="indicate_report"><u>Indicate the problem of the waste sensor</u></string>
+    <string name="title_activity_noise">Noise</string>
+    <string name="title_activity_lighting">Lighting</string>
+    <string name="title_activity_uv__radiation">UV Radiation</string>
+    <string name="title_activity_waste">Waste</string>
+    <string name="title_activity_people">People</string>
+    <string name="title_activity_air">Air</string>
+    <string name="title_activity_waste__fullness">Waste Fullness</string>
+
+
+    <string name="server_error">Error contacting server</string>
+    <string name="loading_temp">Loading temperature</string>
+    <string name="loading_light">Loading lighting</string>
+    <string name="loading_uv">Loading UV</string>
+    <string name="loading_waste">Loading waste fullness</string>
+    <string name="loading_noise">Loading noise</string>
+    <string name="loading_people">Loading people percentage</string>
+    <string name="loading_air">Loading air</string>
+
+    <string name="you_are_here">You are here</string>
+</resources>
